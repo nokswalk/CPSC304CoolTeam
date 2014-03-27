@@ -16,7 +16,7 @@ create table BorrowerType
 
 create table Book
 	(callNumber integer not null PRIMARY KEY,
-	isbn integer,
+	isbn varchar(9),
 	title varchar(50),
 	mainAuthor varchar(20),
 	publisher varchar(20),

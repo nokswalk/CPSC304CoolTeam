@@ -27,10 +27,11 @@ public class ClerkUser {
 		    while (!quit)
 		    {
 			System.out.print("\n\nPlease choose one of the following: \n");
-			System.out.print("1.  Add Borrower\n");
-			//System.out.print("2.  Clerk\n");
-			//System.out.print("3.  Librarian\n");
-			System.out.print("4.  Quit\n>>");
+			System.out.print("1.  Add borrower\n");
+			//System.out.print("2.  Check out items\n");
+			//System.out.print("3.  Process a return\n");
+			//System.out.print("4.  Check overdue items\n");
+			System.out.print("5.  Quit\n>>");
 
 			choice = Integer.parseInt(Main.in.readLine());
 			
