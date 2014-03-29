@@ -107,21 +107,24 @@ public class LibrarianUser {
 		String             mainAuthor;
 		String             publisher;
 		int                year;
-		
+
 		//
 		List<String>       subjects;
+		List<String>       authors;
 
 		Statement          s;    // to check if added book already exists in database
 
 		PreparedStatement  ps1;  // for adding Book
 		PreparedStatement  ps2;  // for adding BookCopy
 		PreparedStatement  ps3;  // for adding HasSubject
+		PreparedStatement  ps4;  // for adding HasAuthor
 
 		try {
 
 			ps1 = Main.con.prepareStatement("INSERT INTO Book VALUES (?,?,?,?,?,?)");
 			ps2 = Main.con.prepareStatement("INSERT INTO BookCopy VALUES (?,?,?)");
 			ps3 = Main.con.prepareStatement("INSERT INTO HasSubject VALUES (?,?)");
+			ps4 = Main.con.prepareStatement("INSERT INTO HasAuthor VALUES (?,?)");
 
 			// new book
 			// TODO use a sequence 
@@ -131,12 +134,12 @@ public class LibrarianUser {
 
 			System.out.print("Book ISBN: ");
 			isbn = Main.in.readLine();
-			
+
 			// check if this book already in database
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT * "
-										+ "FROM Book "
-										+ "WHERE isbn=" + isbn);
+					+ "FROM Book "
+					+ "WHERE isbn=" + isbn);
 			if (rs.next()) {
 				System.out.println("This book already exists in the library database."
 						+ "Please select 'New copy' in the 'Add book' menu.");
@@ -145,7 +148,7 @@ public class LibrarianUser {
 				ps2.close();
 				return;
 			}
-			
+
 			ps1.setString(2, isbn);
 
 			System.out.print("Book title: ");
@@ -164,32 +167,64 @@ public class LibrarianUser {
 			year = Integer.parseInt(Main.in.readLine());
 			ps1.setInt(6, year);
 
+			ps1.executeUpdate();
+
+
 			// new book copy
 			ps2.setInt(1, callNumber);
 			ps2.setInt(2, 1);
 			ps2.setString(3, "in");
 			
+			ps2.executeUpdate();
+
+
 			// add subjects of book
 			System.out.print("Book subjects: ");
 			String temp = Main.in.readLine();
 			subjects = Arrays.asList(temp.split(","));
-			
+
 			for (String subject : subjects) {
 				ps3.setInt(1, callNumber);
-				ps3.setString(2, subject.trim());
+				
+				if (subject.length() == 0) {
+					ps3.setString(2, null);
+				} else {
+					ps3.setString(2, subject.trim());
+				}
+				
+				ps3.executeUpdate();
 			}
 
-			// add book and book copy and subjects to database tables
-			ps1.executeUpdate();
-			ps2.executeUpdate();
-			ps3.executeUpdate();
 
+			// add other authors of book
+			System.out.print("Book's other authors: ");
+			String temp2 = Main.in.readLine();
+			
+			if (temp2.length() != 0) {
+				authors = Arrays.asList(temp2.split(","));
+				
+				for (String author: authors) {
+					ps4.setInt(1, callNumber);
+					
+					if (author.length() == 0) {
+						ps4.setString(2, null);
+					} else {
+						ps4.setString(2, author.trim());
+					}
+					
+					ps4.executeUpdate();
+				}
+			}
+
+			
 			// commit work 
 			Main.con.commit();
 			System.out.println("Book has been added successfully.");
-			
+
 			ps1.close();
 			ps2.close();
+			ps3.close();
+			ps4.close();
 			s.close();
 		}
 
@@ -259,7 +294,7 @@ public class LibrarianUser {
 
 				// add copy to database table
 				ps.execute();
-				
+
 				// commit work 
 				Main.con.commit();
 				System.out.println("Book copy has been added successfully.");
@@ -268,7 +303,7 @@ public class LibrarianUser {
 				System.out.println("This book does not exist in the database yet."
 						+ "  Please select 'New book' in the 'Add book' menu.");
 			}
-			
+
 			ps.close();
 			s.close();
 		}
