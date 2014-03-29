@@ -80,4 +80,10 @@ create table Fine
 	
 
 insert into BorrowerType values
-( 'student', 
+('student', 2);
+insert into BorrowerType values
+('faculty', 12);
+insert into BorrowerType values
+('staff', 6);
+insert into BorrowerType values
+('general', 2);

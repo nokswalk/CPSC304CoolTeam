@@ -123,15 +123,18 @@ public class LibrarianUser {
 			callNumber = Integer.parseInt(Main.in.readLine());
 			ps1.setInt(1, callNumber);
 
+			// TODO test when GUI is working; leaving blank in simple text console ui causes error
 			System.out.print("Book ISBN: ");
-			if (Main.in.readLine().length() == 0) {
+			String tempIsbn = Main.in.readLine();
+			
+			if (tempIsbn.length() == 0) {
 				System.out.println("Book ISBN is a required field.  Please try again.");
 				ps1.close();
 				ps2.close();
 				return;
 			}
 			
-			isbn = Integer.parseInt(Main.in.readLine());
+			isbn = Integer.parseInt(tempIsbn);
 			
 			// check if this book already in database
 			s = Main.con.createStatement();
@@ -176,6 +179,8 @@ public class LibrarianUser {
 
 			// commit work 
 			Main.con.commit();
+			System.out.println("Book has been added successfully.");
+			
 			ps1.close();
 			ps2.close();
 			s.close();
@@ -242,19 +247,21 @@ public class LibrarianUser {
 
 			if (callNumber != 0 || copyNo != 0) {
 				ps.setInt(1, callNumber);
-				ps.setInt(2, copyNo);
+				ps.setInt(2, copyNo+1);
 				ps.setString(3, status);
 
 				// add copy to database table
 				ps.execute();
+				
+				// commit work 
+				Main.con.commit();
+				System.out.println("Book copy has been added successfully.");
 			}
 			else {
 				System.out.println("This book does not exist in the database yet."
 						+ "  Please select 'New book' in the 'Add book' menu.");
 			}
-
-			// commit work 
-			Main.con.commit();
+			
 			ps.close();
 			s.close();
 		}

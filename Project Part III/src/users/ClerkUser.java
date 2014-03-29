@@ -87,7 +87,7 @@ public class ClerkUser {
 		PreparedStatement  ps;  // to add new borrower
 
 		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (?,?,?,?,?,?,?,?,?)");
+			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (?,?,?,?,?,?,?,{d ?},?)");
 
 			// TODO use a sequence
 			System.out.print("Borrower ID: ");
@@ -115,17 +115,20 @@ public class ClerkUser {
 			ps.setString(6, emailAddress);
 
 			System.out.print("Borrower SIN or student number: ");
-			if (Main.in.readLine().length() == 0) {
+			String tempSinOrStNo = Main.in.readLine();
+			
+			// TODO test when GUI is working; leaving blank in simple text console ui causes error
+			if (tempSinOrStNo.length() == 0) {
 				System.out.println("SIN or student number is a required field.  Please try again.");
 				ps.close();
 				return;
 			}
 			
-			sinOrStNo = Integer.parseInt(Main.in.readLine());
+			sinOrStNo = Integer.parseInt(tempSinOrStNo);
 			
 			// check if this book already in database
 			s = Main.con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT * "
+			ResultSet rs = s.executeQuery("SELECT bid "
 										+ "FROM Borrower "
 										+ "WHERE sinOrStNo=" + sinOrStNo);
 			if (rs.next()) {
@@ -137,17 +140,22 @@ public class ClerkUser {
 			
 			ps.setInt(7, sinOrStNo);
 
+			// TODO need to convert between JDBC and Oracle date types, doesn't run as is.
 			System.out.print("Borrower expiry date: ");  // Clerk should set to 2 years from today
-			expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format yyyy-mm-dd
+			expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format dd-mm-yyyy format
 			ps.setDate(8, expiryDate);
 
-			System.out.print("\n Borrower type: ");
+			System.out.print("Borrower type: ");
 			type = Main.in.readLine();
 			ps.setString(9, type);
 
+			// add borrower
 			ps.executeUpdate();
+			
 			// commit work 
 			Main.con.commit();
+			System.out.println("Borrower has been added successfully.");
+			
 			ps.close();
 		}
 

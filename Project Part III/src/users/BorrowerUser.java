@@ -200,7 +200,7 @@ public class BorrowerUser {
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
 					+ "FROM HasAuthor A, Book B "
 					+ "WHERE A.callNumber=B.callNumber AND "
-					+ "(B.mainAuthor LIKE '%" + sAuthor + "%' OR A.name LIKE '%" + sAuthor + "%'");
+					+ "(B.mainAuthor LIKE '%" + sAuthor + "%' OR A.name LIKE '%" + sAuthor + "%')");
 
 			// for each of the results
 			while (rs.next()) {
@@ -211,16 +211,16 @@ public class BorrowerUser {
 				mainAuthor = rs.getString(4);
 
 				// # in library
-				s.executeQuery("SELECT COUNT(*)"
-						+ "FROM Book B, BookCopy C"
+				s.executeQuery("SELECT COUNT(*) "
+						+ "FROM Book B, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
 				while (rs.next()) {
 					inLib = rs.getInt(1);
 				}
 
 				// # out of library or on hold
-				s.executeQuery("SELECT COUNT(*)"
-						+ "FROM BookB, BookCopy C"
+				s.executeQuery("SELECT COUNT(*) "
+						+ "FROM BookB, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
 						+ "AND (C.status='out' OR C.status='on hold')");
 				while (rs.next()) {
@@ -268,14 +268,14 @@ public class BorrowerUser {
 
 		try {
 			// first search Book table based on author name
-			System.out.print("\n Author name: ");
+			System.out.print("\n Subject: ");
 			sSubject = Main.in.readLine();
 
 			s = Main.con.createStatement();
 
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
 					+ "FROM HasSubject S, Book B "
-					+ "WHERE S.callNumber=B.callNumber AND S.subject=" + sSubject);
+					+ "WHERE S.callNumber=B.callNumber AND S.subject='" + sSubject + "'");
 
 			// for each of the results
 			while (rs.next()) {
@@ -286,18 +286,18 @@ public class BorrowerUser {
 				mainAuthor = rs.getString(4);
 
 				// # in library
-				s.executeQuery("SELECT COUNT(*)"
-						+ "FROM Book B, BookCopy C"
+				s.executeQuery("SELECT COUNT(*) "
+						+ "FROM Book B, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
 				while (rs.next()) {
 					inLib = rs.getInt(1);
 				}
 
 				// # out of library or on hold
-				s.executeQuery("SELECT COUNT(*)"
-						+ "FROM BookB, BookCopy C"
+				s.executeQuery("SELECT COUNT(*) "
+						+ "FROM BookB, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
-						+ "AND (C.status='out' OR C.status='on hold'");
+						+ "AND (C.status='out' OR C.status='on hold')");
 				while (rs.next()) {
 					outLib = rs.getInt(1);
 				}
