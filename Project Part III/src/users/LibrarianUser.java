@@ -4,6 +4,7 @@ import gui.Main;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.*;
 
 public class LibrarianUser {
 
@@ -101,21 +102,26 @@ public class LibrarianUser {
 
 		// attributes of new book
 		int                callNumber;
-		int 	           isbn;
+		String 	           isbn;
 		String             title;
 		String             mainAuthor;
 		String             publisher;
 		int                year;
+		
+		//
+		List<String>       subjects;
 
 		Statement          s;    // to check if added book already exists in database
 
 		PreparedStatement  ps1;  // for adding Book
 		PreparedStatement  ps2;  // for adding BookCopy
+		PreparedStatement  ps3;  // for adding HasSubject
 
 		try {
 
 			ps1 = Main.con.prepareStatement("INSERT INTO Book VALUES (?,?,?,?,?,?)");
 			ps2 = Main.con.prepareStatement("INSERT INTO BookCopy VALUES (?,?,?)");
+			ps3 = Main.con.prepareStatement("INSERT INTO HasSubject VALUES (?,?)");
 
 			// new book
 			// TODO use a sequence 
@@ -123,18 +129,8 @@ public class LibrarianUser {
 			callNumber = Integer.parseInt(Main.in.readLine());
 			ps1.setInt(1, callNumber);
 
-			// TODO test when GUI is working; leaving blank in simple text console ui causes error
 			System.out.print("Book ISBN: ");
-			String tempIsbn = Main.in.readLine();
-			
-			if (tempIsbn.length() == 0) {
-				System.out.println("Book ISBN is a required field.  Please try again.");
-				ps1.close();
-				ps2.close();
-				return;
-			}
-			
-			isbn = Integer.parseInt(tempIsbn);
+			isbn = Main.in.readLine();
 			
 			// check if this book already in database
 			s = Main.con.createStatement();
@@ -150,7 +146,7 @@ public class LibrarianUser {
 				return;
 			}
 			
-			ps1.setInt(2, isbn);
+			ps1.setString(2, isbn);
 
 			System.out.print("Book title: ");
 			title = Main.in.readLine();
@@ -172,10 +168,21 @@ public class LibrarianUser {
 			ps2.setInt(1, callNumber);
 			ps2.setInt(2, 1);
 			ps2.setString(3, "in");
+			
+			// add subjects of book
+			System.out.print("Book subjects: ");
+			String temp = Main.in.readLine();
+			subjects = Arrays.asList(temp.split(","));
+			
+			for (String subject : subjects) {
+				ps3.setInt(1, callNumber);
+				ps3.setString(2, subject.trim());
+			}
 
-			// add book and book copy to database tables
+			// add book and book copy and subjects to database tables
 			ps1.executeUpdate();
 			ps2.executeUpdate();
+			ps3.executeUpdate();
 
 			// commit work 
 			Main.con.commit();
@@ -213,7 +220,7 @@ public class LibrarianUser {
 		String             status     = "in";
 
 		// to get existing callNumber of this book
-		int                isbn; 
+		String             isbn; 
 		Statement          s; 
 
 		// to add new copy into database
@@ -222,7 +229,7 @@ public class LibrarianUser {
 		try {
 			// use ISBN to get existing callNumber
 			System.out.print("Book ISBN: ");
-			isbn = Integer.parseInt(Main.in.readLine());
+			isbn = Main.in.readLine();
 
 			s = Main.con.createStatement();
 			ResultSet rs1 = s.executeQuery("SELECT callNumber "

@@ -127,39 +127,63 @@ public class BorrowerUser {
 					+ "FROM Book B "
 					+ "WHERE B.title LIKE '%" + sTitle + "%'");
 
-			// for each of the results
-			while (rs.next()) {
-				// parse the book
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			System.out.println(" ");
+
+			// display column names;
+			for (int i = 0; i < numCols; i++)
+			{
+				// get column name and print it
+
+				System.out.printf("%-15s", rsmd.getColumnName(i+1));    
+			}
+			// add columns for in/out count
+			System.out.printf("%-15s", "in library");
+			System.out.printf("%-15s", "out/on hold");
+
+			System.out.println(" ");
+
+			while(rs.next())
+			{
+				// simplified output formatting; truncation may occur
+
 				callNumber = rs.getInt(1);
+				System.out.printf("%-15.15s", callNumber);
+
 				isbn = rs.getString(2);
+				System.out.printf("%-15.15s", isbn);
+
 				title = rs.getString(3);
+				System.out.printf("%-15.15s", title);
+
 				mainAuthor = rs.getString(4);
+				System.out.printf("%-15.15s", mainAuthor);    
 
 				// # in library
-				s.executeQuery("SELECT COUNT(*) "
+				ResultSet rsi = s.executeQuery("SELECT COUNT(*) "
 						+ "FROM Book B, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
-				while (rs.next()) {
-					inLib = rs.getInt(1);
+				while (rsi.next()) {
+					inLib = rsi.getInt(1);
 				}
+				System.out.printf("%-15.15s", inLib);
 
 				// # out of library or on hold
-				s.executeQuery("SELECT COUNT(*) "
+				ResultSet rso = s.executeQuery("SELECT COUNT(*) "
 						+ "FROM BookB, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
 						+ "AND (C.status='out' OR C.status='on hold'");
-				while (rs.next()) {
-					outLib = rs.getInt(1);
+				while (rso.next()) {
+					outLib = rso.getInt(1);
 				}
-
-				// print out search results
-				System.out.println("\n Call number: " + callNumber 
-						+ "\n ISBN: " + isbn
-						+ "\n Title: " + title + "\n"
-						+ "\n Main Author: " + mainAuthor 
-						+ "\n Copies in library: " + inLib 
-						+ "\n Copies out of library or on hold: " + outLib + "\n");
+				System.out.printf("%-15.15s", outLib);
 			}
+
 			System.out.println("No more search results");
 			s.close();
 		}
@@ -199,42 +223,66 @@ public class BorrowerUser {
 
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
 					+ "FROM HasAuthor A, Book B "
-					+ "WHERE A.callNumber=B.callNumber AND "
-					+ "(B.mainAuthor LIKE '%" + sAuthor + "%' OR A.name LIKE '%" + sAuthor + "%')");
+					+ "WHERE (A.callNumber=B.callNumber AND A.name LIKE '%" + sAuthor + "%') "
+					+ "OR B.mainAuthor LIKE '%" + sAuthor + "%'");
 
-			// for each of the results
-			while (rs.next()) {
-				// parse the book
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			System.out.println(" ");
+
+			// display column names;
+			for (int i = 0; i < numCols; i++)
+			{
+				// get column name and print it
+
+				System.out.printf("%-15s", rsmd.getColumnName(i+1));    
+			}
+			// add columns for in/out count
+			System.out.printf("%-15s", "in library");
+			System.out.printf("%-15s", "out/on hold");
+
+			System.out.println(" ");
+
+			while(rs.next())
+			{
+				// simplified output formatting; truncation may occur
+
 				callNumber = rs.getInt(1);
+				System.out.printf("%-15.15s", callNumber);
+
 				isbn = rs.getString(2);
+				System.out.printf("%-15.15s", isbn);
+
 				title = rs.getString(3);
+				System.out.printf("%-15.15s", title);
+
 				mainAuthor = rs.getString(4);
+				System.out.printf("%-15.15s", mainAuthor);    
 
 				// # in library
-				s.executeQuery("SELECT COUNT(*) "
+				ResultSet rsi = s.executeQuery("SELECT COUNT(*) "
 						+ "FROM Book B, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
-				while (rs.next()) {
-					inLib = rs.getInt(1);
+				while (rsi.next()) {
+					inLib = rsi.getInt(1);
 				}
+				System.out.printf("%-15.15s", inLib);
 
 				// # out of library or on hold
-				s.executeQuery("SELECT COUNT(*) "
+				ResultSet rso = s.executeQuery("SELECT COUNT(*) "
 						+ "FROM BookB, BookCopy C "
 						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
-						+ "AND (C.status='out' OR C.status='on hold')");
-				while (rs.next()) {
-					outLib = rs.getInt(1);
+						+ "AND (C.status='out' OR C.status='on hold'");
+				while (rso.next()) {
+					outLib = rso.getInt(1);
 				}
-
-				// print out search results
-				System.out.println("\n Call number: " + callNumber 
-						+ "\n ISBN: " + isbn
-						+ "\n Title: " + title + "\n"
-						+ "\n Main Author: " + mainAuthor 
-						+ "\n Copies in library: " + inLib 
-						+ "\n Copies out of library or on hold: " + outLib + "\n");
+				System.out.printf("%-15.15s", outLib);
 			}
+
 			System.out.println("No more search results");
 			s.close();
 		}
@@ -321,7 +369,7 @@ public class BorrowerUser {
 			System.out.println("Message: " + ex.getMessage());
 		}
 	}
-	
+
 	/*
 	 * Displays the items the borrower has currently borrowed and
 	 * not yet returned, any outstanding fines and 
@@ -329,7 +377,7 @@ public class BorrowerUser {
 	 */
 	private static void checkAccount() {
 		String userBid;
-		
+
 		String title;
 		String isbn;
 		String mainAuthor;
@@ -339,11 +387,11 @@ public class BorrowerUser {
 		Statement stmt;
 		ResultSet rs;
 
-		
+
 		try {
 			System.out.printf("Put your Borrower ID: ");
 			userBid = Main.in.readLine(); //TODO: I should put constraint.
-			
+
 			stmt = Main.con.createStatement();
 
 			// query of title, isbn and mainAuthor when borrowing's inDate is null.
@@ -491,7 +539,7 @@ public class BorrowerUser {
 					System.out.printf("%-15.15s\n", issuedDate);
 				}
 			}
-			
+
 			// close the statement;
 			// the ResultSet will also be closed
 			stmt.close();

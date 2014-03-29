@@ -18,16 +18,16 @@ create table Borrower
 	password varchar(20) null,
 	name varchar(20) null,
 	address varchar(50) null,
-	phone varchar(10) null,
+	phone char(10) null,
 	emailAddress varchar(50) null,
-	sinOrStNo integer not null,
+	sinOrStNo varchar(10) not null,
 	expiryDate date null,
 	type varchar(10) not null,
 	FOREIGN KEY (type) references BorrowerType);
 
 create table Book
 	(callNumber integer not null PRIMARY KEY,
-	isbn integer not null,
+	isbn char(9) not null,
 	title varchar(50) null,
 	mainAuthor varchar(20) null,
 	publisher varchar(20) null,
@@ -87,3 +87,16 @@ insert into BorrowerType values
 ('staff', 6);
 insert into BorrowerType values
 ('general', 2);
+
+insert into Book values
+(1000, '123456789', 'ABCs', 'Sammy Foo', 'Foo Readers', 2000);
+
+insert into BookCopy values
+(1000, 1, 'in');
+insert into BookCopy values
+(1000, 2, 'out');
+insert into BookCopy values
+(1000, 3, 'on hold');
+
+insert into HasSubject values
+(1000, 'kindergarten');

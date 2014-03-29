@@ -78,7 +78,7 @@ public class ClerkUser {
 		String             address;
 		String             phone;
 		String             emailAddress;
-		int	               sinOrStNo;
+		String             sinOrStNo;
 		Date               expiryDate;
 		String             type;
 		
@@ -115,16 +115,7 @@ public class ClerkUser {
 			ps.setString(6, emailAddress);
 
 			System.out.print("Borrower SIN or student number: ");
-			String tempSinOrStNo = Main.in.readLine();
-			
-			// TODO test when GUI is working; leaving blank in simple text console ui causes error
-			if (tempSinOrStNo.length() == 0) {
-				System.out.println("SIN or student number is a required field.  Please try again.");
-				ps.close();
-				return;
-			}
-			
-			sinOrStNo = Integer.parseInt(tempSinOrStNo);
+			sinOrStNo = Main.in.readLine();
 			
 			// check if this book already in database
 			s = Main.con.createStatement();
@@ -138,7 +129,7 @@ public class ClerkUser {
 				return;
 			}
 			
-			ps.setInt(7, sinOrStNo);
+			ps.setString(7, sinOrStNo);
 
 			// TODO need to convert between JDBC and Oracle date types, doesn't run as is.
 			System.out.print("Borrower expiry date: ");  // Clerk should set to 2 years from today
