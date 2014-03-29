@@ -328,19 +328,31 @@ public class BorrowerUser {
 	 * the hold requests that have been placed by the borrower.
 	 */
 	private static void checkAccount() {
+		String userBid;
+		
 		String title;
 		String isbn;
 		String mainAuthor;
+		int amount;
+		int totalAmount = 0;
+		Date issuedDate;
 		Statement stmt;
 		ResultSet rs;
 
+		
 		try {
+			System.out.printf("Put your Borrower ID: ");
+			userBid = Main.in.readLine(); //TODO: I should put constraint.
+			
 			stmt = Main.con.createStatement();
 
 			// query of title, isbn and mainAuthor when borrowing's inDate is null.
+			System.out.println("List of items you currently borrowed:");
 			rs = stmt.executeQuery("SELECT A.title, A.isbn, A.mainAuthor "
 					+ "FROM Book A, Borrowing B, BookCopy C, Borrower D "
-					+ "WHERE B.bid = D.bid AND B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND C.callNumber = A.callNumber AND B.inDate IS NULL "
+					+ "WHERE B.bid = D.bid AND B.callNumber = C.callNumber "
+					+ "AND B.copyNo = C.copyNo AND C.callNumber = A.callNumber AND B.inDate IS NULL "
+					+ "AND D.bid=" + userBid
 					+ "GROUP BY A.title");
 
 			// get info on ResultSet
@@ -354,7 +366,6 @@ public class BorrowerUser {
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
-
 				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
 			}
 
@@ -387,12 +398,14 @@ public class BorrowerUser {
 					System.out.printf("%-20.20s\n", mainAuthor);
 				}
 			}
-			///////////////////////////////////////		
-			// query of title, isbn and mainAuthor when borrowing's inDate is null.
-			
-			//TODO: Need to show outstanding fines and the hold request that have been placed by borrower
-			rs = stmt.executeQuery("");
 
+			//total outstanding fine
+			System.out.println("Outstanding fine:");
+			rs = stmt.executeQuery("SELECT A.amount, A.issuedDate, D.title "
+					+ "FROM Fine A, Borrowing B, Borrower C, BookCopy D, Book E "
+					+ "WHERE A.borid=B.borid AND B.bid=C.bid AND D.callNumber=E.callNumber "
+					+ "AND B.callNumber=D.callNumber AND B.copyNo=D.copyNo "
+					+ "AND A.payDate IS NULL AND C.bid=" + userBid);
 			// get info on ResultSet
 			rsmd = rs.getMetaData();
 
@@ -404,8 +417,7 @@ public class BorrowerUser {
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
-
-				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
+				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
 			}
 
 			System.out.println(" ");
@@ -416,32 +428,77 @@ public class BorrowerUser {
 
 				// simplified output formatting; truncation may occur
 
+				amount = rs.getInt("amount");
+				if (rs.wasNull()) {
+					System.out.printf("%-20.20s", " ");
+				} else {
+					System.out.printf("%-20.20s", amount);
+				}
+				totalAmount += amount;
+				issuedDate = rs.getDate("issuedDate");
+				if (rs.wasNull()) {
+					System.out.printf("%-15.15s", " ");
+				} else {
+					System.out.printf("%-15.15s", issuedDate);
+				}
+				title = rs.getString("title");
+				if (rs.wasNull()) {
+					System.out.printf("%-50.50s\n", " ");
+				} else {
+					System.out.printf("%-50.50s\n", title);
+				}
+			}
+			System.out.println("Total amount of outstanding fine is: " + totalAmount);
+			System.out.println(" ");
+
+			//Hold Request List
+			System.out.println("HOLD REQUEST LIST placed by you:");
+			rs = stmt.executeQuery("SELECT B.title, A.issuedDate "
+					+ "FROM HoldRequest A, Book B, Borrower C "
+					+ "WHERE A.callNumber=B.callNumber AND A.bid=C.bid "
+					+ "AND C.bid=" + userBid);
+			// get info on ResultSet
+			rsmd = rs.getMetaData();
+
+			// get number of columns
+			numCols = rsmd.getColumnCount();
+
+			System.out.println(" ");
+
+			// display column names;
+			for (int i = 0; i < numCols; i++) {
+				// get column name and print it
+				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
+			}
+
+			System.out.println(" ");
+
+			while (rs.next()) {
+				// for display purposes get everything from Oracle
+				// as a string
+
+				// simplified output formatting; truncation may occur
 				title = rs.getString("title");
 				if (rs.wasNull()) {
 					System.out.printf("%-50.50s", " ");
 				} else {
 					System.out.printf("%-50.50s", title);
 				}
-
-				isbn = rs.getString("isbn");
+				issuedDate = rs.getDate("issuedDate");
 				if (rs.wasNull()) {
-					System.out.printf("%-9.9s", " ");
+					System.out.printf("%-15.15s\n", " ");
 				} else {
-					System.out.printf("%-9.9s", isbn);
-				}
-
-				mainAuthor = rs.getString("mainAuthor");
-				if (rs.wasNull()) {
-					System.out.printf("%-20.20s", " ");
-				} else {
-					System.out.printf("%-20.20s", mainAuthor);
+					System.out.printf("%-15.15s\n", issuedDate);
 				}
 			}
+			
 			// close the statement;
 			// the ResultSet will also be closed
 			stmt.close();
 		} catch (SQLException ex) {
 			System.out.println("Message: " + ex.getMessage());
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
 		}
 	}
 }
