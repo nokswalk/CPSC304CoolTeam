@@ -12,6 +12,7 @@ public class BorrowerUser {
 	 * Uses buffer line reader and connection established in Main class.
 	 */
 	public static void main() {
+		
 		int choice;
 		boolean quit;
 
@@ -41,7 +42,7 @@ public class BorrowerUser {
 			Main.in.close();
 			System.out.println("\nGood Bye!\n\n");
 			System.exit(0);
-			
+
 		}
 		catch (IOException e) {
 			System.out.println("IOException!");
@@ -63,7 +64,6 @@ public class BorrowerUser {
 	 * Keyword book search on titles, authors, and/or subjects.
 	 */
 	private static void searchBook() {
-		// TODO Auto-generated method stub
 
 		// Search by title or author or subject
 		int choice;
@@ -86,7 +86,7 @@ public class BorrowerUser {
 			case 4:  return;
 			}
 		}
-		
+
 		catch (IOException e) {
 			System.out.println("IOException!");
 			try {
@@ -99,68 +99,71 @@ public class BorrowerUser {
 		}
 	}
 
-	private static void searchBookByTitle() {		
+	private static void searchBookByTitle() {	
+
+		// searched title
 		String             sTitle;
+		
+		// search results
+		int          	   callNumber;
+		String             isbn;
+		String             title;
+		String             mainAuthor;
+		
+		// book copies in/out
+		int inLib=0;
+		int outLib=0;
+		
+		// to execute queries
 		Statement          s;
 
 		try {
+			// first search Book table based on title keyword
 			System.out.print("\n Title keyword: ");
 			sTitle = Main.in.readLine();
 
 			s = Main.con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT B.callNumber, B.isbn, B.title, B.mainAuthor, C.copyNo, c.status"
-										+ "FROM HasAuthor A, Book B, BookCopy C"
-										+ "WHERE B.callNumber = C.callNumber AND B.callNumber = A.callNumber AND B.title LIKE '%" + sTitle + "%'"
-										+ "GROUP BY B.callNumber");
+			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
+					+ "FROM Book B "
+					+ "WHERE B.title LIKE '%" + sTitle + "%'");
 
-			// TODO How to get # of copies in or out of library?
-			int           callNumber = 0;
-			String        isbn = null;
-			String        title = null;
-			String        mainAuthor = null;
-			int           copyNo = 0;
-			String        status = null;
-			
-			// keep track of book copies
-			int inLib = 0;
-			int outLib = 0;
-
+			// for each of the results
 			while (rs.next()) {
-				// if this callNumber same as previous tuple's, 
-				// only difference in fields are copyNo and status
-				if (rs.getInt(1) == callNumber) {
-					if (rs.getString(5).equalsIgnoreCase("in")) {
-						inLib++;
-					}
-					else {
-						outLib++;
-					}
-				}
-				// if not the same callNumber as previous tuple
-				// must be next book (because of use of GROUP BY in query)
-				else {
-					// first print out previous book
-					System.out.println("Call number: " + callNumber + "\n"
-									+ "ISBN: " + isbn + "\n"
-									+ "Title: " + title + "\n"
-									+ "Main Author: " + mainAuthor + "\n"
-									+ "Copies in library: " + inLib + "\n"
-									+ "Copies out of library or on hold: " + outLib + "\n\n");
-					
-					// then reset copy counters
-					inLib = 0;  outLib = 0;
-					
-					// then parse in the new book
-					callNumber = rs.getInt(1);
-					isbn = rs.getString(2);
-					title = rs.getString(3);
-					mainAuthor = rs.getString(4);
-					copyNo = rs.getInt(5);
-					status = rs.getString(5);
-				}
-			}
+				// parse the book
+				callNumber = rs.getInt(1);
+				isbn = rs.getString(2);
+				title = rs.getString(3);
+				mainAuthor = rs.getString(4);
 
+				// # in library
+				s.executeQuery("SELECT COUNT(*) "
+						+ "FROM Book B, BookCopy C "
+						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
+				while (rs.next()) {
+					inLib = rs.getInt(1);
+				}
+
+				// # out of library or on hold
+				s.executeQuery("SELECT COUNT(*) "
+						+ "FROM BookB, BookCopy C "
+						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
+						+ "AND (C.status='out' OR C.status='on hold'");
+				while (rs.next()) {
+					outLib = rs.getInt(1);
+				}
+
+				// print out search results
+				System.out.println("\n Call number: " + callNumber 
+						+ "\n ISBN: " + isbn
+						+ "\n Title: " + title + "\n"
+						+ "\n Main Author: " + mainAuthor 
+						+ "\n Copies in library: " + inLib 
+						+ "\n Copies out of library or on hold: " + outLib + "\n");
+			}
+			System.out.println("No more search results");
+			s.close();
 		}
+
 		catch (IOException e) {
 			System.out.println("IOException!");
 		}
@@ -170,12 +173,152 @@ public class BorrowerUser {
 	}
 
 	private static void searchBookByAuthor() {
-		// TODO Auto-generated method stub
+
+		// searched author
+		String             sAuthor;
+		
+		// search results
+		int          	   callNumber;
+		String             isbn;
+		String             title;
+		String             mainAuthor;
+		
+		// book copies in/out
+		int inLib=0;
+		int outLib=0;
+		
+		// to execute queries
+		Statement          s;
+
+		try {
+			// first search Book table based on author name
+			System.out.print("\n Author name: ");
+			sAuthor = Main.in.readLine();
+
+			s = Main.con.createStatement();
+
+			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
+					+ "FROM HasAuthor A, Book B "
+					+ "WHERE A.callNumber=B.callNumber AND "
+					+ "(B.mainAuthor LIKE '%" + sAuthor + "%' OR A.name LIKE '%" + sAuthor + "%'");
+
+			// for each of the results
+			while (rs.next()) {
+				// parse the book
+				callNumber = rs.getInt(1);
+				isbn = rs.getString(2);
+				title = rs.getString(3);
+				mainAuthor = rs.getString(4);
+
+				// # in library
+				s.executeQuery("SELECT COUNT(*)"
+						+ "FROM Book B, BookCopy C"
+						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
+				while (rs.next()) {
+					inLib = rs.getInt(1);
+				}
+
+				// # out of library or on hold
+				s.executeQuery("SELECT COUNT(*)"
+						+ "FROM BookB, BookCopy C"
+						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
+						+ "AND (C.status='out' OR C.status='on hold')");
+				while (rs.next()) {
+					outLib = rs.getInt(1);
+				}
+
+				// print out search results
+				System.out.println("\n Call number: " + callNumber 
+						+ "\n ISBN: " + isbn
+						+ "\n Title: " + title + "\n"
+						+ "\n Main Author: " + mainAuthor 
+						+ "\n Copies in library: " + inLib 
+						+ "\n Copies out of library or on hold: " + outLib + "\n");
+			}
+			System.out.println("No more search results");
+			s.close();
+		}
+
+		catch (IOException e) {
+			System.out.println("IOException!");
+		}
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
 
 	}
 
 	private static void searchBookBySubject() {
-		// TODO Auto-generated method stub
+		
+		// searched subject
+		String             sSubject;
+		
+		// search results
+		int          	   callNumber;
+		String             isbn;
+		String             title;
+		String             mainAuthor;
+		
+		// book copies in/out
+		int inLib=0;
+		int outLib=0;
+		
+		// to execute queries
+		Statement          s;
 
+		try {
+			// first search Book table based on author name
+			System.out.print("\n Author name: ");
+			sSubject = Main.in.readLine();
+
+			s = Main.con.createStatement();
+
+			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
+					+ "FROM HasSubject S, Book B "
+					+ "WHERE S.callNumber=B.callNumber AND S.subject=" + sSubject);
+
+			// for each of the results
+			while (rs.next()) {
+				// parse the book
+				callNumber = rs.getInt(1);
+				isbn = rs.getString(2);
+				title = rs.getString(3);
+				mainAuthor = rs.getString(4);
+
+				// # in library
+				s.executeQuery("SELECT COUNT(*)"
+						+ "FROM Book B, BookCopy C"
+						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
+				while (rs.next()) {
+					inLib = rs.getInt(1);
+				}
+
+				// # out of library or on hold
+				s.executeQuery("SELECT COUNT(*)"
+						+ "FROM BookB, BookCopy C"
+						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
+						+ "AND (C.status='out' OR C.status='on hold'");
+				while (rs.next()) {
+					outLib = rs.getInt(1);
+				}
+
+				// print out search results
+				System.out.println("\n Call number: " + callNumber 
+						+ "\n ISBN: " + isbn
+						+ "\n Title: " + title + "\n"
+						+ "\n Main Author: " + mainAuthor 
+						+ "\n Copies in library: " + inLib 
+						+ "\n Copies out of library or on hold: " + outLib + "\n");
+			}
+			System.out.println("No more search results");
+			s.close();
+		}
+
+		catch (IOException e) {
+			System.out.println("IOException!");
+		}
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
 	}
 }
