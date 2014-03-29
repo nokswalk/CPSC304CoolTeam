@@ -77,7 +77,7 @@ create table Fine
 	paidDate date null,
 	borid integer not null,
 	FOREIGN KEY (borid) references Borrowing);
-	
+
 
 insert into BorrowerType values
 ('student', 2);
