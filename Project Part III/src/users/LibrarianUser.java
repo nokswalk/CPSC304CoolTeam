@@ -177,7 +177,7 @@ public class LibrarianUser {
 			subjects = Arrays.asList(temp.split(","));
 
 			for (String subject : subjects) {				
-				if (subject.length() == 0) {
+				if (subject.trim().length() == 0) {
 					ps3.setString(2, null);
 				} else {
 					ps3.setString(2, subject.trim());
