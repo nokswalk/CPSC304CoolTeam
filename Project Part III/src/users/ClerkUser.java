@@ -4,6 +4,13 @@ import gui.Main;
 
 import java.io.IOException;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 
 /**
@@ -17,7 +24,6 @@ public class ClerkUser {
 	 * Uses buffer line reader and connection established in Main class.
 	 */
 	public static void main() {
-		
 		int choice;
 		boolean quit;
 
@@ -70,79 +76,60 @@ public class ClerkUser {
 	 * User should provide all required info.
 	 */
 	private static void addBorrower() {
-		
-		// attributes of new borrower
+		int                bid;
 		String             password; 
 		String             name;
 		String             address;
 		String             phone;
 		String             emailAddress;
-		String             sinOrStNo;
+		int                sinOrStNo;
 		Date               expiryDate;
 		String             type;
-		
-		Statement          s;   // to check if borrower already exists in database
 
-		PreparedStatement  ps;  // to add new borrower
+		PreparedStatement  ps;
 
 		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,{d ?},?)");
+			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (?,?,?,?,?,?,?,?,?)");
 
-			System.out.print("Borrower password: ");
+			System.out.print("\n Borrower ID: ");
+			bid = Integer.parseInt(Main.in.readLine());
+			ps.setInt(1, bid);
+
+			System.out.print("\n Borrower password: ");
 			password = Main.in.readLine();
 			ps.setString(2, password);
 
-			System.out.print("Borrower name: ");
+			System.out.print("\n Borrower name: ");
 			name = Main.in.readLine();
 			ps.setString(3, name);
 
-			System.out.print("Borrower address: ");
+			System.out.print("\n Borrower address: ");
 			address = Main.in.readLine();
 			ps.setString(4, address);
 
-			System.out.print("Borrower phone number: ");
+			System.out.print("\n Borrower phone number: ");
 			phone = Main.in.readLine();
 			ps.setString(5,  phone);
 
-			System.out.print("Borrower email address: ");
+			System.out.print("\n Borrower email address: ");
 			emailAddress = Main.in.readLine();
 			ps.setString(6, emailAddress);
 
-			System.out.print("Borrower SIN or student number: ");
-			sinOrStNo = Main.in.readLine();
-			
-			// check if this borrower already in database
-			s = Main.con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT bid "
-										+ "FROM Borrower "
-										+ "WHERE sinOrStNo=" + sinOrStNo);
-			if (rs.next()) {
-				System.out.println("An account for this borrower already exists in the library database.");
-				s.close();
-				ps.close();
-				return;
-			}
-			
-			ps.setString(7, sinOrStNo);
+			System.out.print("\n Borrower SIN or student number: ");
+			sinOrStNo = Integer.parseInt(Main.in.readLine());
+			ps.setInt(7, sinOrStNo);
 
-			// TODO need to convert between JDBC and Oracle date types, doesn't run as is.
-			System.out.print("Borrower expiry date (yyyy-mm-dd): ");  // Clerk should set to 2 years from today
-			//expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format yyyy-mm-dd
-			//ps.setDate(8, expiryDate);
-			String date = Main.in.readLine();
-			ps.setString(8, date);
+			System.out.print("\n Borrower expiry date: ");  // Clerk should set to 2 years from today
+			expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format yyyy-mm-dd
+			ps.setDate(8, expiryDate);
 
-			System.out.print("Borrower type: ");
+			System.out.print("\n Borrower type: ");
 			type = Main.in.readLine();
 			ps.setString(9, type);
 
-			// add borrower
 			ps.executeUpdate();
-			
 			// commit work 
 			Main.con.commit();
-			System.out.println("Borrower has been added successfully.");
-			
 			ps.close();
 		}
 
@@ -164,4 +151,203 @@ public class ClerkUser {
 		}
 	}
 
+	
+	private static void checkOutItems() throws ParseException {
+		int 			   bid;
+		List<String>	   callNumbersS;
+		ArrayList<Integer> callNumbers = null;
+		callNumbers = new ArrayList<Integer>();
+		Statement  		   s;
+		
+		try {
+			System.out.println("\n Borrower ID: ");
+			bid = Integer.parseInt(Main.in.readLine());
+			System.out.println("\n List of call numbers: ");
+			callNumbersS = Arrays.asList(Main.in.readLine().split(","));
+			
+			for (String c: callNumbersS){
+				int callNumber;
+				callNumber = Integer.parseInt(c);
+				callNumbers.add(callNumber);
+			}
+			
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT bid "
+										+ "FROM Borrower "
+										+ "WHERE bid = " + bid);
+
+			if (rs.next() == false){
+				System.out.println("Invalid ID");
+				
+			}
+			else {
+				for (int j = 0; j < callNumbers.size(); j++) {
+					int i = callNumbers.get(j);
+					checkOutItem(bid, i);
+				}
+				
+			}
+			
+		}
+
+		catch (IOException e) {
+			System.out.println("IOException!");
+		}
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+	}
+
+	private static void checkOutItem(int bid, int callNumber) throws ParseException {
+		
+		Statement			s;
+		
+		try 
+		{
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT callNumber "
+										+ "FROM BookCopy  "
+										+ "WHERE status = in");
+
+			if (rs.next() == false){
+				System.out.println("Book not available for borrowing");
+				
+			}
+			else {
+				addBorrowingHelper(bid, callNumber);
+			}
+			
+		}
+		
+
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+	}
+	
+	private static void addBorrowingHelper(int bid, int callNumber) throws ParseException {
+
+		int						borid;
+		int						copyNo;
+		java.sql.Date 			outDate;
+		PreparedStatement  ps;
+
+		try {
+			ps = Main.con.prepareStatement("INSERT INTO Borrowing VALUES (?,bid,callNumber,?,?,null)");
+
+			System.out.print("\n Borrowing ID: ");
+			borid = Integer.parseInt(Main.in.readLine());
+			ps.setInt(1, borid);
+
+			System.out.print("\n Copy No: ");
+			copyNo = Integer.parseInt(Main.in.readLine());
+			ps.setInt(4, copyNo);
+
+			System.out.print("\n Out Date: ");
+			outDate = stringToDate(Main.in.readLine());
+			ps.setDate(5, outDate);
+
+			ps.executeUpdate();
+			// commit work 
+			Main.con.commit();
+			ps.close();
+			
+			System.out.println("Call Number: " + callNumber);
+			System.out.println("Copy Number: " + copyNo);
+			System.out.println("Due Date: " + getDueDateAccordingToTodaysDate(bid, outDate).toString());
+		}
+
+		
+		catch (IOException e) {
+			System.out.println("IOException!");
+		}
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+	}
+	
+	static Date stringToDate(String date) throws ParseException{
+		SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
+		java.util.Date utilDate = fm.parse(date);
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		return sqlDate;
+		
+	}
+	
+	static Date getDueDateAccordingToTodaysDate(int bid, Date outDate){
+		
+		Statement 				s;
+		int 					bookTimeLimit = 0;
+		
+		try 
+		{
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT bookTimeLimit "
+										+ "FROM Borrower B, BorrowerType C "
+										+ "WHERE B.type = C.type "
+										+ "AND B.bid = " + bid);
+
+			while (rs.next()){
+				bookTimeLimit = rs.getInt(1);
+				
+			}
+
+			
+		}
+		
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+		
+		String outDateS = outDate.toString();
+		System.out.println("This is the outDate in string: " + outDateS);
+		String[] tokens = outDateS.split("/");
+		
+		GregorianCalendar gregCalendar = new GregorianCalendar(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+		gregCalendar.add(Calendar.DATE, bookTimeLimit*7);
+		java.sql.Date sqlDate = new java.sql.Date(gregCalendar.getTime().getTime());
+		return sqlDate;
+		
+	}
 }
+
