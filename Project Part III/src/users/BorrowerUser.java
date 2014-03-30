@@ -386,7 +386,7 @@ public class BorrowerUser {
 		Date issuedDate;
 		Statement stmt;
 		ResultSet rs;
-
+		
 
 		try {
 			System.out.printf("Put your Borrower ID: ");
