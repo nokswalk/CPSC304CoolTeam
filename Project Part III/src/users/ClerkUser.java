@@ -483,8 +483,14 @@ public class ClerkUser {
 	}
 	
 	private static boolean overdue(Date dueDate){
+		String dueDateString = dueDate.toString();
+		System.out.println("This is the outDate in string: " + dueDateString);
+		String[] tokens = dueDateString.split("-");
+		
+		GregorianCalendar gregCalendar2 = new GregorianCalendar(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+	
 		GregorianCalendar gregCalendar = new GregorianCalendar();
-		if(gregCalendar.after(dueDate))
+		if(gregCalendar.after(gregCalendar2))
 			return true;
 		else
 			return false;
