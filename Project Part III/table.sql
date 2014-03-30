@@ -8,6 +8,12 @@ drop table Book;
 drop table Borrower;
 drop table BorrowerType;
 
+drop sequence bid_c;
+drop sequence callNumber_c;
+drop sequence hid_c;
+drop sequence borid_c;
+drop sequence fid_c;
+
 
 create sequence bid_c
 	start with 1000 
@@ -111,15 +117,15 @@ insert into BorrowerType values
 
 
 insert into Borrower values
-(111, 'aaaa', 'Daniel', '1466 robson st', '6044443333', null, '11111111', {d '2015-09-09'}, 'faculty');
+(111, 'aaaa', 'Daniel', '1466 robson st', '6044443333', null, '11111111', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'student');
 insert into Borrower values
-(222, 'bbbb', 'Vicky', 'vancouver', '6044441111', 'hello@gmaill.com', '22222222', {d '2014-09-09'}, 'staff');
+(222, 'bbbb', 'Vicky', 'vancouver', '6044441111', 'hello@gmaill.com', '22222222', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'staff');
 insert into Borrower values
-(333, 'cccc', 'Zet', 'UBC', '6041233333', 'bye@gmail.com', '33333333', {d '2015-12-12'}, 'general');
+(333, 'cccc', 'Zet', 'UBC', '6041233333', 'bye@gmail.com', '33333333', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'general');
 insert into Borrower values
-(444, 'eeee', 'Rupert', '1234 granville st', '7789999999', 'o3i3@cs.ubc.ca', '44444444', {d '2015-09-09'}, 'staff');
+(444, 'eeee', 'Rupert', '1234 granville st', '7789999999', 'o3i3@cs.ubc.ca', '44444444', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'staff');
 insert into Borrower values
-(555, 'dddd', 'Green', 'Surrey central st', '2744444222', ' ', '55555555', {d '2015-09-09'}, 'student');
+(555, 'dddd', 'Green', 'Surrey central st', '2744444222', ' ', '55555555', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'student');
 
 
 insert into Book values
@@ -150,6 +156,8 @@ insert into BookCopy values
 (400, 1, 'in');
 insert into BookCopy values
 (500, 1, 'in');
+insert into BookCopy values
+(500, 2, 'in');
 insert into BookCopy values
 (600, 1, 'out');
 insert into BookCopy values
@@ -195,13 +203,13 @@ insert into HasSubject values
 
 
 insert into Borrowing values
-(100, 111, 100, 1,'2014-03-29',null);
+(100, 111, 100, 1, TO_DATE('2013-02-20', 'YYYY-MM-DD'), null);
 insert into Borrowing values
-(200, 222, 300, 1,'2014-02-22','2014-03-29');
+(200, 222, 300, 1, TO_DATE('2014-02-22', 'YYYY-MM-DD'), TO_DATE('2014-03-29', 'YYYY-MM-DD'));
 insert into Borrowing values
-(300, 333, 600, 1,'2014-01-29','2014-01-31');
+(300, 333, 600, 1, TO_DATE('2014-01-29', 'YYYY-MM-DD'), TO_DATE('2014-01-31', 'YYYY-MM-DD'));
 insert into Borrowing values
-(400, 444, 999, 2,'2013-09-01','2013-10-10');
+(400, 444, 999, 2, TO_DATE('2013-09-01', 'YYYY-MM-DD'), TO_DATE('2013-10-10', 'YYYY-MM-DD'));
 
 insert into HoldRequest values
-(999, 111, 300, '2014-03-30');
+(999, 111, 300, TO_DATE('2014-03-30', 'YYYY-MM-DD'));
