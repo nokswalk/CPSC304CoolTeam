@@ -18,16 +18,16 @@ create table Borrower
 	password varchar(20) null,
 	name varchar(20) null,
 	address varchar(50) null,
-	phone varchar(10) null,
+	phone char(10) null,
 	emailAddress varchar(50) null,
-	sinOrStNo integer not null,
+	sinOrStNo varchar(10) not null,
 	expiryDate date null,
 	type varchar(10) not null,
 	FOREIGN KEY (type) references BorrowerType);
 
 create table Book
 	(callNumber integer not null PRIMARY KEY,
-	isbn integer not null,
+	isbn char(9) not null,
 	title varchar(50) null,
 	mainAuthor varchar(20) null,
 	publisher varchar(20) null,
@@ -88,6 +88,7 @@ insert into BorrowerType values
 insert into BorrowerType values
 ('general', 2);
 
+
 insert into Borrower values
 ('12345678', 'aaaa', 'Daniel', '1466 robson st', '6044443333', null, '12345678', '2015-09-09', 'faculty');
 insert into Borrower values
@@ -100,17 +101,20 @@ insert into Borrower values
 ('22222222', 'dddd', 'Green', 'Surrey central st', '2744444222', ' ', '12345678', '2015-09-09', 'student');
 
 insert into Book values
-('1000', '01000000', 'Hello Java world', 'Laks', 'UBC','1999');
+(1500, '01000000', 'Hello Java world', 'Laks', 'UBC','1999');
 insert into Book values
-('2000', '02000000', 'Hi Database', 'Laks', 'SFU','2000');
+(2000, '02000000', 'Hi Database', 'Laks', 'SFU','2000');
 insert into Book values
-('3000', '03000000', 'Advanced Data Structure and Algorithm', 'Michelle Ng', 'UBC','2008');
+(3000, '03000000', 'Advanced Data Structure and Algorithm', 'Michelle Ng', 'UBC','2008');
 insert into Book values
-('4000', '04000000', 'Design Patterns', 'Enoch Choi', 'UBC','1999');
+(4000, '04000000', 'Design Patterns', 'Enoch Choi', 'UBC','1999');
 insert into Book values
-('5000', '05000000', 'Hi C++', 'Laks', 'UBC','2014');
+(5000, '05000000', 'Hi C++', 'Laks', 'UBC','2014');
 insert into Book values
-('6000', '06000000', 'Hardware and Software', 'Tony Chu', 'PublisherA','2002');
+(6000, '06000000', 'Hardware and Software', 'Tony Chu', 'PublisherA','2002');
+insert into Book values
+(1000, '123456789', 'ABCs', 'Sammy Foo', 'Foo Readers', 2000);
+
 
 insert into BookCopy values
 (1000, 1, 'in');
@@ -123,13 +127,13 @@ insert into HasSubject values
 (1000, 'kindergarten');
 
 insert into Borrowing values
-('11111','12345678','1000','2','2014-03-29',null);
+('11111','12345678',1000,'2','2014-03-29',null);
 insert into Borrowing values
-('22222','12345678','1000','1','2014-02-22','2014-03-29');
+('22222','12345678',1000,'1','2014-02-22','2014-03-29');
 insert into Borrowing values
-('33333','12345678','1000','1','2014-01-29','2014-01-31');
+('33333','12345678',1000,'1','2014-01-29','2014-01-31');
 insert into Borrowing values
-('44444','12345678','1000','1','2013-09-01','2013-10-10');
+('44444','12345678',1000,'1','2013-09-01','2013-10-10');
 
 insert into HoldRequest values
-('1111','12345678','1000', '2014-03-30');
+('1111','12345678',1000, '2014-03-30');
