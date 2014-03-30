@@ -23,7 +23,7 @@ public class LibrarianUser {
 			while (!quit) {
 				System.out.print("\n\nPlease choose one of the following: \n");
 				System.out.print("1.  Add book\n");
-				//System.out.println("2. Generate a report of all checked out books\n");
+				System.out.println("2. Generate a report of all checked out books\n"); 
 //				System.out.println("3. Generate a report of the most popular items for a given year\n");
 				System.out.print("4.  Quit\n>>");
 
@@ -33,7 +33,7 @@ public class LibrarianUser {
 
 				switch (choice) {
 				case 1:  addBook(); break;
-				case 2:  reportCheckedOutBooks(); break; // TODO reportCheckedOutBooks()
+				case 2:  reportCheckedOutBooks(); break; // TODO reportCheckedOutBooks() NOT DONE YET
 				case 3:  ; break; // TODO mostPopular()
 				case 4:  quit = true; 
 				}
@@ -335,7 +335,7 @@ public class LibrarianUser {
 			// when borrowing's inDate is
 			// null.
 			System.out.println("List of items you currently borrowed:");
-			rs = statement.executeQuery("SELECT A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit"
+			rs = statement.executeQuery("SELECT A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit "
 							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
 							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
 							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "

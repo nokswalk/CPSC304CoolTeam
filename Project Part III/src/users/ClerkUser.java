@@ -360,7 +360,7 @@ public class ClerkUser {
 			statement = Main.con.createStatement();
 
 			System.out.println("List of items overdue and the borrowers who have checked them out:");
-			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit"
+			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit "
 							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
 							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
 							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
