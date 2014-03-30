@@ -12,19 +12,19 @@ drop table BorrowerType;
 create sequence bid_c
 	start with 1000 
 	increment by 1;
-	
+
 create sequence callNumber_c
 	start with 1000
 	increment by 1;
-	
+
 create sequence hid_c
 	start with 1000
 	increment by 1;
-	
+
 create sequence borid_c
 	start with 1000
 	increment by 1;
-	
+
 create sequence fid_c
 	start with 1000
 	increment by 1;
