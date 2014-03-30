@@ -257,26 +257,26 @@ public class ClerkUser {
 		PreparedStatement  ps;
 
 		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrowing VALUES (?,?,?,?,?,?)");
+			ps = Main.con.prepareStatement("INSERT INTO Borrowing VALUES (borid_c.nextval,?,?,?,?,?)");
 
-			System.out.println("Borrowing ID for " + callNumber + ":");
-			borid = Integer.parseInt(Main.in.readLine());
-			ps.setInt(1, borid);
+
 
 			System.out.println("Copy No: ");
 			copyNo = Integer.parseInt(Main.in.readLine());
-			ps.setInt(4, copyNo);
+			ps.setInt(3, copyNo);
 
 			System.out.println("Out Date(dd/mm/yy): ");
 			outDate = stringToDate(Main.in.readLine());
-			ps.setDate(5, outDate);
+			ps.setDate(4, outDate);
 			
 			//!!
-			ps.setInt(2, bid);
-			ps.setInt(3, callNumber);
-			ps.setDate(6, null);
+			ps.setInt(1, bid);
+			ps.setInt(2, callNumber);
+			ps.setDate(5, null);
 
 			ps.executeUpdate();
+			updateBookCopyStatus(callNumber, copyNo);
+
 			// commit work 
 			Main.con.commit();
 			ps.close();
@@ -304,6 +304,43 @@ public class ClerkUser {
 			}
 		}
 	}
+
+    private static void updateBookCopyStatus(int callNumber, int copyNo)
+    {
+
+	String             status = "out";
+	PreparedStatement  ps;
+	  
+	try
+	{
+	  ps = Main.con.prepareStatement("UPDATE bookCopy SET status = 'out' WHERE callNumber = ? AND copyNo = ?");
+	
+
+	  //ps.setString(1, status);
+	  ps.setInt(1, callNumber);
+	  ps.setInt(2, copyNo);
+	  ps.execute();
+
+	  Main.con.commit();
+
+	  ps.close();
+	}
+	catch (SQLException ex)
+	{
+	    System.out.println("Message: " + ex.getMessage());
+	    
+	    try 
+	    {
+		Main.con.rollback();	
+	    }
+	    catch (SQLException ex2)
+	    {
+		System.out.println("Message: " + ex2.getMessage());
+		System.exit(-1);
+	    }
+	}	
+    }
+
 	
 	static Date stringToDate(String date) {
 		try {SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
@@ -352,7 +389,6 @@ public class ClerkUser {
 		}
 		
 		String outDateS = outDate.toString();
-		System.out.println("This is the outDate in string: " + outDateS);
 		String[] tokens = outDateS.split("-");
 		
 		GregorianCalendar gregCalendar = new GregorianCalendar(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
