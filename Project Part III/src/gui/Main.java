@@ -7,6 +7,7 @@ import java.sql.*;
 
 import javax.swing.*;
 
+import users.BorrowerUser;
 import users.ClerkUser;
 import users.LibrarianUser;
 
@@ -212,7 +213,7 @@ public class Main implements ActionListener {
 
 		switch(choice)
 		{
-		   case 1:  ; break;
+		   case 1:  BorrowerUser.main(); break;
 		   case 2:  ClerkUser.main(); break;
 		   case 3:  LibrarianUser.main(); break;
 		   case 4:  quit = true; 

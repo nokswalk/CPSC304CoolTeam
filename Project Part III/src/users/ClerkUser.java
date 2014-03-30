@@ -17,6 +17,7 @@ public class ClerkUser {
 	 * Uses buffer line reader and connection established in Main class.
 	 */
 	public static void main() {
+		
 		int choice;
 		boolean quit;
 
@@ -69,60 +70,79 @@ public class ClerkUser {
 	 * User should provide all required info.
 	 */
 	private static void addBorrower() {
-		int                bid;
+		
+		// attributes of new borrower
 		String             password; 
 		String             name;
 		String             address;
-		String                phone;
+		String             phone;
 		String             emailAddress;
-		int                sinOrStNo;
+		String             sinOrStNo;
 		Date               expiryDate;
 		String             type;
+		
+		Statement          s;   // to check if borrower already exists in database
 
-		PreparedStatement  ps;
+		PreparedStatement  ps;  // to add new borrower
 
 		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (?,?,?,?,?,?,?,?,?)");
+			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,{d ?},?)");
 
-			System.out.print("\n Borrower ID: ");
-			bid = Integer.parseInt(Main.in.readLine());
-			ps.setInt(1, bid);
-
-			System.out.print("\n Borrower password: ");
+			System.out.print("Borrower password: ");
 			password = Main.in.readLine();
 			ps.setString(2, password);
 
-			System.out.print("\n Borrower name: ");
+			System.out.print("Borrower name: ");
 			name = Main.in.readLine();
 			ps.setString(3, name);
 
-			System.out.print("\n Borrower address: ");
+			System.out.print("Borrower address: ");
 			address = Main.in.readLine();
 			ps.setString(4, address);
 
-			System.out.print("\n Borrower phone number: ");
+			System.out.print("Borrower phone number: ");
 			phone = Main.in.readLine();
 			ps.setString(5,  phone);
 
-			System.out.print("\n Borrower email address: ");
+			System.out.print("Borrower email address: ");
 			emailAddress = Main.in.readLine();
 			ps.setString(6, emailAddress);
 
-			System.out.print("\n Borrower SIN or student number: ");
-			sinOrStNo = Integer.parseInt(Main.in.readLine());
-			ps.setInt(7, sinOrStNo);
+			System.out.print("Borrower SIN or student number: ");
+			sinOrStNo = Main.in.readLine();
+			
+			// check if this borrower already in database
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT bid "
+										+ "FROM Borrower "
+										+ "WHERE sinOrStNo=" + sinOrStNo);
+			if (rs.next()) {
+				System.out.println("An account for this borrower already exists in the library database.");
+				s.close();
+				ps.close();
+				return;
+			}
+			
+			ps.setString(7, sinOrStNo);
 
-			System.out.print("\n Borrower expiry date: ");  // Clerk should set to 2 years from today
-			expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format yyyy-mm-dd
-			ps.setDate(8, expiryDate);
+			// TODO need to convert between JDBC and Oracle date types, doesn't run as is.
+			System.out.print("Borrower expiry date (yyyy-mm-dd): ");  // Clerk should set to 2 years from today
+			//expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format yyyy-mm-dd
+			//ps.setDate(8, expiryDate);
+			String date = Main.in.readLine();
+			ps.setString(8, date);
 
-			System.out.print("\n Borrower type: ");
+			System.out.print("Borrower type: ");
 			type = Main.in.readLine();
 			ps.setString(9, type);
 
+			// add borrower
 			ps.executeUpdate();
+			
 			// commit work 
 			Main.con.commit();
+			System.out.println("Borrower has been added successfully.");
+			
 			ps.close();
 		}
 
