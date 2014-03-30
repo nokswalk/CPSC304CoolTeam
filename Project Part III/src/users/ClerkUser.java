@@ -410,7 +410,7 @@ public class ClerkUser {
 			statement = Main.con.createStatement();
 
 			System.out.println("List of items overdue and the borrowers who have checked them out:");
-			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit "
+			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate, "
 							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
 							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
 							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
@@ -424,7 +424,7 @@ public class ClerkUser {
 			System.out.println(" ");
 
 			// display column names;
-			for (int i = 0; i < numCols-2; i++) {
+			for (int i = 0; i < numCols-1; i++) {
 				// get column name and print it
 				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
 			}
@@ -435,9 +435,6 @@ public class ClerkUser {
 			while (rs.next()) {
 				Integer bid = rs.getInt("bid");
 				Date outDate = rs.getDate("outDate");
-				Integer bookTimeLimit = rs.getInt("bookTimeLimit");
-				// pseudo code: Date dueDate = outDate + bookTimeLimit;
-				// System.out.printf("%-20.20s\n", dueDate);
 				if (overdue(getDueDate(bid, outDate))) {
 					System.out.printf("%-9.9s", bid);
 					String name = rs.getString("name");
@@ -474,6 +471,8 @@ public class ClerkUser {
 				}
 			}
 
+			//TODO: Should be able to send email to each user or all the user.
+			
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
@@ -482,7 +481,7 @@ public class ClerkUser {
 		}
 	}
 	
-	private static boolean overdue(Date dueDate){
+	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
 		System.out.println("This is the outDate in string: " + dueDateString);
 		String[] tokens = dueDateString.split("-");

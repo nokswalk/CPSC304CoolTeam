@@ -335,7 +335,7 @@ public class LibrarianUser {
 			// when borrowing's inDate is
 			// null.
 			System.out.println("List of items you currently borrowed:");
-			rs = statement.executeQuery("SELECT A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit "
+			rs = statement.executeQuery("SELECT A.callNumber, C.copyNo, A.title, B.outDate, B.bid "
 							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
 							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
 							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "
@@ -386,12 +386,14 @@ public class LibrarianUser {
 					System.out.printf("%-20.20s", outDate);
 				}
 				
-				Integer bookTimeLimit = rs.getInt("bookTimeLimit");
-				//pseudo code: Date dueDate = outDate + bookTimeLimit;
-				//System.out.printf("%-20.20s\n", dueDate);		
+				Integer bid = rs.getInt("bid");
+				Date duedate = ClerkUser.getDueDate(bid,outDate);			
+				System.out.printf("%-20.20s\n", duedate);
 				
-				//TODO: check if the item is overdue using gregorianCalendar(), and let it flags.
-
+				if(ClerkUser.overdue(duedate)){
+					//TODO: let it flags since
+				}
+				
 				//TODO: If a subject is provided the report lists only books related to that subject, otherwise all the books that are out are listed by the report.
 				
 			}
