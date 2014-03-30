@@ -100,7 +100,6 @@ public class LibrarianUser {
 	private static void addNewBook() {
 
 		// attributes of new book
-		int                callNumber;
 		String 	           isbn;
 		String             title;
 		String             mainAuthor;
@@ -120,17 +119,12 @@ public class LibrarianUser {
 
 		try {
 
-			ps1 = Main.con.prepareStatement("INSERT INTO Book VALUES (?,?,?,?,?,?)");
-			ps2 = Main.con.prepareStatement("INSERT INTO BookCopy VALUES (?,?,?)");
-			ps3 = Main.con.prepareStatement("INSERT INTO HasSubject VALUES (?,?)");
-			ps4 = Main.con.prepareStatement("INSERT INTO HasAuthor VALUES (?,?)");
+			ps1 = Main.con.prepareStatement("INSERT INTO Book VALUES (bid_c.nextval,?,?,?,?,?)");
+			ps2 = Main.con.prepareStatement("INSERT INTO BookCopy VALUES (bid_c.nextval,?,?)");
+			ps3 = Main.con.prepareStatement("INSERT INTO HasSubject VALUES (bid_c.nextval,?)");
+			ps4 = Main.con.prepareStatement("INSERT INTO HasAuthor VALUES (bid_c,?)");
 
 			// new book
-			// TODO use a sequence 
-			System.out.print("Book call number: ");
-			callNumber = Integer.parseInt(Main.in.readLine());
-			ps1.setInt(1, callNumber);
-
 			System.out.print("Book ISBN: ");
 			isbn = Main.in.readLine();
 
@@ -170,7 +164,6 @@ public class LibrarianUser {
 
 
 			// new book copy
-			ps2.setInt(1, callNumber);
 			ps2.setInt(2, 1);
 			ps2.setString(3, "in");
 			
@@ -182,9 +175,7 @@ public class LibrarianUser {
 			String temp = Main.in.readLine();
 			subjects = Arrays.asList(temp.split(","));
 
-			for (String subject : subjects) {
-				ps3.setInt(1, callNumber);
-				
+			for (String subject : subjects) {				
 				if (subject.length() == 0) {
 					ps3.setString(2, null);
 				} else {
@@ -202,9 +193,7 @@ public class LibrarianUser {
 			if (temp2.length() != 0) {
 				authors = Arrays.asList(temp2.split(","));
 				
-				for (String author: authors) {
-					ps4.setInt(1, callNumber);
-					
+				for (String author: authors) {					
 					if (author.length() == 0) {
 						ps4.setString(2, null);
 					} else {
@@ -246,7 +235,6 @@ public class LibrarianUser {
 	}
 
 	private static void addNewBookCopy() {
-		// TODO Auto-generated method stub
 
 		// attributes of new copy
 		int                callNumber = 0;
