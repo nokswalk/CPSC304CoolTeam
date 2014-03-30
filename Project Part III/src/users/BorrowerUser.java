@@ -425,9 +425,9 @@ public class BorrowerUser {
 
 				title = rs.getString("title");
 				if (rs.wasNull()) {
-					System.out.printf("%-50.50s", " ");
+					System.out.printf("%-25.25s", " ");
 				} else {
-					System.out.printf("%-50.50s", title);
+					System.out.printf("%-25.25s", title);
 				}
 
 				isbn = rs.getString("isbn");
@@ -522,9 +522,9 @@ public class BorrowerUser {
 				// simplified output formatting; truncation may occur
 				title = rs.getString("title");
 				if (rs.wasNull()) {
-					System.out.printf("%-50.50s", " ");
+					System.out.printf("%-25.25s", " ");
 				} else {
-					System.out.printf("%-50.50s", title);
+					System.out.printf("%-25.25s", title);
 				}
 				issuedDate = rs.getDate("issuedDate");
 				if (rs.wasNull()) {

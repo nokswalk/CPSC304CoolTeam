@@ -410,7 +410,7 @@ public class ClerkUser {
 			statement = Main.con.createStatement();
 
 			System.out.println("List of items overdue and the borrowers who have checked them out:");
-			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate, "
+			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate "
 							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
 							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
 							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
@@ -435,7 +435,8 @@ public class ClerkUser {
 			while (rs.next()) {
 				Integer bid = rs.getInt("bid");
 				Date outDate = rs.getDate("outDate");
-				if (overdue(getDueDate(bid, outDate))) {
+				Date duedate = getDueDate(bid, outDate);
+				if (overdue(duedate)) {
 					System.out.printf("%-9.9s", bid);
 					String name = rs.getString("name");
 					if(rs.wasNull())
@@ -468,6 +469,7 @@ public class ClerkUser {
 					} else {
 						System.out.printf("%-30.30s", title);
 					}
+					System.out.printf("%-20.20s", duedate);
 				}
 			}
 
@@ -483,7 +485,7 @@ public class ClerkUser {
 	
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
-		System.out.println("This is the outDate in string: " + dueDateString);
+		//System.out.println("This is the outDate in string: " + dueDateString);
 		String[] tokens = dueDateString.split("-");
 		
 		GregorianCalendar gregCalendar2 = new GregorianCalendar(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
