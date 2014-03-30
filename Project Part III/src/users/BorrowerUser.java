@@ -21,7 +21,7 @@ public class BorrowerUser {
 			while (!quit) {
 				System.out.print("\n\nPlease choose one of the following: \n");
 				System.out.print("1.  Book search\n");
-				//System.out.print("2.  Check account\n");
+				System.out.print("2.  Check account\n");
 				//System.out.print("3.  Place a hold request\n");
 				//System.out.print("4.  Pay fines\n");
 				System.out.print("5.  Quit\n>>");
@@ -375,7 +375,7 @@ public class BorrowerUser {
 	 * the hold requests that have been placed by the borrower.
 	 */
 	private static void checkAccount() {
-		String userBid;
+		int userBid;
 
 		String title;
 		String isbn;
@@ -385,11 +385,11 @@ public class BorrowerUser {
 		Date issuedDate;
 		Statement stmt;
 		ResultSet rs;
-
+		
 
 		try {
 			System.out.printf("Put your Borrower ID: ");
-			userBid = Main.in.readLine(); //TODO: I should put constraint.
+			userBid = Integer.parseInt(Main.in.readLine()); //TODO: I should put constraint.
 
 			stmt = Main.con.createStatement();
 
@@ -400,7 +400,7 @@ public class BorrowerUser {
 					+ "WHERE B.bid = D.bid AND B.callNumber = C.callNumber "
 					+ "AND B.copyNo = C.copyNo AND C.callNumber = A.callNumber AND B.inDate IS NULL "
 					+ "AND D.bid=" + userBid
-					+ "GROUP BY A.title");
+					+ "ORDER BY A.title ASC");
 
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -447,12 +447,12 @@ public class BorrowerUser {
 			}
 
 			//total outstanding fine
-			System.out.println("Outstanding fine:");
-			rs = stmt.executeQuery("SELECT A.amount, A.issuedDate, D.title "
+			System.out.println("\nOutstanding fine:");
+			rs = stmt.executeQuery("SELECT A.amount, A.issuedDate, E.title "
 					+ "FROM Fine A, Borrowing B, Borrower C, BookCopy D, Book E "
 					+ "WHERE A.borid=B.borid AND B.bid=C.bid AND D.callNumber=E.callNumber "
 					+ "AND B.callNumber=D.callNumber AND B.copyNo=D.copyNo "
-					+ "AND A.payDate IS NULL AND C.bid=" + userBid);
+					+ "AND A.paidDate IS NULL AND C.bid=" + userBid);
 			// get info on ResultSet
 			rsmd = rs.getMetaData();
 
