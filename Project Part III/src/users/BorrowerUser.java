@@ -383,19 +383,30 @@ public class BorrowerUser {
 		int amount;
 		int totalAmount = 0;
 		Date issuedDate;
-		Statement stmt;
-		ResultSet rs;
+		
+		Statement s;
 		
 
 		try {
-			System.out.printf("Put your Borrower ID: ");
-			userBid = Integer.parseInt(Main.in.readLine()); //TODO: I should put constraint.
+			s = Main.con.createStatement();
+			
+			System.out.printf("Please enter your Borrower ID: ");
+			userBid = Integer.parseInt(Main.in.readLine());
+			
+			// check that this is a valid Borrower account
+			ResultSet rs = s.executeQuery("SELECT * "
+										 + "FROM Borrower "
+										 + "WHERE bid=" + userBid);
+			if (rs.next() == false) {
+				System.out.println("This is not a valid borrower ID.");
+				s.close();
+				return;
+			}
 
-			stmt = Main.con.createStatement();
 
 			// query of title, isbn and mainAuthor when borrowing's inDate is null.
 			System.out.println("List of items you currently borrowed:");
-			rs = stmt.executeQuery("SELECT A.title, A.isbn, A.mainAuthor "
+			rs = s.executeQuery("SELECT A.title, A.isbn, A.mainAuthor "
 					+ "FROM Book A, Borrowing B, BookCopy C, Borrower D "
 					+ "WHERE B.bid = D.bid AND B.callNumber = C.callNumber "
 					+ "AND B.copyNo = C.copyNo AND C.callNumber = A.callNumber AND B.inDate IS NULL "
@@ -448,7 +459,7 @@ public class BorrowerUser {
 
 			//total outstanding fine
 			System.out.println("\nOutstanding fine:");
-			rs = stmt.executeQuery("SELECT A.amount, A.issuedDate, E.title "
+			rs = s.executeQuery("SELECT A.amount, A.issuedDate, E.title "
 					+ "FROM Fine A, Borrowing B, Borrower C, BookCopy D, Book E "
 					+ "WHERE A.borid=B.borid AND B.bid=C.bid AND D.callNumber=E.callNumber "
 					+ "AND B.callNumber=D.callNumber AND B.copyNo=D.copyNo "
@@ -500,7 +511,7 @@ public class BorrowerUser {
 
 			//Hold Request List
 			System.out.println("HOLD REQUEST LIST placed by you:");
-			rs = stmt.executeQuery("SELECT B.title, A.issuedDate "
+			rs = s.executeQuery("SELECT B.title, A.issuedDate "
 					+ "FROM HoldRequest A, Book B, Borrower C "
 					+ "WHERE A.callNumber=B.callNumber AND A.bid=C.bid "
 					+ "AND C.bid=" + userBid);
@@ -541,7 +552,7 @@ public class BorrowerUser {
 
 			// close the statement;
 			// the ResultSet will also be closed
-			stmt.close();
+			s.close();
 		} catch (SQLException ex) {
 			System.out.println("Message: " + ex.getMessage());
 		} catch (IOException e) {
