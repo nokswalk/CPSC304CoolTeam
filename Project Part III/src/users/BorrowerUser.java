@@ -4,6 +4,8 @@ import gui.Main;
 
 import java.io.IOException;
 import java.sql.*;
+import java.text.ParseException;
+import java.util.GregorianCalendar;
 
 public class BorrowerUser {
 
@@ -22,8 +24,8 @@ public class BorrowerUser {
 				System.out.print("\n\nPlease choose one of the following: \n");
 				System.out.print("1.  Book search\n");
 				System.out.print("2.  Check account\n");
-				//System.out.print("3.  Place a hold request\n");
-				//System.out.print("4.  Pay fines\n");
+				System.out.print("3.  Place a hold request\n");
+				System.out.print("4.  Pay fines\n");
 				System.out.print("5.  Quit\n>>");
 
 				choice = Integer.parseInt(Main.in.readLine());
@@ -33,8 +35,8 @@ public class BorrowerUser {
 				switch(choice) {
 				case 1:  searchBook(); break;
 				case 2:  checkAccount(); break;
-				case 3:  ; break; // TODO requestHold()
-				case 4:  ; break; // TODO payFine()
+				case 3:  requestHold(); break;
+				case 4:  payFine(); break;
 				case 5:  quit = true; 
 				}
 			}
@@ -423,9 +425,9 @@ public class BorrowerUser {
 
 				title = rs.getString("title");
 				if (rs.wasNull()) {
-					System.out.printf("%-50.50s", " ");
+					System.out.printf("%-25.25s", " ");
 				} else {
-					System.out.printf("%-50.50s", title);
+					System.out.printf("%-25.25s", title);
 				}
 
 				isbn = rs.getString("isbn");
@@ -520,9 +522,9 @@ public class BorrowerUser {
 				// simplified output formatting; truncation may occur
 				title = rs.getString("title");
 				if (rs.wasNull()) {
-					System.out.printf("%-50.50s", " ");
+					System.out.printf("%-25.25s", " ");
 				} else {
-					System.out.printf("%-50.50s", title);
+					System.out.printf("%-25.25s", title);
 				}
 				issuedDate = rs.getDate("issuedDate");
 				if (rs.wasNull()) {
@@ -586,5 +588,296 @@ public class BorrowerUser {
 			return null;
 		}
 	}
+	
+private static void requestHold() {
+		int					bid = 0;
+		int					callNumber = 0;
+		Statement			s;
+		Statement			s2;
+		
+		System.out.println("Borrower ID: ");
+		try {
+			bid = Integer.parseInt(Main.in.readLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+		System.out.println("Book call number: ");
+		try {
+			callNumber = Integer.parseInt(Main.in.readLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+		
+		try 
+		{
+			s2 = Main.con.createStatement();
+			ResultSet rs2 = s2.executeQuery("SELECT copyNo  "
+										+ "FROM BookCopy  "
+										+ "WHERE callNumber = " + callNumber
+										+ "AND status = 'in'");
+
+			if (rs2.next()){
+				System.out.println("Book is available for borrowing");
+				return;
+			}
+			else {
+
+				s = Main.con.createStatement();
+				ResultSet rs = s.executeQuery("SELECT copyNo  "
+						+ "FROM BookCopy  "
+						+ "WHERE callNumber = " + callNumber
+						+ "AND status = 'out'");
+
+				if (rs.next()){
+				updateBookCopyStatus(callNumber, rs.getInt(1));
+				addHoldRequest(bid, callNumber);
+				System.out.println("Hold request successful! An email will be sent to you when the book is available.");
+				}
+			else {
+					System.out.println("No books available for hold");
+				}
+			
+			}
+		}
+
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+	}
+
+private static void updateBookCopyStatus(int callNumber, int copyNo)
+{
+
+	PreparedStatement  ps;
+
+	try
+	{
+		ps = Main.con.prepareStatement("UPDATE bookCopy SET status = 'on hold' WHERE callNumber = ? AND copyNo = ?");
+
+
+		ps.setInt(1, callNumber);
+		ps.setInt(2, copyNo);
+		ps.execute();
+
+		Main.con.commit();
+
+		ps.close();
+	}
+	catch (SQLException ex)
+	{
+		System.out.println("Message: " + ex.getMessage());
+
+		try 
+		{
+			Main.con.rollback();	
+		}
+		catch (SQLException ex2)
+		{
+			System.out.println("Message: " + ex2.getMessage());
+			System.exit(-1);
+		}
+	}	
+}
+
+private static void addHoldRequest(int bid, int callNumber) {
+
+
+	java.sql.Date 			issuedDate;
+	PreparedStatement  ps;
+
+	try {
+		ps = Main.con.prepareStatement("INSERT INTO holdRequest VALUES (hid_c.nextval,?,?,?)");
+
+		
+		ps.setInt(1, bid);
+		ps.setInt(2, callNumber);
+		GregorianCalendar gregCalendar = new GregorianCalendar();
+		issuedDate = new java.sql.Date(gregCalendar.getTime().getTime());
+		ps.setDate(3, issuedDate);
+
+
+		ps.executeUpdate();
+
+		// commit work 
+		Main.con.commit();
+		ps.close();
+
+	}
+
+
+	catch (SQLException ex) {
+		System.out.println("Message: " + ex.getMessage());
+		try 
+		{
+			// undo the insert
+			Main.con.rollback();	
+		}
+		catch (SQLException ex2)
+		{
+			System.out.println("Message: " + ex2.getMessage());
+			System.exit(-1);
+		}
+	}
+}
+
+private static void payFine()
+{
+	int		   bid = 0;
+	Statement  s;
+	int		   fid = 0;
+	String	   ans = "";
+
+	try
+	{
+		
+		System.out.print("Borrower ID: ");
+		try {
+			bid = Integer.parseInt(Main.in.readLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+		s = Main.con.createStatement();
+
+		ResultSet rs = s.executeQuery("SELECT fid, amount, issuedDate "
+				+ "FROM Fine F, Borrowing B "
+				+ "WHERE F.borid = B.borid "
+				+ "AND B.bid = " + bid);
+		
+		// get info on ResultSet
+		ResultSetMetaData rsmd = rs.getMetaData();
+
+		// get number of columns
+		int numCols = rsmd.getColumnCount();
+
+		System.out.println(" ");
+
+		
+		// display column names;
+		for (int i = 0; i < numCols; i++)
+		{
+			// get column name and print it
+
+			System.out.printf("%-15s", rsmd.getColumnName(i+1));    
+		}
+		
+		System.out.println(" ");
+
+		while(rs.next())
+		{
+			// simplified output formatting; truncation may occur
+
+			fid = rs.getInt(1);
+			System.out.printf("%-15.15s", fid);
+
+			double amount = rs.getDouble(2);
+			System.out.printf("%-15.15s", amount);
+
+			Date issuedDate = rs.getDate(3);
+			System.out.printf("%-15.15s", issuedDate);
+
+		}
+		System.out.println("\n\nSelect ID of fine that will be paid for: ");
+		try {
+			fid = Integer.parseInt(Main.in.readLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+		System.out.println("Proceed with payment?(y/n)");
+		try {
+			ans = Main.in.readLine();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		if (ans.equals("y")){
+			updateFine(fid);
+			System.out.println("Fine has been paid.");
+		}
+		else{
+			System.out.println("Payment cancelled.");
+		}
+	}
+
+	catch (SQLException ex) {
+		System.out.println("Message: " + ex.getMessage());
+		try 
+		{
+			// undo the insert
+			Main.con.rollback();	
+		}
+		catch (SQLException ex2)
+		{
+			System.out.println("Message: " + ex2.getMessage());
+			System.exit(-1);
+		}
+	}
+}
+
+private static void updateFine(int fid)
+{
+
+	Date			   paidDate;
+	PreparedStatement  ps;
+
+	try
+	{
+		ps = Main.con.prepareStatement("UPDATE fine SET paidDate = ? WHERE fid = ?");
+
+
+		GregorianCalendar gregCalendar = new GregorianCalendar();
+		paidDate = new java.sql.Date(gregCalendar.getTime().getTime());
+		ps.setDate(1, paidDate);
+		ps.setInt(2, fid);
+		ps.execute();
+
+		Main.con.commit();
+
+		ps.close();
+	}
+	catch (SQLException ex)
+	{
+		System.out.println("Message: " + ex.getMessage());
+
+		try 
+		{
+			Main.con.rollback();	
+		}
+		catch (SQLException ex2)
+		{
+			System.out.println("Message: " + ex2.getMessage());
+			System.exit(-1);
+		}
+	}	
+}
+
 }
 

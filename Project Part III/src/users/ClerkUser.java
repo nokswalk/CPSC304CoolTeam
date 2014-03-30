@@ -278,21 +278,22 @@ public class ClerkUser {
 
 			ps.setInt(1, bid);
 			ps.setInt(2, callNumber);
-
-			System.out.print("Copy number of item " + callNumber + ": ");
+			
+			System.out.print("Copy number of item" + callNumber + ": ");
 			copyNo = Integer.parseInt(Main.in.readLine());
-			ps.setInt(3, copyNo);
 
 			ps.setDate(4, outDate);		
 			System.out.println("got past insert");
 
 			ps.executeUpdate();
 
+			updateBookCopyStatus(callNumber, copyNo);
+
 			// commit work 
 			Main.con.commit();
 			ps.close();
 		}
-
+		
 		catch (IOException e) {
 			System.out.println("IOException!");
 		}
@@ -311,7 +312,44 @@ public class ClerkUser {
 		}
 	}
 
-	public static Date stringToDate(String date) {
+    private static void updateBookCopyStatus(int callNumber, int copyNo)
+    {
+
+	String             status = "out";
+	PreparedStatement  ps;
+	  
+	try
+	{
+	  ps = Main.con.prepareStatement("UPDATE bookCopy SET status = 'out' WHERE callNumber = ? AND copyNo = ?");
+	
+
+	  //ps.setString(1, status);
+	  ps.setInt(1, callNumber);
+	  ps.setInt(2, copyNo);
+	  ps.execute();
+
+	  Main.con.commit();
+
+	  ps.close();
+	}
+	catch (SQLException ex)
+	{
+	    System.out.println("Message: " + ex.getMessage());
+	    
+	    try 
+	    {
+		Main.con.rollback();	
+	    }
+	    catch (SQLException ex2)
+	    {
+		System.out.println("Message: " + ex2.getMessage());
+		System.exit(-1);
+	    }
+	}	
+    }
+
+	
+	static Date stringToDate(String date) {
 		try {SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
 		java.util.Date utilDate = fm.parse(date);
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
@@ -491,11 +529,13 @@ public class ClerkUser {
 			statement = Main.con.createStatement();
 
 			System.out.println("List of items overdue and the borrowers who have checked them out:");
-			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit "
-					+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
-					+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
-					+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
-					+ "ORDER BY E.bid, E.name ASC");
+
+			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate "
+							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
+							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
+							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
+							+ "ORDER BY E.bid, E.name ASC");
+			
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -505,7 +545,7 @@ public class ClerkUser {
 			System.out.println(" ");
 
 			// display column names;
-			for (int i = 0; i < numCols-2; i++) {
+			for (int i = 0; i < numCols-1; i++) {
 				// get column name and print it
 				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
 			}
@@ -516,9 +556,10 @@ public class ClerkUser {
 			while (rs.next()) {
 				Integer bid = rs.getInt("bid");
 				Date outDate = rs.getDate("outDate");
-				// pseudo code: Date dueDate = outDate + bookTimeLimit;
-				// System.out.printf("%-20.20s\n", dueDate);
-				if (overdue(getDueDate(bid, outDate))) {
+				Date duedate = getDueDate(bid, outDate);
+				
+				if (overdue(duedate)) {
+					
 					System.out.printf("%-9.9s", bid);
 					String name = rs.getString("name");
 					if(rs.wasNull())
@@ -551,9 +592,12 @@ public class ClerkUser {
 					} else {
 						System.out.printf("%-30.30s", title);
 					}
+					System.out.printf("%-20.20s", duedate);
 				}
 			}
 
+			//TODO: Should be able to send email to each user or all the user.
+			
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
@@ -565,6 +609,7 @@ public class ClerkUser {
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
 		System.out.println("Item due: " + dueDateString);
+
 		String[] tokens = dueDateString.split("-");
 
 		GregorianCalendar gregCalendar2 = new GregorianCalendar(Integer.parseInt(tokens[0]), 
