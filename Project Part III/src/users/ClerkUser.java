@@ -150,7 +150,7 @@ public class ClerkUser {
 	 * Checks out items borrowed by a borrower.  Borrowers provide their bid and a list
 	 * of callNumbers and copyNos of the items they wish to check out. 
 	 */
-	private static void checkOutItems() throws ParseException {
+	private static void checkOutItems() {
 		int 			   bid;
 		List<String>	   callNumbers;
 		Statement  		   s;
@@ -168,8 +168,8 @@ public class ClerkUser {
 
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bid "
-					+ "FROM Borrower "
-					+ "WHERE bid = " + bid);
+										+ "FROM Borrower "
+										+ "WHERE bid = " + bid);
 			// check that bid is valid
 			if (!rs.next()){
 				System.out.println("Invalid borrower ID.");
@@ -185,8 +185,8 @@ public class ClerkUser {
 			// after checking out items using helper function, 
 			// display all that were successfully checked out
 			ResultSet rs2 = s.executeQuery("SELECT callNumber, copyNo "
-					+ "FROM Borrowing "
-					+ "WHERE bid=" + bid + " AND outDate=" + sqlToday.toString());
+										 + "FROM Borrowing "
+										 + "WHERE bid=" + bid + " AND outDate=TO_DATE('" + sqlToday + "', 'YYYY-MM-DD')");
 
 			// display columns
 			ResultSetMetaData rsmd = rs2.getMetaData();
@@ -230,45 +230,7 @@ public class ClerkUser {
 		}
 	}
 
-	private static void checkOutItem(int bid, int callNumber, Date outDate) throws ParseException {
-
-		Statement			s;
-
-		try 
-		{
-			//check if book is in library
-			s = Main.con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT callNumber "
-					+ "FROM BookCopy  "
-					+ "WHERE status = 'in' "
-					+ "AND callNumber = " + callNumber);
-
-			if (!rs.next()){
-				System.out.println("Book not available for borrowing at this time.");
-
-			}
-			else {
-				addBorrowingHelper(bid, callNumber, outDate);
-			}
-
-		}
-
-		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
-			try 
-			{
-				// undo the insert
-				Main.con.rollback();	
-			}
-			catch (SQLException ex2)
-			{
-				System.out.println("Message: " + ex2.getMessage());
-				System.exit(-1);
-			}
-		}
-	}
-
-	private static void addBorrowingHelper(int bid, int callNumber, Date outDate) throws ParseException {
+	private static void checkOutItem (int bid, int callNumber, Date outDate) {
 
 		int				   copyNo;
 		PreparedStatement  ps;
@@ -279,11 +241,11 @@ public class ClerkUser {
 			ps.setInt(1, bid);
 			ps.setInt(2, callNumber);
 			
-			System.out.print("Copy number of item" + callNumber + ": ");
+			System.out.print("Copy number of item " + callNumber + ": ");
 			copyNo = Integer.parseInt(Main.in.readLine());
+			ps.setInt(3, copyNo);
 
 			ps.setDate(4, outDate);		
-			System.out.println("got past insert");
 
 			ps.executeUpdate();
 
@@ -322,8 +284,6 @@ public class ClerkUser {
 	{
 	  ps = Main.con.prepareStatement("UPDATE bookCopy SET status = 'out' WHERE callNumber = ? AND copyNo = ?");
 	
-
-	  //ps.setString(1, status);
 	  ps.setInt(1, callNumber);
 	  ps.setInt(2, copyNo);
 	  ps.execute();
@@ -347,60 +307,6 @@ public class ClerkUser {
 	    }
 	}	
     }
-
-	
-	static Date stringToDate(String date) {
-		try {SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
-		java.util.Date utilDate = fm.parse(date);
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		return sqlDate;
-		}
-		catch (ParseException p) {
-			System.out.println("Message: Date must be in format dd/MM/yy.");
-			return null;
-		}		
-	}
-
-	public static Date getDueDate(int bid, Date outDate){
-
-		Statement 				s;
-		int 					bookTimeLimit = 0;
-
-		try 
-		{
-			s = Main.con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT bookTimeLimit "
-					+ "FROM Borrower B, BorrowerType C "
-					+ "WHERE B.type = C.type "
-					+ "AND B.bid = " + bid);
-			while (rs.next()){
-				bookTimeLimit = rs.getInt(1);
-
-			}
-		}
-
-		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
-			try 
-			{
-				// undo the insert
-				Main.con.rollback();	
-			}
-			catch (SQLException ex2)
-			{
-				System.out.println("Message: " + ex2.getMessage());
-				System.exit(-1);
-			}
-		}
-
-		String outDateS = outDate.toString();
-		String[] tokens = outDateS.split("-");
-
-		GregorianCalendar gregCalendar = new GregorianCalendar(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
-		gregCalendar.add(Calendar.DAY_OF_YEAR, bookTimeLimit*7);
-		java.sql.Date sqlDate = new java.sql.Date(gregCalendar.getTime().getTime());
-		return sqlDate;		
-	}
 
 
 	/*
@@ -427,7 +333,7 @@ public class ClerkUser {
 		PreparedStatement   ps4;
 
 		try {
-			ps1 = Main.con.prepareStatement("UPDATE Borrowing SET inDate= ? WHERE callNumber= ? AND copyNo= ?");
+			ps1 = Main.con.prepareStatement("UPDATE Borrowing SET inDate=TO_DATE(?, 'YYYY-MM-DD') WHERE callNumber= ? AND copyNo= ?");
 			ps2 = Main.con.prepareStatement("INSERT INTO Fine VALUES (fid_c.nextval,?,?,?,?)");
 			ps3 = Main.con.prepareStatement("UPDATE BookCopy SET status='on hold' WHERE callNumber= ? AND copyNo= ?");
 			ps4 = Main.con.prepareStatement("UPDATE BookCopy SET status='in' WHERE callNumber= ? AND copyNo= ?");
@@ -442,9 +348,9 @@ public class ClerkUser {
 
 			// get borid and bid of borrowing
 			ResultSet rs = s.executeQuery("SELECT A.borid, A.bid, A.outDate, C.bookTimeLimit "
-					+ "FROM Borrowing A, Borrower B, BorrowerType C "
-					+ "WHERE A.callNumber=" + callNumber + " AND A.copyNo=" + copyNo
-					+ " AND A.bid=B.bid AND B.type=C.type");
+										+ "FROM Borrowing A, Borrower B, BorrowerType C "
+										+ "WHERE A.callNumber=" + callNumber + " AND A.copyNo=" + copyNo
+										+ " AND A.bid=B.bid AND B.type=C.type");
 			if (!rs.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
 				return;
@@ -464,7 +370,7 @@ public class ClerkUser {
 
 			// if item is overdue, place a fine on the borrower
 			if (overdue(getDueDate(bid, outDate))) {
-				double fine = overdueBy(outDate) * 0.10;  // charged 10 cents a day
+				double fine = overdueBy(getDueDate(bid, outDate)) * 0.10;  // charged 10 cents a day
 				ps2.setDouble(1, fine);
 				ps2.setDate(2, sqlToday);
 				ps2.setDate(3, null);
@@ -476,6 +382,7 @@ public class ClerkUser {
 			ResultSet rs2 = s.executeQuery("SELECT bid "
 					+ "FROM HoldRequest "
 					+ "WHERE callNumber=" + callNumber);
+			
 			// if there is a hold request on the book, register as on hold
 			if (rs2.next()) {
 				ps3.setInt(1, callNumber);
@@ -495,6 +402,7 @@ public class ClerkUser {
 				System.out.println("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
 						"), has been notified about their held item.");
 			}
+			
 			// otherwise update book copy so that it's registered as 'in'
 			else {
 				ps4.setInt(1, callNumber);
@@ -601,11 +509,68 @@ public class ClerkUser {
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
+			
 		} catch (SQLException ex) {
 			System.out.println("Message: " + ex.getMessage());
 		}
 	}
 
+	
+	// Converts a date to string in proper format
+	public static Date stringToDate(String date) {
+		try {SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
+		java.util.Date utilDate = fm.parse(date);
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		return sqlDate;
+		}
+		catch (ParseException p) {
+			System.out.println("Message: Date must be in format dd/MM/yy.");
+			return null;
+		}		
+	}
+
+	// Gets due date of an item given borrower's bid and out date of item
+	public static Date getDueDate(int bid, Date outDate){
+
+		Statement 				s;
+		int 					bookTimeLimit = 0;
+
+		try {
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT bookTimeLimit "
+					+ "FROM Borrower B, BorrowerType C "
+					+ "WHERE B.type = C.type "
+					+ "AND B.bid = " + bid);
+			while (rs.next()){
+				bookTimeLimit = rs.getInt(1);
+
+			}
+		}
+
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+
+		String outDateS = outDate.toString();
+		String[] tokens = outDateS.split("-");
+
+		GregorianCalendar gregCalendar = new GregorianCalendar(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+		gregCalendar.add(Calendar.DAY_OF_YEAR, bookTimeLimit*7);
+		java.sql.Date sqlDate = new java.sql.Date(gregCalendar.getTime().getTime());
+		return sqlDate;		
+	}
+	
+	// Returns true of dueDate < today's date
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
 		System.out.println("Item due: " + dueDateString);
@@ -622,6 +587,7 @@ public class ClerkUser {
 			return false;
 	}
 
+	// Returns # days item is overdue by
 	public static int overdueBy(Date dueDate) {
 		String dueDateString = dueDate.toString();
 		String[] tokens = dueDateString.split("-");
@@ -633,7 +599,7 @@ public class ClerkUser {
 		java.util.Date dueDate1 = gregDueDate.getTime();
 		java.util.Date today = gregToday.getTime();
 
-		double diff = (double) ((today.getTime() - dueDate1.getTime()))/(1000*60*60*24);
+		double diff = (double) ((today.getTime() - dueDate1.getTime()))/(1000*60*60*60*24);
 		return (int) diff;
 	}
 }
