@@ -72,7 +72,6 @@ public class ClerkUser {
 	private static void addBorrower() {
 		
 		// attributes of new borrower
-		int                bid;
 		String             password; 
 		String             name;
 		String             address;
@@ -87,12 +86,7 @@ public class ClerkUser {
 		PreparedStatement  ps;  // to add new borrower
 
 		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (?,?,?,?,?,?,?,{d ?},?)");
-
-			// TODO use a sequence
-			System.out.print("Borrower ID: ");
-			bid = Integer.parseInt(Main.in.readLine());
-			ps.setInt(1, bid);
+			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,{d ?},?)");
 
 			System.out.print("Borrower password: ");
 			password = Main.in.readLine();
@@ -117,7 +111,7 @@ public class ClerkUser {
 			System.out.print("Borrower SIN or student number: ");
 			sinOrStNo = Main.in.readLine();
 			
-			// check if this book already in database
+			// check if this borrower already in database
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bid "
 										+ "FROM Borrower "
@@ -132,9 +126,11 @@ public class ClerkUser {
 			ps.setString(7, sinOrStNo);
 
 			// TODO need to convert between JDBC and Oracle date types, doesn't run as is.
-			System.out.print("Borrower expiry date: ");  // Clerk should set to 2 years from today
-			expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format dd-mm-yyyy format
-			ps.setDate(8, expiryDate);
+			System.out.print("Borrower expiry date (yyyy-mm-dd): ");  // Clerk should set to 2 years from today
+			//expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format yyyy-mm-dd
+			//ps.setDate(8, expiryDate);
+			String date = Main.in.readLine();
+			ps.setString(8, date);
 
 			System.out.print("Borrower type: ");
 			type = Main.in.readLine();

@@ -166,8 +166,8 @@ public class BorrowerUser {
 
 				// # in library
 				ResultSet rsi = s.executeQuery("SELECT COUNT(*) "
-						+ "FROM Book B, BookCopy C "
-						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber AND C.status='in'");
+						+ "FROM BookCopy "
+						+ "WHERE callNumber=" + callNumber + " AND status='in'");
 				while (rsi.next()) {
 					inLib = rsi.getInt(1);
 				}
@@ -175,16 +175,15 @@ public class BorrowerUser {
 
 				// # out of library or on hold
 				ResultSet rso = s.executeQuery("SELECT COUNT(*) "
-						+ "FROM BookB, BookCopy C "
-						+ "WHERE B.callNumber=" + callNumber + "B.callNumber=C.callNumber "
-						+ "AND (C.status='out' OR C.status='on hold'");
+						+ "FROM BookCopy "
+						+ "WHERE callNumber=" + callNumber + " AND (status='out' OR status='on hold')");
 				while (rso.next()) {
 					outLib = rso.getInt(1);
 				}
 				System.out.printf("%-15.15s", outLib);
 			}
 
-			System.out.println("No more search results");
+			System.out.println("\n No more search results");
 			s.close();
 		}
 
