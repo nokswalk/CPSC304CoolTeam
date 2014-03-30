@@ -4,6 +4,7 @@ import gui.Main;
 
 import java.io.IOException;
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 public class LibrarianUser {
@@ -22,10 +23,9 @@ public class LibrarianUser {
 			while (!quit) {
 				System.out.print("\n\nPlease choose one of the following: \n");
 				System.out.print("1.  Add book\n");
-				//System.out.print("2.  Check out items\n");
-				//System.out.print("3.  Process a return\n");
-				//System.out.print("4.  Check overdue items\n");
-				System.out.print("5.  Quit\n>>");
+				//System.out.println("2. Generate a report of all checked out books\n");
+//				System.out.println("3. Generate a report of the most popular items for a given year\n");
+				System.out.print("4.  Quit\n>>");
 
 				choice = Integer.parseInt(Main.in.readLine());
 
@@ -33,10 +33,9 @@ public class LibrarianUser {
 
 				switch (choice) {
 				case 1:  addBook(); break;
-				case 2:  ; break; // TODO checkOutItems()
-				case 3:  ; break; // TODO processReturn()
-				case 4:  ; break; // TODO checkOverdueItems()
-				case 5:  quit = true; 
+				case 2:  reportCheckedOutBooks(); break; // TODO reportCheckedOutBooks()
+				case 3:  ; break; // TODO mostPopular()
+				case 4:  quit = true; 
 				}
 			}
 			Main.con.close();
@@ -327,5 +326,93 @@ public class LibrarianUser {
 
 
 
+	}
+	
+
+	/*
+	 * Generate a report with all the books that have been checked out. For each
+	 * book the report shows the date it was checked out and the due date. The
+	 * system flags the items that are overdue. The items are ordered by the
+	 * book call number. If a subject is provided the report lists only books
+	 * related to that subject, otherwise all the books that are out are listed
+	 * by the report.
+	 */
+	private static void reportCheckedOutBooks() {
+		Statement statement;
+		ResultSet rs;
+		try {
+			statement = Main.con.createStatement();
+
+			// query of callNumber, copyNo, title, outDate and bookTimeLimit
+			// when borrowing's inDate is
+			// null.
+			System.out.println("List of items you currently borrowed:");
+			rs = statement.executeQuery("SELECT A.callNumber, C.copyNo, A.title, B.outDate, D.bookTimeLimit"
+							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
+							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
+							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "
+							+ "ORDER BY A.callNumber, C.copyNo, A.title ASC");
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			System.out.println(" ");
+
+			// display column names;
+			for (int i = 0; i < numCols-1; i++) {
+				// get column name and print it
+				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
+			}
+			System.out.printf("%-25s", "DUEDATE");
+			
+			System.out.println(" ");
+
+			while (rs.next()) {
+				Integer callNumber = rs.getInt("callNumber");
+				if (rs.wasNull()) {
+					System.out.printf("%-9.9s", " ");
+				} else {
+					System.out.printf("%-9.9s", callNumber);
+				}
+
+				Integer copyNo = rs.getInt("copyNo");
+				if (rs.wasNull()) {
+					System.out.printf("%-20.20s", " ");
+				} else {
+					System.out.printf("%-20.20s", copyNo);
+				}
+				
+				String title = rs.getString("title");
+				if (rs.wasNull()) {
+					System.out.printf("%-30.30s", " ");
+				} else {
+					System.out.printf("%-30.30s", title);
+				}
+				
+				Date outDate = rs.getDate("outDate");
+				if(rs.wasNull()){
+					System.out.printf("%-20.20s", " ");
+				} else {
+					System.out.printf("%-20.20s", outDate);
+				}
+				
+				Integer bookTimeLimit = rs.getInt("bookTimeLimit");
+				//pseudo code: Date dueDate = outDate + bookTimeLimit;
+				//System.out.printf("%-20.20s\n", dueDate);		
+				
+				//TODO: check if the item is overdue using gregorianCalendar(), and let it flags.
+
+				//TODO: If a subject is provided the report lists only books related to that subject, otherwise all the books that are out are listed by the report.
+				
+			}
+
+			// close the statement;
+			// the ResultSet will also be closed
+			statement.close();
+		} catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+		}
 	}
 }
