@@ -164,12 +164,7 @@ public class Main implements ActionListener {
 			// if the username and password are valid, 
 			// remove the login window and display a text menu 
 			mainFrame.dispose();
-			try {
-				showMenu();
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}     
+			showMenu();     
 		}
 		else
 		{

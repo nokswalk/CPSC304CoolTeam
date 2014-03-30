@@ -262,17 +262,17 @@ public class ClerkUser {
 		PreparedStatement  ps;
 
 		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrowing VALUES (?,?,?,?,?,?)");
+			ps = Main.con.prepareStatement("INSERT INTO Borrowing VALUES (?,bid,callNumber,?,?,null)");
 
-			System.out.println("Borrowing ID for " + callNumber + ":");
+			System.out.print("\n Borrowing ID for " + callNumber + ":");
 			borid = Integer.parseInt(Main.in.readLine());
 			ps.setInt(1, borid);
 
-			System.out.println("Copy No: ");
+			System.out.print("\n Copy No: ");
 			copyNo = Integer.parseInt(Main.in.readLine());
 			ps.setInt(4, copyNo);
 
-			System.out.println("Out Date(dd/mm/yy): ");
+			System.out.print("\n Out Date(dd/mm/yy): ");
 			outDate = stringToDate(Main.in.readLine());
 			ps.setDate(5, outDate);
 			
@@ -288,7 +288,7 @@ public class ClerkUser {
 			
 			System.out.println("Call Number: " + callNumber);
 			System.out.println("Copy Number: " + copyNo);
-			System.out.println("Due Date: " + getDueDate(bid, outDate).toString());
+			System.out.println("Due Date: " + getDueDateAccordingToTodaysDate(bid, outDate).toString());
 		}
 
 		
@@ -318,7 +318,7 @@ public class ClerkUser {
 		
 	}
 	
-	static Date getDueDate(int bid, Date outDate){
+	static Date getDueDateAccordingToTodaysDate(int bid, Date outDate){
 		
 		Statement 				s;
 		int 					bookTimeLimit = 0;
@@ -355,10 +355,10 @@ public class ClerkUser {
 		
 		String outDateS = outDate.toString();
 		System.out.println("This is the outDate in string: " + outDateS);
-		String[] tokens = outDateS.split("-");
+		String[] tokens = outDateS.split("/");
 		
-		GregorianCalendar gregCalendar = new GregorianCalendar(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
-		gregCalendar.add(Calendar.DAY_OF_YEAR, bookTimeLimit*7);
+		GregorianCalendar gregCalendar = new GregorianCalendar(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+		gregCalendar.add(Calendar.DATE, bookTimeLimit*7);
 		java.sql.Date sqlDate = new java.sql.Date(gregCalendar.getTime().getTime());
 		return sqlDate;
 		
