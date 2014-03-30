@@ -149,17 +149,23 @@ insert into BookCopy values
 insert into BookCopy values
 (200, 1, 'on hold');
 insert into BookCopy values
+(200, 2, 'out');
+insert into BookCopy values
 (300, 1, 'out');
 insert into BookCopy values
 (300, 2, 'on hold');
 insert into BookCopy values
 (400, 1, 'in');
 insert into BookCopy values
+(400, 2, 'out');
+insert into BookCopy values
 (500, 1, 'in');
 insert into BookCopy values
 (500, 2, 'in');
 insert into BookCopy values
 (600, 1, 'out');
+insert into BookCopy values
+(600, 2, 'out');
 insert into BookCopy values
 (999, 1, 'in');
 insert into BookCopy values
@@ -203,7 +209,17 @@ insert into HasSubject values
 
 
 insert into Borrowing values
-(100, 111, 100, 1, TO_DATE('2013-02-20', 'YYYY-MM-DD'), null);
+(100, 333, 100, 1, TO_DATE('2013-02-20', 'YYYY-MM-DD'), null);
+insert into Borrowing values
+(500, 111, 200, 2, TO_DATE('2010-02-20', 'YYYY-MM-DD'), null);
+insert into Borrowing values
+(600, 111, 300, 1, TO_DATE('2009-02-20', 'YYYY-MM-DD'), null);
+insert into Borrowing values
+(700, 111, 400, 2, TO_DATE('2013-05-20', 'YYYY-MM-DD'), null);
+insert into Borrowing values
+(800, 222, 600, 2, TO_DATE('2012-02-20', 'YYYY-MM-DD'), null);
+insert into Borrowing values
+(900, 222, 999, 2, TO_DATE('2012-02-22', 'YYYY-MM-DD'), null);
 insert into Borrowing values
 (200, 222, 300, 1, TO_DATE('2014-02-22', 'YYYY-MM-DD'), TO_DATE('2014-03-29', 'YYYY-MM-DD'));
 insert into Borrowing values
