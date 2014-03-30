@@ -225,7 +225,7 @@ insert into Borrowing values
 insert into Borrowing values
 (400, 444, 999, 2, TO_DATE('2013-09-01', 'YYYY-MM-DD'), TO_DATE('2013-10-10', 'YYYY-MM-DD'));
 insert into Borrowing values
-(500, 555, 999, 3, TO_DATE('2014-03-29', 'YYYY-MM-DD'), null);
+(550, 555, 999, 3, TO_DATE('2014-03-29', 'YYYY-MM-DD'), null);
 
 
 insert into HoldRequest values
