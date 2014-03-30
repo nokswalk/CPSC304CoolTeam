@@ -402,7 +402,6 @@ public class BorrowerUser {
 					+ "AND B.copyNo = C.copyNo AND C.callNumber = A.callNumber AND B.inDate IS NULL "
 					+ "AND D.bid=" + userBid
 					+ "ORDER BY A.title ASC");
-
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -460,8 +459,6 @@ public class BorrowerUser {
 			// get number of columns
 			numCols = rsmd.getColumnCount();
 
-			System.out.println(" ");
-
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
@@ -510,8 +507,6 @@ public class BorrowerUser {
 
 			// get number of columns
 			numCols = rsmd.getColumnCount();
-
-			System.out.println(" ");
 
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
