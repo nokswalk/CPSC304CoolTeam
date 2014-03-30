@@ -25,7 +25,7 @@ public class BorrowerUser {
 				System.out.print("1.  Book search\n");
 				System.out.print("2.  Check account\n");
 				System.out.print("3.  Place a hold request\n");
-				//System.out.print("4.  Pay fines\n");
+				System.out.print("4.  Pay fines\n");
 				System.out.print("5.  Quit\n>>");
 
 				choice = Integer.parseInt(Main.in.readLine());
@@ -36,7 +36,7 @@ public class BorrowerUser {
 				case 1:  searchBook(); break;
 				case 2:  checkAccount(); break;
 				case 3:  requestHold(); break;
-				case 4:  ; break; // TODO payFine()
+				case 4:  payFine(); break;
 				case 5:  quit = true; 
 				}
 			}
@@ -738,5 +738,146 @@ private static void addHoldRequest(int bid, int callNumber) {
 		}
 	}
 }
+
+private static void payFine()
+{
+	int		   bid = 0;
+	Statement  s;
+	int		   fid = 0;
+	String	   ans = "";
+
+	try
+	{
+		
+		System.out.print("Borrower ID: ");
+		try {
+			bid = Integer.parseInt(Main.in.readLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+		s = Main.con.createStatement();
+
+		ResultSet rs = s.executeQuery("SELECT fid, amount, issuedDate "
+				+ "FROM Fine F, Borrowing B "
+				+ "WHERE F.borid = B.borid "
+				+ "AND B.bid = " + bid);
+		
+		// get info on ResultSet
+		ResultSetMetaData rsmd = rs.getMetaData();
+
+		// get number of columns
+		int numCols = rsmd.getColumnCount();
+
+		System.out.println(" ");
+
+		
+		// display column names;
+		for (int i = 0; i < numCols; i++)
+		{
+			// get column name and print it
+
+			System.out.printf("%-15s", rsmd.getColumnName(i+1));    
+		}
+		
+		System.out.println(" ");
+
+		while(rs.next())
+		{
+			// simplified output formatting; truncation may occur
+
+			fid = rs.getInt(1);
+			System.out.printf("%-15.15s", fid);
+
+			double amount = rs.getDouble(2);
+			System.out.printf("%-15.15s", amount);
+
+			Date issuedDate = rs.getDate(3);
+			System.out.printf("%-15.15s", issuedDate);
+
+		}
+		System.out.println("\n\nSelect ID of fine that will be paid for: ");
+		try {
+			fid = Integer.parseInt(Main.in.readLine());
+		} catch (NumberFormatException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+		System.out.println("Proceed with payment?(y/n)");
+		try {
+			ans = Main.in.readLine();
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		if (ans.equals("y")){
+			updateFine(fid);
+			System.out.println("Fine has been paid.");
+		}
+		else{
+			System.out.println("Payment cancelled.");
+		}
+	}
+
+	catch (SQLException ex) {
+		System.out.println("Message: " + ex.getMessage());
+		try 
+		{
+			// undo the insert
+			Main.con.rollback();	
+		}
+		catch (SQLException ex2)
+		{
+			System.out.println("Message: " + ex2.getMessage());
+			System.exit(-1);
+		}
+	}
+}
+
+private static void updateFine(int fid)
+{
+
+	Date			   paidDate;
+	PreparedStatement  ps;
+
+	try
+	{
+		ps = Main.con.prepareStatement("UPDATE fine SET paidDate = ? WHERE fid = ?");
+
+
+		GregorianCalendar gregCalendar = new GregorianCalendar();
+		paidDate = new java.sql.Date(gregCalendar.getTime().getTime());
+		ps.setDate(1, paidDate);
+		ps.setInt(2, fid);
+		ps.execute();
+
+		Main.con.commit();
+
+		ps.close();
+	}
+	catch (SQLException ex)
+	{
+		System.out.println("Message: " + ex.getMessage());
+
+		try 
+		{
+			Main.con.rollback();	
+		}
+		catch (SQLException ex2)
+		{
+			System.out.println("Message: " + ex2.getMessage());
+			System.exit(-1);
+		}
+	}	
+}
+
 }
 

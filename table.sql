@@ -216,3 +216,4 @@ insert into HoldRequest values
 
 insert into Fine values
 (100, 100.00, TO_DATE('2013-09-01', 'YYYY-MM-DD'), null, 100);
+(200, 90.00, TO_DATE('2013-09-02', 'YYYY-MM-DD'), null, 100);
