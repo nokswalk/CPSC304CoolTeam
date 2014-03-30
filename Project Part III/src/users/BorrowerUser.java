@@ -376,7 +376,7 @@ public class BorrowerUser {
 	 * the hold requests that have been placed by the borrower.
 	 */
 	private static void checkAccount() {
-		String userBid;
+		int userBid;
 
 		String title;
 		String isbn;
@@ -390,7 +390,7 @@ public class BorrowerUser {
 
 		try {
 			System.out.printf("Put your Borrower ID: ");
-			userBid = Main.in.readLine(); //TODO: I should put constraint.
+			userBid = Integer.parseInt(Main.in.readLine()); //TODO: I should put constraint.
 
 			stmt = Main.con.createStatement();
 
