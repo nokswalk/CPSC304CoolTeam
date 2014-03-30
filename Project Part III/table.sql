@@ -111,15 +111,15 @@ insert into BorrowerType values
 
 
 insert into Borrower values
-(12345678, 'aaaa', 'Daniel', '1466 robson st', '6044443333', null, '12345678', '2015-09-09', 'faculty');
+(111, 'aaaa', 'Daniel', '1466 robson st', '6044443333', null, '11111111', {d '2015-09-09'}, 'faculty');
 insert into Borrower values
-(56781234, 'bbbb', 'Vicky', 'vancouver', '6044441111', 'hello@gmaill.com', '12345678', '2014-09-09', 'staff');
+(222, 'bbbb', 'Vicky', 'vancouver', '6044441111', 'hello@gmaill.com', '22222222', {d '2014-09-09'}, 'staff');
 insert into Borrower values
-(87654321, 'cccc', 'Zet', 'UBC', '6041233333', 'bye@gmail.com', '12345678', '2015-12-12', 'general');
+(333, 'cccc', 'Zet', 'UBC', '6041233333', 'bye@gmail.com', '33333333', {d '2015-12-12'}, 'general');
 insert into Borrower values
-(11111111, 'eeee', 'Rupert', '1234 granville st', '7789999999', 'o3i3@cs.ubc.ca', '12345678', '2015-09-09', 'staff');
+(444, 'eeee', 'Rupert', '1234 granville st', '7789999999', 'o3i3@cs.ubc.ca', '44444444', {d '2015-09-09'}, 'staff');
 insert into Borrower values
-(22222222, 'dddd', 'Green', 'Surrey central st', '2744444222', ' ', '12345678', '2015-09-09', 'student');
+(555, 'dddd', 'Green', 'Surrey central st', '2744444222', ' ', '55555555', {d '2015-09-09'}, 'student');
 
 
 insert into Book values
@@ -197,13 +197,13 @@ insert into HasSubject values
 
 
 insert into Borrowing values
-(11111, 12345678, 1000, 2,'2014-03-29',null);
+(100, 111, 100, 1,'2014-03-29',null);
 insert into Borrowing values
-(22222, 12345678, 1000, 1,'2014-02-22','2014-03-29');
+(200, 222, 300, 1,'2014-02-22','2014-03-29');
 insert into Borrowing values
-(33333, 12345678, 1000, 1,'2014-01-29','2014-01-31');
+(300, 333, 600, 1,'2014-01-29','2014-01-31');
 insert into Borrowing values
-(44444, 12345678, 1000, 1,'2013-09-01','2013-10-10');
+(400, 444, 999, 2,'2013-09-01','2013-10-10');
 
 insert into HoldRequest values
-(1111, 12345678, 1000, '2014-03-30');
+(999, 111, 300, '2014-03-30');

@@ -33,10 +33,9 @@ public class LibrarianUser {
 
 				switch (choice) {
 				case 1:  addBook(); break;
-				case 2:  ; break; // TODO checkOutItems()
-				case 3:  ; break; // TODO processReturn()
-				case 4:  ; break; // TODO checkOverdueItems()
-				case 5:  quit = true; 
+				case 2:  ; break; // TODO checkedOutBooksReport()
+				case 3:  ; break; // TODO mostPopularItemsReport()
+				case 4:  quit = true; 
 				}
 			}
 			Main.con.close();
@@ -120,10 +119,10 @@ public class LibrarianUser {
 
 		try {
 
-			ps1 = Main.con.prepareStatement("INSERT INTO Book VALUES (bid_c.nextval,?,?,?,?,?)");
-			ps2 = Main.con.prepareStatement("INSERT INTO BookCopy VALUES (bid_c.nextval,?,?)");
-			ps3 = Main.con.prepareStatement("INSERT INTO HasSubject VALUES (bid_c.nextval,?)");
-			ps4 = Main.con.prepareStatement("INSERT INTO HasAuthor VALUES (bid_c,?)");
+			ps1 = Main.con.prepareStatement("INSERT INTO Book VALUES (callNumber_c.nextval,?,?,?,?,?)");
+			ps2 = Main.con.prepareStatement("INSERT INTO BookCopy VALUES (callNumber_c.currval,?,?)");
+			ps3 = Main.con.prepareStatement("INSERT INTO HasSubject VALUES (callNumber_c.currval,?)");
+			ps4 = Main.con.prepareStatement("INSERT INTO HasAuthor VALUES (callNumber_c.currval,?)");
 
 			// new book
 			System.out.print("Book ISBN: ");
@@ -143,30 +142,30 @@ public class LibrarianUser {
 				return;
 			}
 
-			ps1.setString(2, isbn);
+			ps1.setString(1, isbn);
 
 			System.out.print("Book title: ");
 			title = Main.in.readLine();
-			ps1.setString(3, title);
+			ps1.setString(2, title);
 
 			System.out.print("Book main author: ");
 			mainAuthor = Main.in.readLine();
-			ps1.setString(4, mainAuthor);
+			ps1.setString(3, mainAuthor);
 
 			System.out.print("Book publisher: ");
 			publisher = Main.in.readLine();
-			ps1.setString(5,  publisher);
+			ps1.setString(4,  publisher);
 
 			System.out.print("Book published year: ");
 			year = Integer.parseInt(Main.in.readLine());
-			ps1.setInt(6, year);
+			ps1.setInt(5, year);
 
 			ps1.executeUpdate();
 
 
 			// new book copy
-			ps2.setInt(2, 1);
-			ps2.setString(3, "in");
+			ps2.setInt(1, 1);
+			ps2.setString(2, "in");
 			
 			ps2.executeUpdate();
 
@@ -178,9 +177,9 @@ public class LibrarianUser {
 
 			for (String subject : subjects) {				
 				if (subject.trim().length() == 0) {
-					ps3.setString(2, null);
+					ps3.setString(1, null);
 				} else {
-					ps3.setString(2, subject.trim());
+					ps3.setString(1, subject.trim());
 				}
 				
 				ps3.executeUpdate();
@@ -196,9 +195,9 @@ public class LibrarianUser {
 				
 				for (String author: authors) {					
 					if (author.length() == 0) {
-						ps4.setString(2, null);
+						ps4.setString(1, null);
 					} else {
-						ps4.setString(2, author.trim());
+						ps4.setString(1, author.trim());
 					}
 					
 					ps4.executeUpdate();

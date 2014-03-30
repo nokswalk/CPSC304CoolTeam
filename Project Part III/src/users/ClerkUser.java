@@ -83,49 +83,45 @@ public class ClerkUser {
 		String             phone;
 		String             emailAddress;
 		int                sinOrStNo;
-		Date               expiryDate;
+		String             expiryDate;
 		String             type;
 
 		PreparedStatement  ps;
 
 		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (?,?,?,?,?,?,?,?,?)");
+			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,{d ?},?)");
 
-			System.out.print("\n Borrower ID: ");
-			bid = Integer.parseInt(Main.in.readLine());
-			ps.setInt(1, bid);
-
-			System.out.print("\n Borrower password: ");
+			System.out.print("Borrower password: ");
 			password = Main.in.readLine();
-			ps.setString(2, password);
+			ps.setString(1, password);
 
-			System.out.print("\n Borrower name: ");
+			System.out.print("Borrower name: ");
 			name = Main.in.readLine();
-			ps.setString(3, name);
+			ps.setString(2, name);
 
-			System.out.print("\n Borrower address: ");
+			System.out.print("Borrower address: ");
 			address = Main.in.readLine();
-			ps.setString(4, address);
+			ps.setString(3, address);
 
-			System.out.print("\n Borrower phone number: ");
+			System.out.print("Borrower phone number: ");
 			phone = Main.in.readLine();
-			ps.setString(5,  phone);
+			ps.setString(4,  phone);
 
-			System.out.print("\n Borrower email address: ");
+			System.out.print("Borrower email address: ");
 			emailAddress = Main.in.readLine();
-			ps.setString(6, emailAddress);
+			ps.setString(5, emailAddress);
 
-			System.out.print("\n Borrower SIN or student number: ");
+			System.out.print("Borrower SIN or student number: ");
 			sinOrStNo = Integer.parseInt(Main.in.readLine());
-			ps.setInt(7, sinOrStNo);
+			ps.setInt(6, sinOrStNo);
 
-			System.out.print("\n Borrower expiry date: ");  // Clerk should set to 2 years from today
-			expiryDate = Date.valueOf(Main.in.readLine());  // Must be in format yyyy-mm-dd
-			ps.setDate(8, expiryDate);
+			System.out.print("Borrower expiry date: ");  // Clerk should set to 2 years from today
+			expiryDate = Main.in.readLine();  // Must be in format yyyy-mm-dd
+			ps.setString(7, expiryDate);
 
-			System.out.print("\n Borrower type: ");
+			System.out.print("Borrower type: ");
 			type = Main.in.readLine();
-			ps.setString(9, type);
+			ps.setString(8, type);
 
 			ps.executeUpdate();
 			// commit work 
@@ -296,12 +292,16 @@ public class ClerkUser {
 		}
 	}
 	
-	static Date stringToDate(String date) throws ParseException{
-		SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
+	static Date stringToDate(String date) {
+		try {SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
 		java.util.Date utilDate = fm.parse(date);
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 		return sqlDate;
-		
+		}
+		catch (ParseException p) {
+			System.out.println("Message: Date must be informat dd/MM/yy");
+			return null;
+		}		
 	}
 	
 	static Date getDueDateAccordingToTodaysDate(int bid, Date outDate){
