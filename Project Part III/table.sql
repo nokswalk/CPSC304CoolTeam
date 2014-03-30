@@ -121,31 +121,80 @@ insert into Borrower values
 insert into Borrower values
 (22222222, 'dddd', 'Green', 'Surrey central st', '2744444222', ' ', '12345678', '2015-09-09', 'student');
 
+
 insert into Book values
-(1500, '01000000', 'Hello Java world', 'Laks', 'UBC','1999');
+(100, '01000000', 'Hello Java world', 'Laks', 'UBC','1999');
 insert into Book values
-(2000, '02000000', 'Hi Database', 'Laks', 'SFU','2000');
+(200, '02000000', 'Hi Database', 'Laks', 'SFU','2000');
 insert into Book values
-(3000, '03000000', 'Advanced Data Structure and Algorithm', 'Michelle Ng', 'UBC','2008');
+(300, '03000000', 'Advanced Data Structures and Algorithms', 'Michelle Ng', 'UBC','2008');
 insert into Book values
-(4000, '04000000', 'Design Patterns', 'Enoch Choi', 'UBC','1999');
+(400, '04000000', 'Design Patterns', 'Enoch Choi', 'UBC','1999');
 insert into Book values
-(5000, '05000000', 'Hi C++', 'Laks', 'UBC','2014');
+(500, '05000000', 'Hi C++', 'Laks', 'UBC','2014');
 insert into Book values
-(6000, '06000000', 'Hardware and Software', 'Tony Chu', 'PublisherA','2002');
+(600, '06000000', 'Hardware and Software', 'Tony Chu', 'PublisherA','2002');
 insert into Book values
-(1000, '123456789', 'ABCs', 'Sammy Foo', 'Foo Readers', 2000);
+(999, '123456789', 'ABCs', 'Sammy', 'Foo Readers', 2000);
 
 
 insert into BookCopy values
-(1000, 1, 'in');
+(100, 1, 'out');
 insert into BookCopy values
-(1000, 2, 'out');
+(200, 1, 'on hold');
 insert into BookCopy values
-(1000, 3, 'on hold');
+(300, 1, 'out');
+insert into BookCopy values
+(300, 2, 'on hold');
+insert into BookCopy values
+(400, 1, 'in');
+insert into BookCopy values
+(500, 1, 'in');
+insert into BookCopy values
+(500, 1, 'in');
+insert into BookCopy values
+(600, 1, 'out');
+insert into BookCopy values
+(999, 1, 'in');
+insert into BookCopy values
+(999, 2, 'out');
+insert into BookCopy values
+(999, 3, 'on hold');
+
+
+insert into HasAuthor values
+(200, 'Gregor');
+insert into HasAuthor values
+(200, 'Mike');
+insert into HasAuthor values
+(500, 'Patrice');
+insert into HasAuthor values
+(999, 'Bobby');
+
 
 insert into HasSubject values
-(1000, 'kindergarten');
+(100, 'java');
+insert into HasSubject values
+(100, 'computer');
+insert into HasSubject values
+(200, 'database');
+insert into HasSubject values
+(200, 'computer');
+insert into HasSubject values
+(300, 'computer');
+insert into HasSubject values
+(400, 'computer');
+insert into HasSubject values
+(500, 'c++');
+insert into HasSubject values
+(500, 'computer');
+insert into HasSubject values
+(600, 'computer');
+insert into HasSubject values
+(999, 'kindergarten');
+insert into HasSubject values
+(999, 'letters');
+
 
 insert into Borrowing values
 (11111, 12345678, 1000, 2,'2014-03-29',null);

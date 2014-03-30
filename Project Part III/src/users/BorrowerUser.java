@@ -369,6 +369,7 @@ public class BorrowerUser {
 		}
 	}
 
+	
 	/*
 	 * Displays the items the borrower has currently borrowed and
 	 * not yet returned, any outstanding fines and 
