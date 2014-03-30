@@ -217,7 +217,7 @@ insert into Borrowing values
 insert into Borrowing values
 (700, 111, 400, 2, TO_DATE('2013-05-20', 'YYYY-MM-DD'), null);
 insert into Borrowing values
-(800, 222, 600, 2, TO_DATE('2012-02-20', 'YYYY-MM-DD'), null);
+(800, 222, 600, 2, TO_DATE('2014-03-29', 'YYYY-MM-DD'), null);
 insert into Borrowing values
 (900, 222, 999, 2, TO_DATE('2012-02-22', 'YYYY-MM-DD'), null);
 insert into Borrowing values

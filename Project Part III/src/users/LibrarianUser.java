@@ -23,8 +23,8 @@ public class LibrarianUser {
 			while (!quit) {
 				System.out.print("\n\nPlease choose one of the following: \n");
 				System.out.print("1.  Add book\n");
-				System.out.println("2.  Generate a report of all checked out books\n"); 
-//				System.out.println("3.  Generate a report of the most popular items for a given year\n");
+				System.out.print("2.  Generate a report of all checked out books\n"); 
+				System.out.print("3.  Generate a report of the most popular items for a given year\n");
 				System.out.print("4.  Quit\n>>");
 
 				choice = Integer.parseInt(Main.in.readLine());
@@ -415,11 +415,9 @@ public class LibrarianUser {
 					System.out.println("This item missed dueDate:" + duedate);
 					//TODO: let it flag.
 				}
-				
-				//TODO: If a subject is provided the report lists only books related to that subject, otherwise all the books that are out are listed by the report.
-				
+				else
+					System.out.println(" ");
 			}
-
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
@@ -436,4 +434,11 @@ public class LibrarianUser {
 			}
 		}
 	}
+	
+
+//	private static void mostPopular() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+
 }
