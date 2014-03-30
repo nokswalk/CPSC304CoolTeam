@@ -279,9 +279,10 @@ public class ClerkUser {
 			ps.setInt(1, bid);
 			ps.setInt(2, callNumber);
 			
-			System.out.print("Copy number of item" + callNumber + ": ");
+			System.out.print("Copy number of item " + callNumber + ": ");
 			copyNo = Integer.parseInt(Main.in.readLine());
 
+			ps.setInt(3, copyNo);
 			ps.setDate(4, outDate);		
 			System.out.println("got past insert");
 
@@ -525,6 +526,7 @@ public class ClerkUser {
 	private static void checkOverdueItems() {
 		Statement statement;
 		ResultSet rs;
+		List<String> bidsS = null;
 		try {
 			statement = Main.con.createStatement();
 
@@ -596,8 +598,34 @@ public class ClerkUser {
 				}
 			}
 
-			//TODO: Should be able to send email to each user or all the user.
+
+			System.out.print("\n\nList of borrower IDs you would like to send an overdue email to (or type in 'all' to send to all borrowers): ");
+			try {
+				bidsS = Arrays.asList(Main.in.readLine().split(","));
+			} catch (IOException e) {
+				System.out.println("Message: " + e.getMessage());
+				e.printStackTrace();
+			}
 			
+			if (bidsS.get(0).equals("all")){
+				
+				ResultSet rs2 = statement.executeQuery("SELECT E.bid "
+						+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
+						+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
+						+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
+						+ "ORDER BY E.bid, E.name ASC");
+				
+				while (rs2.next()) {
+					Integer bid = rs2.getInt("bid");
+					sendEmailOverdue(bid);
+				}
+			}
+			else {
+			for (String b: bidsS){
+				int bid = Integer.parseInt(b.trim());
+				sendEmailOverdue(bid);
+			}
+			}
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
@@ -606,9 +634,46 @@ public class ClerkUser {
 		}
 	}
 
+	private static void sendEmailOverdue(int bid) {
+		Statement 				s;
+		String 					emailAddrHold;
+		String					nameHold;
+
+		try 
+		{
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT emailAddress, name "
+					+ "FROM Borrower "
+					+ "WHERE bid = " + bid);
+			
+			while (rs.next()){
+				emailAddrHold = rs.getString(1);
+				nameHold = rs.getString(2);
+				System.out.println("\nBorrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
+						"), has been notified about their overdue item.");
+			}
+		}
+
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try 
+			{
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2)
+			{
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+		
+	}
+
+
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
-		System.out.println("Item due: " + dueDateString);
+		//System.out.println("Item due: " + dueDateString);
 
 		String[] tokens = dueDateString.split("-");
 
