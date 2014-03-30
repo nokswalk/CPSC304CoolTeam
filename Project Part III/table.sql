@@ -222,6 +222,8 @@ insert into Borrowing values
 (200, 222, 300, 1, TO_DATE('2014-02-22', 'YYYY-MM-DD'), null);
 insert into Borrowing values
 (300, 333, 600, 1, TO_DATE('2014-01-29', 'YYYY-MM-DD'), TO_DATE('2014-01-31', 'YYYY-MM-DD'));
+insert into Borrowing values
+(550, 555, 999, 3, TO_DATE('2014-03-29', 'YYYY-MM-DD'), null);
 
 
 insert into HoldRequest values
