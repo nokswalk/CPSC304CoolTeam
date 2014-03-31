@@ -203,15 +203,24 @@ public class Main implements ActionListener {
 	
 	private void showMenu(int user) throws ParseException{
 		final JFrame menu = new JFrame("Menu");
-		final JPanel panel = new JPanel();
+		final JPanel panelLibrarianMenu = new JPanel();
 		final JPanel panelLibrarianSubmenu = new JPanel();
+		final JPanel panelBorrowerMenu = new JPanel();
+		final JPanel panelBorrowerSubmenu = new JPanel();
+		final JPanel panelClerkMenu = new JPanel();
+		final JPanel panelClerkSubmenu = new JPanel();
+		
 		JTextArea textArea = new JTextArea();
 
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
 		
 		//setting how we want the panel to be shown on the frame
-		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+		panelLibrarianMenu.setLayout(new BoxLayout(panelLibrarianMenu,BoxLayout.Y_AXIS));
 		panelLibrarianSubmenu.setLayout(new BoxLayout(panelLibrarianSubmenu, BoxLayout.Y_AXIS));
+		panelBorrowerMenu.setLayout(new BoxLayout(panelBorrowerMenu, BoxLayout.Y_AXIS));
+		panelBorrowerSubmenu.setLayout(new BoxLayout(panelBorrowerSubmenu, BoxLayout.Y_AXIS));
+		panelClerkMenu.setLayout(new BoxLayout(panelClerkMenu, BoxLayout.Y_AXIS));
+		panelClerkSubmenu.setLayout(new BoxLayout(panelClerkSubmenu, BoxLayout.Y_AXIS));
 		
 		//panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
 		//System.setOut(new PrintStream(taOutputStream));
@@ -224,6 +233,7 @@ public class Main implements ActionListener {
 			JButton addNewBook = new JButton("Add New Book");
 			JButton addNewBookCopy = new JButton("Add New Book Copy");
 			JButton back = new JButton("Go Back");
+			JButton quit = new JButton("Quit Program");
 			
 		//center align buttons
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -232,13 +242,15 @@ public class Main implements ActionListener {
 			addNewBook.setAlignmentX(Component.CENTER_ALIGNMENT);
 			addNewBookCopy.setAlignmentX(Component.CENTER_ALIGNMENT);
 			back.setAlignmentX(Component.CENTER_ALIGNMENT);
+			quit.setAlignmentX(Component.CENTER_ALIGNMENT);
 			
 			menu.setPreferredSize(new Dimension(200, 300));
 			
 		//attaching buttons to the frame
-			panel.add(addBook);
-			panel.add(reportCheckedOutBooks);
-			panel.add(mostPopular);
+			panelLibrarianMenu.add(addBook);
+			panelLibrarianMenu.add(reportCheckedOutBooks);
+			panelLibrarianMenu.add(mostPopular);
+			panelLibrarianMenu.add(quit);
 			
 			panelLibrarianSubmenu.add(addNewBook);
 			panelLibrarianSubmenu.add(addNewBookCopy);
@@ -250,13 +262,13 @@ public class Main implements ActionListener {
 			
 		//add the panel into JFrame
 			
-			menu.getContentPane().add(panel);
+			menu.getContentPane().add(panelLibrarianMenu);
 			
 			//add listeners to the buttons
 			addBook.addActionListener(new ActionListener() { //go into submenu
 	    		public void actionPerformed(ActionEvent e) {
 	    			menu.getContentPane().add(panelLibrarianSubmenu); //attach submenu to the frame
-					panel.setVisible(false);
+					panelLibrarianMenu.setVisible(false);
 					panelLibrarianSubmenu.setVisible(true);
 	    		}
 	    	});
@@ -283,7 +295,13 @@ public class Main implements ActionListener {
 			back.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			panelLibrarianSubmenu.setVisible(false);
-	    			panel.setVisible(true);
+	    			panelLibrarianMenu.setVisible(true);
+	    		}
+	    	});
+			quit.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			menu.dispose();
+	    			System.exit(0);
 	    		}
 	    	});
 			
@@ -299,31 +317,134 @@ public class Main implements ActionListener {
 			//LibrarianUser.main();
 		}
 		else if (user == 2){ //user is borrower
-			menu.setPreferredSize(new Dimension(700, 800));
-			menu.add(textArea);
+			//menu.setPreferredSize(new Dimension(700, 800));
+			//menu.add(textArea);
+			
+		//make some buttons
+			JButton searchBook = new JButton("Search Book");
+			JButton searchBookbyTitle = new JButton("Search Book by Title");
+			JButton searchBookbySubject = new JButton("Search Book by Subject");
+			JButton searchBookbyAuthor = new JButton("Search Book by Author");
+			JButton checkAccount = new JButton("Check Account");
+			JButton requestHold = new JButton("Place a Hold Request");
+			JButton payFines = new JButton("Pay Fines");
+			JButton back = new JButton("Go Back");
+			JButton quit = new JButton("Quit Program");
+			
+		//center align buttons
+			searchBook.setAlignmentX(Component.CENTER_ALIGNMENT);
+			searchBookbyTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+			searchBookbySubject.setAlignmentX(Component.CENTER_ALIGNMENT);
+			searchBookbyAuthor.setAlignmentX(Component.CENTER_ALIGNMENT);
+			checkAccount.setAlignmentX(Component.CENTER_ALIGNMENT);
+			requestHold.setAlignmentX(Component.CENTER_ALIGNMENT);
+			payFines.setAlignmentX(Component.CENTER_ALIGNMENT);
+			back.setAlignmentX(Component.CENTER_ALIGNMENT);
+			quit.setAlignmentX(Component.CENTER_ALIGNMENT);
+			
+		//set the menu frame's size
+			menu.setPreferredSize(new Dimension(200, 300));
+			
+		//attaching buttons to the frame
+			panelBorrowerMenu.add(searchBook);
+			panelBorrowerMenu.add(checkAccount);
+			panelBorrowerMenu.add(requestHold);
+			panelBorrowerMenu.add(payFines);
+			panelBorrowerMenu.add(quit);
+			
+			panelBorrowerSubmenu.add(searchBookbyAuthor);
+			panelBorrowerSubmenu.add(searchBookbySubject);
+			panelBorrowerSubmenu.add(searchBookbyTitle);
+			panelBorrowerSubmenu.add(back);
+			
+		//add borrower menu to the frame
+			menu.getContentPane().add(panelBorrowerMenu);
+			
+		//add the button listeners
+			searchBook.addActionListener(new ActionListener() { //go into submenu
+	    		public void actionPerformed(ActionEvent e) {
+	    			menu.getContentPane().add(panelBorrowerSubmenu); //attach submenu to the frame
+					panelBorrowerMenu.setVisible(false);
+					panelBorrowerSubmenu.setVisible(true);
+	    		}
+	    	});
+			searchBookbyTitle.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			searchBookbySubject.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			searchBookbyAuthor.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			checkAccount.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			requestHold.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			payFines.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			back.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			panelBorrowerSubmenu.setVisible(false);
+	    			panelBorrowerMenu.setVisible(true);
+	    		}
+	    	});
+			quit.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			menu.dispose();
+	    			System.exit(0);
+	    		}
+	    	});
+			
+			//display the window
+			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			menu.pack();
 			menu.setVisible(true);
-			BorrowerUser.main();
 		}
 		else if (user == 3){ //user is clerk
+		//make buttons
 			JButton addBorrower = new JButton("Add Borrower");
 			JButton checkOutItems = new JButton("Check out Items");
 			JButton processReturn = new JButton("Process Return");
 			JButton checkOverdueItems = new JButton("Check Overdue Items");
+			JButton quit = new JButton("Quit Program");
 
-			
+		//center align buttons
 			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
 			checkOutItems.setAlignmentX(Component.CENTER_ALIGNMENT);
 			processReturn.setAlignmentX(Component.CENTER_ALIGNMENT);
 			checkOverdueItems.setAlignmentX(Component.CENTER_ALIGNMENT);
+			quit.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+		//set the menu frame's size
 			menu.setPreferredSize(new Dimension(200, 300));
-			panel.add(addBorrower);
-			panel.add(checkOutItems);
-			panel.add(processReturn);
-			panel.add(checkOverdueItems);
+			
+		//attaching buttons to the frame
+			panelClerkMenu.add(addBorrower);
+			panelClerkMenu.add(checkOutItems);
+			panelClerkMenu.add(processReturn);
+			panelClerkMenu.add(checkOverdueItems);
+			panelClerkMenu.add(quit);
 
-			//add listeners to the buttons
+		//attach panel to the frame
+			menu.getContentPane().add(panelClerkMenu);
+			
+		//add listeners to the buttons
 			addBorrower.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			
@@ -344,10 +465,16 @@ public class Main implements ActionListener {
 	    			
 	    		}
 	    	});
+			quit.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			menu.dispose();
+	    			System.exit(0);
+	    		}
+	    	});
 			
 
 			//add the panel into JFrame
-			menu.getContentPane().add(panel);
+			//menu.getContentPane().add(panel);
 			
 			//display the window
 			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
