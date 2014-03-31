@@ -268,7 +268,7 @@ public class LibrarianUser {
 			s = Main.con.createStatement();
 			ResultSet rs1 = s.executeQuery("SELECT callNumber "
 					+ "FROM Book "
-					+ "WHERE isbn=" + isbn);
+					+ "WHERE isbn='" + isbn + "'");
 
 			while (rs1.next()) {
 				callNumber = rs1.getInt(1);
@@ -332,7 +332,8 @@ public class LibrarianUser {
 	 * book call number. If a subject is provided the report lists only books
 	 * related to that subject, otherwise all the books that are out are listed
 	 * by the report.
-	 */
+	*/
+	
 	public static void reportCheckedOutBooks(String subjectS) {
 
 		String subject = subjectS;
