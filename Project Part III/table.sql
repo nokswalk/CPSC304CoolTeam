@@ -223,6 +223,8 @@ insert into Borrowing values
 insert into Borrowing values
 (300, 333, 600, 1, TO_DATE('2014-01-29', 'YYYY-MM-DD'), TO_DATE('2014-01-31', 'YYYY-MM-DD'));
 insert into Borrowing values
+(400, 444, 999, 2, TO_DATE('2013-09-01', 'YYYY-MM-DD'), TO_DATE('2013-10-10', 'YYYY-MM-DD'));
+insert into Borrowing values
 (550, 555, 999, 3, TO_DATE('2014-03-29', 'YYYY-MM-DD'), null);
 
 
