@@ -34,7 +34,7 @@ public class LibrarianUser {
 				switch (choice) {
 				case 1:  addBook(); break;
 //				case 2:  reportCheckedOutBooks(); break; // TODO reportCheckedOutBooks() NOT DONE YET
-				case 3:  mostPopular(); break; // TODO mostPopular()
+//				case 3:  mostPopular(); break; // TODO mostPopular()
 				case 4:  quit = true; 
 				}
 			}
