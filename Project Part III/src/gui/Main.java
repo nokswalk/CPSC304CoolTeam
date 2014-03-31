@@ -194,17 +194,53 @@ public class Main implements ActionListener {
 		JPanel panel = new JPanel();
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
 		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-		panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
-		System.setOut(new PrintStream(taOutputStream));
+		//panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
+		//System.setOut(new PrintStream(taOutputStream));
 		JFrame menu = null;
 		if (user == 1){ //user is librarian
-			menu = new JFrame("Librarian");
-			menu.setPreferredSize(new Dimension(700, 800));
-			menu.add(textArea);
+			menu = new JFrame("Librarian Menu");
+			
+			JButton addBook = new JButton("Add Book");
+			JButton reportCheckedOutBooks = new JButton("Report Checked Out Books");
+			JButton mostPopular = new JButton("Most Popular Books");
+			
+			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
+			reportCheckedOutBooks.setAlignmentX(Component.CENTER_ALIGNMENT);
+			mostPopular.setAlignmentX(Component.CENTER_ALIGNMENT);
+			
+			menu.setPreferredSize(new Dimension(200, 300));
+			panel.add(addBook);
+			panel.add(reportCheckedOutBooks);
+			panel.add(mostPopular);
+			//panel.add(textArea);
+			
+			//add listeners to the buttons
+			addBook.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			reportCheckedOutBooks.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			mostPopular.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			
+			//add the panel into JFrame
+			menu.getContentPane().add(panel);
+			
+			//display the window
+			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			menu.pack();
 			menu.setVisible(true);
-			System.out.println("HELLOLLOLOLOOLOOOOO");
-			LibrarianUser.main();
+			
+			//System.out.println("HELLOLLOLOLOOLOOOOO");
+			//LibrarianUser.main();
 		}
 		else if (user == 2){ //user is borrower
 			menu = new JFrame("Borrower");
