@@ -412,6 +412,16 @@ public class Main implements ActionListener {
 	    			reportCheckedoutBooksFrame.setVisible(true);
 	    		}
 	    	});
+			enterreportCheckedOutBooks.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			okayreportCheckedOutBooks.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
 			mostPopular.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			
@@ -452,7 +462,7 @@ public class Main implements ActionListener {
 	    			yeartxt.setText(null);
 	    			subjectstxt.setText(null);
 	    			authorstxt.setText(null);
-	    			String isbnstr = isbntxt.getText();
+	    			String isbnstr = isbntxtaddNewBook.getText();
 	    			String titlestr = titletxt.getText();
 	    			String mainAuthorstr = mainAuthortxt.getText();
 	    			String publisherstr = publishertxt.getText();
