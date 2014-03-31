@@ -34,9 +34,9 @@ public class BorrowerUser {
 
 				switch(choice) {
 				case 1:  searchBook(); break;
-				case 2:  checkAccount(); break;
-				case 3:  requestHold(); break;
-				case 4:  payFine(); break;
+//				case 2:  checkAccount(); break;
+//				case 3:  requestHold(); break;
+//				case 4:  payFine(); break;
 				case 5:  quit = true; 
 				}
 			}
@@ -65,6 +65,7 @@ public class BorrowerUser {
 	/*
 	 * Keyword book search on titles, authors, and/or subjects.
 	 */
+	//DON'T USE THIS ONE FOR MAIN!!! D: OMG
 	private static void searchBook() {
 
 		// Search by title or author or subject
@@ -82,9 +83,9 @@ public class BorrowerUser {
 			System.out.println(" ");
 
 			switch (choice) {
-			case 1:  searchBookByTitle(); break;
-			case 2:  searchBookByAuthor(); break;
-			case 3:  searchBookBySubject(); break;
+//			case 1:  searchBookByTitle(); break;
+	//		case 2:  searchBookByAuthor(); break;
+		//	case 3:  searchBookBySubject(); break;
 			case 4:  return;
 			}
 		}
@@ -101,10 +102,10 @@ public class BorrowerUser {
 		}
 	}
 
-	private static void searchBookByTitle() {	
+	public static void searchBookByTitle(String titleS) {	
 
 		// searched title
-		String             sTitle;
+		String             sTitle = titleS;
 
 		// search results
 		int          	   callNumber;
@@ -122,7 +123,7 @@ public class BorrowerUser {
 		try {
 			// first search Book table based on title keyword
 			System.out.print("\n Title keyword: ");
-			sTitle = Main.in.readLine();
+			//sTitle = Main.in.readLine();
 
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
@@ -177,18 +178,15 @@ public class BorrowerUser {
 			s.close();
 		}
 
-		catch (IOException e) {
-			System.out.println("IOException!");
-		}
 		catch (SQLException ex) {
 			System.out.println("Message: " + ex.getMessage());
 		}
 	}
 
-	private static void searchBookByAuthor() {
+	public static void searchBookByAuthor(String authorS) {
 
 		// searched author
-		String             sAuthor;
+		String             sAuthor = authorS;
 
 		// search results
 		int          	   callNumber;
@@ -206,7 +204,7 @@ public class BorrowerUser {
 		try {
 			// first search Book table based on author name
 			System.out.print("\n Author name: ");
-			sAuthor = Main.in.readLine();
+			//sAuthor = Main.in.readLine();
 
 			s = Main.con.createStatement();
 
@@ -263,19 +261,16 @@ public class BorrowerUser {
 			s.close();
 		}
 
-		catch (IOException e) {
-			System.out.println("IOException!");
-		}
 		catch (SQLException ex) {
 			System.out.println("Message: " + ex.getMessage());
 		}
 
 	}
 
-	private static void searchBookBySubject() {
+	public static void searchBookBySubject(String subjectS) {
 
 		// searched subject
-		String             sSubject;
+		String             sSubject = subjectS;
 
 		// search results
 		int          	   callNumber;
@@ -293,7 +288,7 @@ public class BorrowerUser {
 		try {
 			// first search Book table based on subject name
 			System.out.print("\n Subject: ");
-			sSubject = Main.in.readLine();
+			//sSubject = Main.in.readLine();
 
 			s = Main.con.createStatement();
 
@@ -349,9 +344,6 @@ public class BorrowerUser {
 			s.close();
 		}
 
-		catch (IOException e) {
-			System.out.println("IOException!");
-		}
 		catch (SQLException ex) {
 			System.out.println("Message: " + ex.getMessage());
 		}
@@ -363,8 +355,9 @@ public class BorrowerUser {
 	 * not yet returned, any outstanding fines and 
 	 * the hold requests that have been placed by the borrower.
 	 */
-	private static void checkAccount() {
-		int userBid;
+	public static void checkAccount(String userBidS) {
+		
+		int userBid = Integer.parseInt(userBidS);
 
 		String title;
 		String isbn;
@@ -380,7 +373,7 @@ public class BorrowerUser {
 			s = Main.con.createStatement();
 
 			System.out.printf("Please enter your Borrower ID: ");
-			userBid = Integer.parseInt(Main.in.readLine());
+			//userBid = Integer.parseInt(Main.in.readLine());
 
 			// check that this is a valid Borrower account
 			ResultSet rs = s.executeQuery("SELECT * "
@@ -539,8 +532,6 @@ public class BorrowerUser {
 			s.close();
 		} catch (SQLException ex) {
 			System.out.println("Message: " + ex.getMessage());
-		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
 		}
 	}
 
@@ -589,29 +580,23 @@ public class BorrowerUser {
 		}
 	}
 	
-private static void requestHold() {
-		int					bid = 0;
-		int					callNumber = 0;
+public static void requestHold(String bidS, String callNumberS) {
+		int					bid = Integer.parseInt(bidS);
+		int					callNumber = Integer.parseInt(callNumberS);
 		Statement			s;
 		Statement			s2;
 		
 		System.out.println("Borrower ID: ");
 		try {
-			bid = Integer.parseInt(Main.in.readLine());
+			//bid = Integer.parseInt(Main.in.readLine());
 		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
 			System.out.println("Message: " + e.getMessage());
 			e.printStackTrace();
 		}
 		System.out.println("Book call number: ");
 		try {
-			callNumber = Integer.parseInt(Main.in.readLine());
+			//callNumber = Integer.parseInt(Main.in.readLine());
 		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
 			System.out.println("Message: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -739,9 +724,10 @@ private static void addHoldRequest(int bid, int callNumber) {
 	}
 }
 
-private static void payFine()
+//Tony! this one is tricky theres a string input -> display fines -> string input
+public static void payFine(String bidS, String fidS)
 {
-	int		   bid = 0;
+	int		   bid = Integer.parseInt(bidS);
 	Statement  s;
 	int		   fid = 0;
 	String	   ans = "";
@@ -751,11 +737,8 @@ private static void payFine()
 		
 		System.out.print("Borrower ID: ");
 		try {
-			bid = Integer.parseInt(Main.in.readLine());
+			//bid = Integer.parseInt(Main.in.readLine());
 		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
 			System.out.println("Message: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -801,30 +784,26 @@ private static void payFine()
 
 		}
 		System.out.println("\n\nSelect ID of fine that will be paid for: ");
+		
+		//this is where the chosen fid is inputted
+		fid = Integer.parseInt(fidS);
 		try {
-			fid = Integer.parseInt(Main.in.readLine());
+		//	fid = Integer.parseInt(Main.in.readLine());
 		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
 			System.out.println("Message: " + e.getMessage());
 			e.printStackTrace();
 		}
 		System.out.println("Proceed with payment?(y/n)");
-		try {
-			ans = Main.in.readLine();
-		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		if (ans.equals("y")){
+//		ans = Main.in.readLine();
+		
+//		if (ans.equals("y")){
+		//No confirmation needed anymore
 			updateFine(fid);
-			System.out.println("Fine has been paid.");
-		}
-		else{
-			System.out.println("Payment cancelled.");
-		}
+//			System.out.println("Fine has been paid.");
+//		}
+//		else{
+//			System.out.println("Payment cancelled.");
+//		}
 	}
 
 	catch (SQLException ex) {
