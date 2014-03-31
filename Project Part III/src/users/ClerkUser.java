@@ -63,6 +63,9 @@ public class ClerkUser {
 				System.err.println("Message: " + ex.getMessage());
 			}
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
+		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -149,10 +152,23 @@ public class ClerkUser {
 			ps.close();
 			
 			System.out.println("New borrower successfully added to database.");
+			
+			int bid;
+			// get new borrower's bid
+			rs = s.executeQuery("SELECT bid "
+					+ "FROM Borrower "
+					+ "WHERE sinOrStNo= '" + sinOrStNo + "'");
+			bid = rs.getInt(1);
+			s.close();
+			
+			System.out.println("New borrower id: " + bid);
 		}
 
 		catch (IOException e) {
 			System.err.println("IOException!");
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -215,6 +231,9 @@ public class ClerkUser {
 
 		catch (IOException e) {
 			System.err.println("IOException!");
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -285,6 +304,9 @@ public class ClerkUser {
 
 		catch (IOException e) {
 			System.err.println("IOException!");
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -413,6 +435,9 @@ public class ClerkUser {
 		catch (IOException e) {
 			System.err.println("IOException!");
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
+		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -532,7 +557,8 @@ public class ClerkUser {
 		catch (IOException e) {
 			System.out.println("Message: " + e.getMessage());
 			e.printStackTrace();
-		} catch (SQLException ex) {
+		} 
+		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
 

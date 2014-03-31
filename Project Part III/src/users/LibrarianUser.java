@@ -54,6 +54,9 @@ public class LibrarianUser {
 				System.err.println("Message: " + ex.getMessage());
 			}
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
+		}
 		catch (SQLException ex)	{
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -94,6 +97,9 @@ public class LibrarianUser {
 			catch (SQLException ex) {
 				System.err.println("Message: " + ex.getMessage());
 			}
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
 		}
 	}
 
@@ -219,6 +225,9 @@ public class LibrarianUser {
 		catch (IOException e) {
 			System.err.println("IOException!");
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
+		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 			try 
@@ -297,6 +306,9 @@ public class LibrarianUser {
 
 		catch (IOException e) {
 			System.err.println("IOException!");
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -509,6 +521,9 @@ public class LibrarianUser {
 			System.err.println("Message: " + e.getMessage());
 		} catch (IOException e) {
 			System.err.println("Message: " + e.getMessage());
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 	}
 }

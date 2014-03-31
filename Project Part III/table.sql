@@ -50,7 +50,7 @@ create table Borrower
 	sinOrStNo varchar(10) not null,
 	expiryDate date null,
 	type varchar(10) not null,
-	FOREIGN KEY (type) references BorrowerType);
+	FOREIGN KEY (type) references BorrowerType ON DELETE CASCADE);
 
 create table Book
 	(callNumber integer not null PRIMARY KEY,
@@ -65,19 +65,19 @@ create table BookCopy
 	copyNo integer not null,
 	status varchar(10) null,
 	PRIMARY KEY (callNumber, copyNo),
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table HasAuthor
 	(callNumber integer not null,
 	name varchar(20) not null,
 	PRIMARY KEY (callNumber, name),
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table HasSubject
 	(callNumber integer not null,
 	subject varchar(50) not null,
 	PRIMARY KEY (callNumber, subject),
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table HoldRequest
 	(hid integer not null PRIMARY KEY,
@@ -85,7 +85,7 @@ create table HoldRequest
 	callNumber integer not null,
 	issuedDate date null,
 	FOREIGN KEY (bid) references Borrower,
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELELTE CASCADE);
 
 create table Borrowing
 	(borid integer not null PRIMARY KEY,
@@ -95,7 +95,7 @@ create table Borrowing
 	outDate date null,
 	inDate date null,
 	FOREIGN KEY (bid) references Borrower,
-	FOREIGN KEY (callNumber, copyNo) references BookCopy);
+	FOREIGN KEY (callNumber, copyNo) references BookCopy ON DELETE CASCADE);
 
 create table Fine
 	(fid integer not null PRIMARY KEY,
@@ -103,7 +103,7 @@ create table Fine
 	issuedDate date null,
 	paidDate date null,
 	borid integer not null,
-	FOREIGN KEY (borid) references Borrowing);
+	FOREIGN KEY (borid) references Borrowing ON DELETE CASCADE);
 
 
 insert into BorrowerType values
