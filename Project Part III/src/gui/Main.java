@@ -92,9 +92,21 @@ public class Main implements ActionListener {
 		gb.setConstraints(loginButton, c);
 		contentPane.add(loginButton);
 
+		//TODO: please uncomment them, login process is simplified just to test gui.
 		// register password field and OK button with action event handler
-		passwordField.addActionListener(this);
-		loginButton.addActionListener(this);
+//		passwordField.addActionListener(this);
+//		loginButton.addActionListener(this);
+		loginButton.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			mainFrame.dispose();
+    			try {
+    				showUserMenu();
+    			} catch (ParseException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}     
+    		}
+    	});
 
 		// anonymous inner class for closing the window
 		mainFrame.addWindowListener(new WindowAdapter() 
@@ -104,7 +116,7 @@ public class Main implements ActionListener {
 				System.exit(0); 
 			}
 		});
-
+		
 		// size the window to obtain a best fit for the components
 		mainFrame.pack();
 
@@ -294,11 +306,54 @@ public class Main implements ActionListener {
 			BorrowerUser.main();
 		}
 		else if (user == 3){ //user is clerk
-			menu.setPreferredSize(new Dimension(700, 800));
-			menu.add(textArea);
+			JButton addBorrower = new JButton("Add Borrower");
+			JButton checkOutItems = new JButton("Check out Items");
+			JButton processReturn = new JButton("Process Return");
+			JButton checkOverdueItems = new JButton("Check Overdue Items");
+
+			
+			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
+			checkOutItems.setAlignmentX(Component.CENTER_ALIGNMENT);
+			processReturn.setAlignmentX(Component.CENTER_ALIGNMENT);
+			checkOverdueItems.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+			menu.setPreferredSize(new Dimension(200, 300));
+			panel.add(addBorrower);
+			panel.add(checkOutItems);
+			panel.add(processReturn);
+			panel.add(checkOverdueItems);
+
+			//add listeners to the buttons
+			addBorrower.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			checkOutItems.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			processReturn.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			checkOverdueItems.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			
+
+			//add the panel into JFrame
+			menu.getContentPane().add(panel);
+			
+			//display the window
+			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			menu.pack();
 			menu.setVisible(true);
-			ClerkUser.main();
+			//ClerkUser.main();
 		}
 		else{
 			System.out.println("OMG THIS SHOULD NEVER HAPPEN BUT IT DID SO HAHAHA");
@@ -429,7 +484,6 @@ public class Main implements ActionListener {
 */
     }
 
-    
     public static void main(String args[])
     {
     	Main m = new Main();
