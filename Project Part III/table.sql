@@ -129,17 +129,17 @@ insert into Borrower values
 
 
 insert into Book values
-(100, '01000000', 'Hello Java world', 'Laks', 'UBC','1999');
+(100, '001000000', 'Hello Java world', 'Laks', 'UBC','1999');
 insert into Book values
-(200, '02000000', 'Hi Database', 'Laks', 'SFU','2000');
+(200, '002000000', 'Hi Database', 'Laks', 'SFU','2000');
 insert into Book values
-(300, '03000000', 'Advanced Data Structures and Algorithms', 'Michelle Ng', 'UBC','2008');
+(300, '003000000', 'Advanced Data Structures and Algorithms', 'Michelle Ng', 'UBC','2008');
 insert into Book values
-(400, '04000000', 'Design Patterns', 'Enoch Choi', 'UBC','1999');
+(400, '004000000', 'Design Patterns', 'Enoch Choi', 'UBC','1999');
 insert into Book values
-(500, '05000000', 'Hi C++', 'Laks', 'UBC','2014');
+(500, '005000000', 'Hi C++', 'Laks', 'UBC','2014');
 insert into Book values
-(600, '06000000', 'Hardware and Software', 'Tony Chu', 'PublisherA','2002');
+(600, '006000000', 'Hardware and Software', 'Tony Chu', 'PublisherA','2002');
 insert into Book values
 (999, '123456789', 'ABCs', 'Sammy', 'Foo Readers', 2000);
 
