@@ -135,7 +135,7 @@ public class LibrarianUser {
 
 			// new book
 			System.out.print("Book ISBN: ");
-			isbn = Main.in.readLine();
+			//isbn = Main.in.readLine();
 
 			// check if this book already in database
 			s = Main.con.createStatement();
@@ -153,19 +153,19 @@ public class LibrarianUser {
 
 			ps1.setString(1, isbn);
 
-			System.out.print("Book title: ");
+			System.out.print("Book title: " + title);
 //			title = Main.in.readLine();
 			ps1.setString(2, title);
 
-			System.out.print("Book main author: ");
+			System.out.print("Book main author: " + mainAuthor);
 //			mainAuthor = Main.in.readLine();
 			ps1.setString(3, mainAuthor);
 
-			System.out.print("Book publisher: ");
+			System.out.print("Book publisher: "+ publisher);
 //			publisher = Main.in.readLine();
 			ps1.setString(4,  publisher);
 
-			System.out.print("Book published year: ");
+			System.out.print("Book published year: "+ year);
 //			year = Integer.parseInt(Main.in.readLine());
 			ps1.setInt(5, year);
 
@@ -189,6 +189,7 @@ public class LibrarianUser {
 					ps3.setString(1, null);
 				} else {
 					ps3.setString(1, subject.trim());
+					System.out.print(subject);
 				}
 				
 				ps3.executeUpdate();
@@ -207,6 +208,7 @@ public class LibrarianUser {
 						ps4.setString(1, null);
 					} else {
 						ps4.setString(1, author.trim());
+						System.out.print(author);
 					}
 					
 					ps4.executeUpdate();
@@ -225,9 +227,6 @@ public class LibrarianUser {
 			s.close();
 		}
 
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -262,13 +261,13 @@ public class LibrarianUser {
 
 		try {
 			// use ISBN to get existing callNumber
-			System.out.print("Book ISBN: ");
+			System.out.print("Book ISBN: " + isbn);
 		//	isbn = Main.in.readLine();
 
 			s = Main.con.createStatement();
 			ResultSet rs1 = s.executeQuery("SELECT callNumber "
 					+ "FROM Book "
-					+ "WHERE isbn=" + isbn);
+					+ "WHERE isbn=" + isbn );
 
 			while (rs1.next()) {
 				callNumber = rs1.getInt(1);
@@ -306,8 +305,6 @@ public class LibrarianUser {
 			ps.close();
 			s.close();
 		}
-
-
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -334,7 +331,8 @@ public class LibrarianUser {
 	 * book call number. If a subject is provided the report lists only books
 	 * related to that subject, otherwise all the books that are out are listed
 	 * by the report.
-	 */
+	*/
+	
 	public static void reportCheckedOutBooks(String subjectS) {
 
 		String subject = subjectS;
@@ -342,6 +340,7 @@ public class LibrarianUser {
 		try {
 			Statement s = Main.con.createStatement();
 			ResultSet rs;
+
 			//IF THE STRING IS EMPTY, IT WILL PRINT OUT EVERYTHING
 			System.out.println("Please enter a subject to report. \n "
 					+ "If no subject is inputted, the report will contain all subjects.): \n>> ");
@@ -446,8 +445,7 @@ public class LibrarianUser {
 			
 		} catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
-		} 
-		
+		}
 	}
 	
 	
@@ -465,11 +463,13 @@ public class LibrarianUser {
 			System.out.println("Generating a report with most popular items.");
 			System.out.println("Please specify how many books you wish to add into the report:\n>>");
 			//int amount = Integer.parseInt(Main.in.readLine());
+			
 			if(amount < 0){
 				System.out.println("Negatives are not allowed.");
 				return;
 			}
 			System.out.println("Please specify the year you wish to report:\n>>");
+
 			//String year = Main.in.readLine();
 			Statement statement = Main.con.createStatement();
 
@@ -515,7 +515,7 @@ public class LibrarianUser {
 			
 		} catch (SQLException e) {
 			System.err.println("Message: " + e.getMessage());
-		} 
+		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}

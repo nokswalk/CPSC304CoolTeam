@@ -63,10 +63,10 @@ public class ClerkUser {
 				System.out.println(" ");
 
 				switch (choice) {
-				case 1:  break;//addBorrower(); break;
-				case 2:  checkOutItems(); break;
-				case 3:  processReturn(); break;
-				case 4:  checkOverdueItems(); break;
+//				case 1:  addBorrower(); break;
+//				case 2:  checkOutItems(); break;
+//				case 3:  processReturn(); break;
+//				case 4:  checkOverdueItems(); break;
 				case 5:  quit = true; 
 				}
 			}
@@ -218,9 +218,11 @@ public class ClerkUser {
 	 * borrowing. Then it creates one or more borrowing records and prints a note with the 
 	 * items and their due day (which is giver to the borrower).  
 	 */
-	private static void checkOutItems() {
-		int 			   bid;
-		List<String>	   callNumbers;
+	
+	public static void checkOutItems(String bidS, String callNumbersS) {
+		int 			   bid = Integer.parseInt(bidS);
+		
+		List<String>	   callNumbers = Arrays.asList(callNumbersS.split(","));
 		Statement  		   s;
 
 		// today's date
@@ -229,10 +231,10 @@ public class ClerkUser {
 
 		try {
 			System.out.print("Borrower ID: ");
-			bid = Integer.parseInt(Main.in.readLine());
+			//bid = Integer.parseInt(Main.in.readLine());
 
 			System.out.print("List of call numbers to be checked out: ");
-			callNumbers = Arrays.asList(Main.in.readLine().split(","));
+			//callNumbers = Arrays.asList(Main.in.readLine().split(","));
 
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bid "
@@ -252,10 +254,6 @@ public class ClerkUser {
 
 			// print due date
 			System.out.println("Checked out items due " + getDueDate(bid, sqlToday));
-		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
@@ -354,11 +352,11 @@ public class ClerkUser {
 	 * borrower. If there is a hold request for this item by another borrower, the item is 
 	 * registered as "on hold" and a message is send to the borrower who made the hold request. 
 	 */
-	private static void processReturn() {
+	public static void processReturn(String callNumberS, String copyNoS) {
 
 		// provided by clerk
-		int 				callNumber;
-		int					copyNo;
+		int 				callNumber = Integer.parseInt(callNumberS);
+		int					copyNo = Integer.parseInt(copyNoS);
 
 		// determined by system
 		int					borid;
@@ -379,9 +377,9 @@ public class ClerkUser {
 
 			// first enter callNumber and copyNo
 			System.out.print("Book call number: ");
-			callNumber = Integer.parseInt(Main.in.readLine());
+//			callNumber = Integer.parseInt(Main.in.readLine());
 			System.out.print("Book copy number: ");
-			copyNo = Integer.parseInt(Main.in.readLine());
+//			copyNo = Integer.parseInt(Main.in.readLine());
 
 			s = Main.con.createStatement();
 
@@ -457,9 +455,6 @@ public class ClerkUser {
 			ps4.close();
 
 		}
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -474,11 +469,12 @@ public class ClerkUser {
 	 * borrowers who have checked them out. The clerk may decide to send an email messages 
 	 * to any of them (or to all of them). 
 	 */
-	private static void checkOverdueItems() {
+	//THIS METHOD TAKES IN BIDS AS INPUT TO KNOW WHICH EMAIL ADDRESSES TO SEND TO. IF 'ALL' IS INPUTTED, THEN EMAILS ALL BORROWERS
+	public static void checkOverdueItems(String bidsSS) {
 
 		Statement statement;
 		ResultSet rs;
-
+		
 		List<Integer> overdueBids = new ArrayList<Integer>();  // for storing overdue item borrower ids, for emailing
 
 		try {
@@ -554,13 +550,12 @@ public class ClerkUser {
 				}
 			}
 
-
 			// Clerk can send an email to each user or all users
-			List<String> bidsS = null;
+			List<String> bidsS = Arrays.asList(bidsSS.split(","));
 
 			System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
 					+ "or input 'all' to send a message to all borrowers: ");
-			bidsS = Arrays.asList(Main.in.readLine().split(","));
+			//bidsS = Arrays.asList(Main.in.readLine().split(","));
 
 			if (bidsS.get(0).equals("all")){
 				for (int b : overdueBids) {
@@ -579,10 +574,6 @@ public class ClerkUser {
 			statement.close();
 		}
 
-		catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} 
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -634,9 +625,9 @@ public class ClerkUser {
 		try {
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bookTimeLimit "
-					+ "FROM Borrower B, BorrowerType C "
-					+ "WHERE B.type = C.type "
-					+ "AND B.bid = " + bid);
+										+ "FROM Borrower B, BorrowerType C "
+										+ "WHERE B.type = C.type "
+										+ "AND B.bid = " + bid);
 			while (rs.next()){
 				bookTimeLimit = rs.getInt(1);
 			}
@@ -663,7 +654,7 @@ public class ClerkUser {
 		return sqlDate;		
 	}
 
-
+	
 	// Returns true of dueDate < today's date
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
