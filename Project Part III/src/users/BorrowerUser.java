@@ -56,6 +56,9 @@ public class BorrowerUser {
 				System.err.println("Message: " + ex.getMessage());
 			}
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
+		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -99,6 +102,9 @@ public class BorrowerUser {
 			catch (SQLException ex) {
 				System.err.println("Message: " + ex.getMessage());
 			}
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
 		}
 	}
 
@@ -540,6 +546,9 @@ public class BorrowerUser {
 		} catch (IOException e) {
 			System.err.println("Message: " + e.getMessage());
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
+		}
 	}
 
 
@@ -625,6 +634,9 @@ public class BorrowerUser {
 		}
 		catch (IOException e) {
 			System.err.println("Message: " + e.getMessage());
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 	}
 
@@ -726,6 +738,9 @@ public class BorrowerUser {
 		}
 		catch (IOException e) {
 			System.err.println("Message: " + e.getMessage());
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 	}
 
