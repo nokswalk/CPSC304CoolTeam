@@ -528,6 +528,10 @@ public class ClerkUser {
 					sendEmailOverdue(bid);
 				}
 			}
+			else if (bidsS.get(0).trim().equals("")){
+				System.out.println("Email not sent");
+			}
+			
 			else {
 			for (String b: bidsS){
 				int bid = Integer.parseInt(b.trim());
