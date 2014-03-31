@@ -421,6 +421,7 @@ public class Main implements ActionListener {
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
 			
+			
 		//center align buttons
 			searchBook.setAlignmentX(Component.CENTER_ALIGNMENT);
 			searchBookbyTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -508,7 +509,7 @@ public class Main implements ActionListener {
 		}
 		else if (user == 3){ //user is clerk
 		//make addNewBook frame and panel
-			int ROWS = 7;
+			int ROWS = 8;
 			int COLUMNS = 2;
 	
 			final JFrame addBorrowerFrame = new JFrame("Add a New Borrower");
@@ -537,15 +538,16 @@ public class Main implements ActionListener {
 			JLabel email = new JLabel("Email Address:");
 			JLabel sinOrStno = new JLabel("SIN or Student Number:");
 			JLabel type = new JLabel("Type(student, staff, etc):");
+			
 
 		//making textarea for addBorrower
-			JTextField passwordtxt = new JTextField();
-			JTextField nametxt = new JTextField();
-			JTextField addresstxt = new JTextField();
-			JTextField phonetxt = new JTextField();
-			JTextField emailtxt = new JTextField();
-			JTextField sinOrStnotxt = new JTextField();
-			JTextField typetxt = new JTextField();
+			final JTextField passwordtxt = new JTextField();
+			final JTextField nametxt = new JTextField();
+			final JTextField addresstxt = new JTextField();
+			final JTextField phonetxt = new JTextField();
+			final JTextField emailtxt = new JTextField();
+			final JTextField sinOrStnotxt = new JTextField();
+			final JTextField typetxt = new JTextField();
 			
 		//make buttons
 			JButton addBorrower = new JButton("Add Borrower");
@@ -554,6 +556,8 @@ public class Main implements ActionListener {
 			JButton checkOverdueItems = new JButton("Check Overdue Items");
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
+			JButton enter = new JButton("Enter");
+			JButton cancel = new JButton("Cancel");
 			
 		//center align buttons
 			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -594,6 +598,8 @@ public class Main implements ActionListener {
 			paneladdBorrower.add(sinOrStnotxt);
 			paneladdBorrower.add(type);
 			paneladdBorrower.add(typetxt);
+			paneladdBorrower.add(enter);
+			paneladdBorrower.add(cancel);
 			
 		//add listeners to the buttons
 			addBorrower.addActionListener(new ActionListener() {
@@ -630,7 +636,39 @@ public class Main implements ActionListener {
 	    			System.exit(0);
 	    		}
 	    	});
-			
+			enter.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			passwordtxt.setText(null);
+	    			nametxt.setText(null);
+	    			addresstxt.setText(null);
+	    			phonetxt.setText(null);
+	    			emailtxt.setText(null);
+	    			sinOrStnotxt.setText(null);
+	    			typetxt.setText(null);
+	    			String passwordstr = passwordtxt.getText();
+	    			String namestr = nametxt.getText();
+	    			String addressstr = addresstxt.getText();
+	    			String phonestr = phonetxt.getText();
+	    			String emailstr = emailtxt.getText();
+	    			String sinOrStnostr = sinOrStnotxt.getText();
+	    			String typestr = typetxt.getText();
+	    			//ClerkUser.addBorrower(passwordstr, namestr, addressstr, phonestr, emailstr, sinOrStnostr, typestr);
+	    			addBorrowerFrame.dispose();
+	    		}
+	    	});
+			cancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			passwordtxt.setText(null);
+	    			nametxt.setText(null);
+	    			addresstxt.setText(null);
+	    			phonetxt.setText(null);
+	    			emailtxt.setText(null);
+	    			sinOrStnotxt.setText(null);
+	    			typetxt.setText(null);
+	    			addBorrowerFrame.dispose();
+	    		}
+	    	});
+
 
 			//add the panel into JFrame
 			//menu.getContentPane().add(panel);
