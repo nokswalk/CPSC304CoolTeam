@@ -451,7 +451,7 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			isbntxt.setText(null);
 	    			String isbnstr = isbntxt.getText();
-	    			//LibrarianUser.addNewBookCopy(isbnstr);
+	    			LibrarianUser.addNewBookCopy(isbnstr);
 	    			isbntxt.setText(null);
 	    			addNewBookCopyFrame.dispose();
 	    		}
