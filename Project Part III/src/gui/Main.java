@@ -96,17 +96,17 @@ public class Main implements ActionListener {
 
 		passwordField.addActionListener(this);
 		loginButton.addActionListener(this);
-		loginButton.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    			mainFrame.dispose();
-    			try {
-    				showUserMenu();
-    			} catch (ParseException e1) {
-    				// TODO Auto-generated catch block
-    				e1.printStackTrace();
-    			}     
-    		}
-    	});
+//		loginButton.addActionListener(new ActionListener() {
+//    		public void actionPerformed(ActionEvent e) {
+//    			mainFrame.dispose();
+//    			try {
+//    				showUserMenu();
+//    			} catch (ParseException e1) {
+//    				// TODO Auto-generated catch block
+//    				e1.printStackTrace();
+//    			}     
+//    		}
+//    	});
 
 		// anonymous inner class for closing the window
 		mainFrame.addWindowListener(new WindowAdapter() 
@@ -509,12 +509,13 @@ public class Main implements ActionListener {
 		}
 		else if (user == 3){ //user is clerk
 		//make addNewBook frame and panel
-			int ROWS = 8;
+			int ADDBORROWERROWS = 8;
 			int COLUMNS = 2;
 	
 			final JFrame addBorrowerFrame = new JFrame("Add a New Borrower");
 			final JPanel paneladdBorrower = new JPanel();
-			GridLayout layout = new GridLayout(ROWS, COLUMNS);
+			final JPanel paneladdBorrowerResult = new JPanel();
+			GridLayout layout = new GridLayout(ADDBORROWERROWS, COLUMNS);
 			paneladdBorrower.setLayout(layout);
 			addBorrowerFrame.setPreferredSize(new Dimension (300, 200));
 			addBorrowerFrame.setLocationRelativeTo(null);
@@ -558,6 +559,7 @@ public class Main implements ActionListener {
 			JButton quit = new JButton("Quit Program");
 			JButton enter = new JButton("Enter");
 			JButton cancel = new JButton("Cancel");
+			final JButton close = new JButton("Close");
 			
 		//center align buttons
 			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -607,6 +609,13 @@ public class Main implements ActionListener {
 	    			addBorrowerFrame.getContentPane().add(paneladdBorrower);
 	    			addBorrowerFrame.pack();
 	    			addBorrowerFrame.setVisible(true);
+	    			passwordtxt.setText(null);
+	    			nametxt.setText(null);
+	    			addresstxt.setText(null);
+	    			phonetxt.setText(null);
+	    			emailtxt.setText(null);
+	    			sinOrStnotxt.setText(null);
+	    			typetxt.setText(null);
 	    		}
 	    	});
 			checkOutItems.addActionListener(new ActionListener() {
@@ -638,13 +647,6 @@ public class Main implements ActionListener {
 	    	});
 			enter.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			passwordtxt.setText(null);
-	    			nametxt.setText(null);
-	    			addresstxt.setText(null);
-	    			phonetxt.setText(null);
-	    			emailtxt.setText(null);
-	    			sinOrStnotxt.setText(null);
-	    			typetxt.setText(null);
 	    			String passwordstr = passwordtxt.getText();
 	    			String namestr = nametxt.getText();
 	    			String addressstr = addresstxt.getText();
@@ -652,11 +654,28 @@ public class Main implements ActionListener {
 	    			String emailstr = emailtxt.getText();
 	    			String sinOrStnostr = sinOrStnotxt.getText();
 	    			String typestr = typetxt.getText();
-	    			//ClerkUser.addBorrower(passwordstr, namestr, addressstr, phonestr, emailstr, sinOrStnostr, typestr);
-	    			addBorrowerFrame.dispose();
+	    			ClerkUser.addBorrower(passwordstr, namestr, addressstr, phonestr, emailstr, sinOrStnostr, typestr);
+	    			int bid = ClerkUser.getNewBid(sinOrStnostr);
+	    			if(bid == -1){
+	    				addBorrowerFrame.setPreferredSize(new Dimension (450, 200));
+	    				paneladdBorrowerResult.add(new JLabel("Not Available to Retrieve Borrower ID with this SIN or Student Number."));
+	    			}else
+	    				paneladdBorrowerResult.add(new JLabel(namestr + "'s Borrower ID (bid) is : " + bid));
+	    			paneladdBorrowerResult.add(close);
+	    			addBorrowerFrame.getContentPane().add(paneladdBorrowerResult);
+	    			paneladdBorrower.setVisible(false);
+	    			paneladdBorrowerResult.setVisible(true);
 	    		}
 	    	});
-			cancel.addActionListener(new ActionListener() {
+	    	close.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			addBorrowerFrame.dispose();
+	    			paneladdBorrowerResult.setVisible(false);
+	    			paneladdBorrower.setVisible(true);
+	    		}
+	    	});
+
+	    	cancel.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			passwordtxt.setText(null);
 	    			nametxt.setText(null);
@@ -668,6 +687,7 @@ public class Main implements ActionListener {
 	    			addBorrowerFrame.dispose();
 	    		}
 	    	});
+
 
 
 			//add the panel into JFrame
