@@ -450,12 +450,13 @@ public class LibrarianUser {
 			System.out.println("Also specify the year:\n>>");
 			String year = Main.in.readLine();
 			Statement statement = Main.con.createStatement();
+
 			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS count "  
 												+ "FROM Borrowing B "
 												+ "LEFT JOIN Book A "
 												+ "ON B.callNumber=A.callNumber "
 												+ "WHERE B.outDate > '"+year+"-01-01' AND B.outDate < '"+year+"-12-31' "
-												+ "GROUP BY A.callNumber, A.title, A.mainAuthor, A.isbn "
+												+ "GROUP BY A.callNumber "
 												+ "ORDER BY rating desc");
 			// get info on ResultSet
 			ResultSetMetaData rsmd = query.getMetaData();
@@ -471,13 +472,11 @@ public class LibrarianUser {
 			for(int i = 0; i < amount; i++){
 				query.next();
 				// simplified output formatting; truncation may occur
-				int callNumber = query.getInt("callNumber");
 				String title = query.getString("title");
 				String isbn = query.getString("isbn");
 				String mainAuthor = query.getString("mainAuthor");
 				int count = query.getInt("count");
 
-				System.out.printf("%-10.10s", callNumber);
 				System.out.printf("%-30.30s", title);
 				System.out.printf("%-20.20s", mainAuthor);
 				System.out.printf("%-10.10s", isbn);
