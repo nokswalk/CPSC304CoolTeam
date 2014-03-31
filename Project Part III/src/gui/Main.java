@@ -257,7 +257,29 @@ public class Main implements ActionListener {
 			
 		//make reportCheckOutBooks frame and panel
 			final JFrame reportCheckedoutBooksFrame = new JFrame("Report Checked out Books");
-			final JPanel panelreportCheckedoutBooks = new JPanel();
+			final JPanel toppanelreportCheckedoutBooks = new JPanel();
+			toppanelreportCheckedoutBooks.setLayout(new BorderLayout());
+			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
+			final JPanel panelreportCheckedoutBooksNorth = new JPanel();
+			
+			//final JPanel panelreportCheckedoutBooksCenter = new JPanel();
+			//final JPanel panelreportCheckedoutBooksSouth = new JPanel();
+			
+			//panelreportCheckedoutBooksNorth.setLayout(new FlowLayout());
+			
+			//JSplitPane splitpanelreportCheckedoutBooksV = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+			//JSplitPane splitpanelreportCheckedoutBooksBottomV = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+			//toppanelreportCheckedoutBooks.add(splitpanelreportCheckedoutBooksV, BorderLayout.CENTER);
+			
+			//splitpanelreportCheckedoutBooksV.setTopComponent(panelreportCheckedoutBooksNorth);
+			//splitpanelreportCheckedoutBooksV.setBottomComponent(panelreportCheckedoutBooksCenter);
+			//splitpanelreportCheckedoutBooksBottomV.setTopComponent(splitpanelreportCheckedoutBooksV);
+			//splitpanelreportCheckedoutBooksBottomV.setBottomComponent(panelreportCheckedoutBooksSouth);
+			//toppanelreportCheckedoutBooks.add(splitpanelreportCheckedoutBooksBottomV);
+			
+			reportCheckedoutBooksFrame.setPreferredSize(new Dimension(800,600));
+			reportCheckedoutBooksFrame.setLocationRelativeTo(null);
+			
 		//make mostPopular frame and panel
 			final JFrame mostPopularFrame = new JFrame("Most Popular");
 			final JPanel panelmostPopular = new JPanel();
@@ -283,6 +305,7 @@ public class Main implements ActionListener {
 			JButton enteraddNewBookCopy = new JButton("Enter");
 			JButton canceladdNewBook = new JButton("Cancel");
 			JButton canceladdNewBookCopy = new JButton("Cancel");
+			JButton okayreportCheckedoutBooks = new JButton("Okay");
 			
 		//making text field
 			final JTextField isbntxt = new JTextField();
@@ -292,7 +315,10 @@ public class Main implements ActionListener {
 			final JTextField yeartxt = new JTextField();
 			final JTextField subjectstxt = new JTextField();
 			final JTextField authorstxt = new JTextField();
+			final JTextField reportCheckedOutBookstxt = new JTextField();
 			
+		//make text area
+			final JTextArea reportCheckedOutBookstxtarea = new JTextArea();
 			//setupButton(addBook, panelLibrarianMenu);
 			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
 			
@@ -344,6 +370,10 @@ public class Main implements ActionListener {
 			paneladdNewBookCopy.add(enteraddNewBookCopy);
 			paneladdNewBookCopy.add(canceladdNewBookCopy);
 			
+			//splitpanelreportCheckedoutBooksV.add(reportCheckedOutBookstxt);
+			//splitpanelreportCheckedoutBooksBottomV.add(reportCheckedOutBookstxtarea);
+			//splitpanelreportCheckedoutBooksBottomV.add(okayreportCheckedoutBooks);
+			
 		//add the panel into JFrame
 			
 			menu.getContentPane().add(panelLibrarianMenu);
@@ -358,7 +388,9 @@ public class Main implements ActionListener {
 	    	});
 			reportCheckedOutBooks.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+	    			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
+	    			reportCheckedoutBooksFrame.pack();
+	    			reportCheckedoutBooksFrame.setVisible(true);
 	    		}
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
