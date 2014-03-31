@@ -47,17 +47,17 @@ public class BorrowerUser {
 
 		}
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -90,13 +90,13 @@ public class BorrowerUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
 	}
@@ -178,10 +178,10 @@ public class BorrowerUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -264,10 +264,10 @@ public class BorrowerUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 
 	}
@@ -350,10 +350,10 @@ public class BorrowerUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -375,7 +375,6 @@ public class BorrowerUser {
 
 		Statement s;
 
-
 		try {
 			s = Main.con.createStatement();
 
@@ -391,7 +390,6 @@ public class BorrowerUser {
 				s.close();
 				return;
 			}
-
 
 			// query of title, isbn and mainAuthor when borrowing's inDate is null.
 			System.out.println("List of items you currently borrowed:");
@@ -537,10 +535,11 @@ public class BorrowerUser {
 			// close the statement;
 			// the ResultSet will also be closed
 			s.close();
+			
 		} catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
+			System.err.println("Message: " + e.getMessage());
 		}
 	}
 
@@ -584,7 +583,7 @@ public class BorrowerUser {
 		}
 		
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
 	}
@@ -650,7 +649,7 @@ private static void requestHold() {
 		}
 
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -658,7 +657,7 @@ private static void requestHold() {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
@@ -692,7 +691,7 @@ private static void updateBookCopyStatus(int callNumber, int copyNo)
 		}
 		catch (SQLException ex2)
 		{
-			System.out.println("Message: " + ex2.getMessage());
+			System.err.println("Message: " + ex2.getMessage());
 			System.exit(-1);
 		}
 	}	
@@ -725,7 +724,7 @@ private static void addHoldRequest(int bid, int callNumber) {
 
 
 	catch (SQLException ex) {
-		System.out.println("Message: " + ex.getMessage());
+		System.err.println("Message: " + ex.getMessage());
 		try 
 		{
 			// undo the insert
@@ -733,7 +732,7 @@ private static void addHoldRequest(int bid, int callNumber) {
 		}
 		catch (SQLException ex2)
 		{
-			System.out.println("Message: " + ex2.getMessage());
+			System.err.println("Message: " + ex2.getMessage());
 			System.exit(-1);
 		}
 	}
@@ -828,7 +827,7 @@ private static void payFine()
 	}
 
 	catch (SQLException ex) {
-		System.out.println("Message: " + ex.getMessage());
+		System.err.println("Message: " + ex.getMessage());
 		try 
 		{
 			// undo the insert
@@ -836,7 +835,7 @@ private static void payFine()
 		}
 		catch (SQLException ex2)
 		{
-			System.out.println("Message: " + ex2.getMessage());
+			System.err.println("Message: " + ex2.getMessage());
 			System.exit(-1);
 		}
 	}
@@ -865,7 +864,7 @@ private static void updateFine(int fid)
 	}
 	catch (SQLException ex)
 	{
-		System.out.println("Message: " + ex.getMessage());
+		System.err.println("Message: " + ex.getMessage());
 
 		try 
 		{
@@ -873,7 +872,7 @@ private static void updateFine(int fid)
 		}
 		catch (SQLException ex2)
 		{
-			System.out.println("Message: " + ex2.getMessage());
+			System.err.println("Message: " + ex2.getMessage());
 			System.exit(-1);
 		}
 	}	

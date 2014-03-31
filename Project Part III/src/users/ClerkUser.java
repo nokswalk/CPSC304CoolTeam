@@ -54,17 +54,17 @@ public class ClerkUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -128,10 +128,10 @@ public class ClerkUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -139,7 +139,7 @@ public class ClerkUser {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
@@ -213,10 +213,10 @@ public class ClerkUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -224,7 +224,7 @@ public class ClerkUser {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
@@ -257,10 +257,10 @@ public class ClerkUser {
 		}
 		
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -268,7 +268,7 @@ public class ClerkUser {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
@@ -294,7 +294,7 @@ public class ClerkUser {
 	}
 	catch (SQLException ex)
 	{
-	    System.out.println("Message: " + ex.getMessage());
+	    System.err.println("Message: " + ex.getMessage());
 	    
 	    try 
 	    {
@@ -302,7 +302,7 @@ public class ClerkUser {
 	    }
 	    catch (SQLException ex2)
 	    {
-		System.out.println("Message: " + ex2.getMessage());
+		System.err.println("Message: " + ex2.getMessage());
 		System.exit(-1);
 	    }
 	}	
@@ -418,10 +418,10 @@ public class ClerkUser {
 
 		}
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -511,7 +511,7 @@ public class ClerkUser {
 			statement.close();
 			
 		} catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -524,7 +524,7 @@ public class ClerkUser {
 		return sqlDate;
 		}
 		catch (ParseException p) {
-			System.out.println("Message: Date must be in format dd/MM/yy.");
+			System.err.println("Message: Date must be in format dd/MM/yy.");
 			return null;
 		}		
 	}

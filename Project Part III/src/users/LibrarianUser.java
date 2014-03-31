@@ -33,8 +33,8 @@ public class LibrarianUser {
 
 				switch (choice) {
 				case 1:  addBook(); break;
-				case 2:  reportCheckedOutBooks(); break; // TODO reportCheckedOutBooks() NOT DONE YET
-				case 3:  mostPopular(); break; // TODO mostPopular()
+				case 2:  reportCheckedOutBooks(); break;
+				case 3:  mostPopular(); break; 
 				case 4:  quit = true; 
 				}
 			}
@@ -45,17 +45,17 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
 		catch (SQLException ex)	{
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -86,13 +86,13 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
 	}
@@ -217,10 +217,10 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -228,7 +228,7 @@ public class LibrarianUser {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
@@ -296,10 +296,10 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -307,13 +307,10 @@ public class LibrarianUser {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
-
-
-
 	}
 	
 
@@ -422,15 +419,15 @@ public class LibrarianUser {
 			// the ResultSet will also be closed
 			statement.close();
 		} catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		} catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
 	}
@@ -453,7 +450,7 @@ public class LibrarianUser {
 			System.out.println("Also specify the year:\n>>");
 			String year = Main.in.readLine();
 			Statement statement = Main.con.createStatement();
-			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS rating "  
+			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS count "  
 												+ "FROM Borrowing B "
 												+ "LEFT JOIN Book A "
 												+ "ON B.callNumber=A.callNumber "
@@ -478,22 +475,23 @@ public class LibrarianUser {
 				String title = query.getString("title");
 				String isbn = query.getString("isbn");
 				String mainAuthor = query.getString("mainAuthor");
-				int rating = query.getInt("rating");
+				int count = query.getInt("count");
 
 				System.out.printf("%-10.10s", callNumber);
 				System.out.printf("%-30.30s", title);
-				System.out.printf("%-10.10s", isbn);
 				System.out.printf("%-20.20s", mainAuthor);
-				System.out.printf("%-10.10s", rating);
+				System.out.printf("%-10.10s", isbn);
+				System.out.printf("%-10.10s\n", count);
 			}
 
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
+			
 		} catch (SQLException e) {
-			System.out.println("Message: " + e.getMessage());
+			System.err.println("Message: " + e.getMessage());
 		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
+			System.err.println("Message: " + e.getMessage());
 		}
 	}
 }
