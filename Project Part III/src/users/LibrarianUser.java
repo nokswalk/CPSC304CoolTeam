@@ -34,7 +34,7 @@ public class LibrarianUser {
 				switch (choice) {
 				case 1:  addBook(); break;
 				case 2:  reportCheckedOutBooks(); break; // TODO reportCheckedOutBooks() NOT DONE YET
-				case 3:  ; break; // TODO mostPopular()
+				case 3:  mostPopular(); break; // TODO mostPopular()
 				case 4:  quit = true; 
 				}
 			}
@@ -435,10 +435,65 @@ public class LibrarianUser {
 		}
 	}
 	
+	/*
+	 * Generate a report with the most popular items in a given year. The
+	 * librarian provides a year and a number n. The system lists out the top n
+	 * books that where borrowed the most times during that year. The books are
+	 * ordered by the number of times they were borrowed.
+	 */
+	private static void mostPopular() {
+		try {
+			System.out.println("Generating a report with most popular items.");
+			System.out.println("Please specify how many books you want to add into the report:\n>>");
+			int amount = Integer.parseInt(Main.in.readLine());
+			if(amount < 0){
+				System.out.println("negative is not allowed.");
+				return;
+			}
+			System.out.println("Also specify the year:\n>>");
+			String year = Main.in.readLine();
+			Statement statement = Main.con.createStatement();
+			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS rating "  
+												+ "FROM Borrowing B "
+												+ "LEFT JOIN Book A "
+												+ "ON B.callNumber=A.callNumber "
+												+ "WHERE B.outDate > '"+year+"-01-01' AND B.outDate < '"+year+"-12-31' "
+												+ "GROUP BY A.callNumber, A.title, A.mainAuthor, A.isbn "
+												+ "ORDER BY rating desc");
+			// get info on ResultSet
+			ResultSetMetaData rsmd = query.getMetaData();
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+			// display column names;
+			for (int i = 0; i < numCols; i++) {
+				// get column name and print it
+				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
+			}
+			System.out.println(" ");
+			
+			for(int i = 0; i < amount; i++){
+				query.next();
+				// simplified output formatting; truncation may occur
+				int callNumber = query.getInt("callNumber");
+				String title = query.getString("title");
+				String isbn = query.getString("isbn");
+				String mainAuthor = query.getString("mainAuthor");
+				int rating = query.getInt("rating");
 
-//	private static void mostPopular() {
-//		// TODO Auto-generated method stub
-//		
-//	}
+				System.out.printf("%-10.10s", callNumber);
+				System.out.printf("%-30.30s", title);
+				System.out.printf("%-10.10s", isbn);
+				System.out.printf("%-20.20s", mainAuthor);
+				System.out.printf("%-10.10s", rating);
+			}
 
+			// close the statement;
+			// the ResultSet will also be closed
+			statement.close();
+		} catch (SQLException e) {
+			System.out.println("Message: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Message: " + e.getMessage());
+		}
+	}
 }
