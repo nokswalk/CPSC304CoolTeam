@@ -226,7 +226,7 @@ public class Main implements ActionListener {
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
 		
 		//setting how we want the panel to be shown on the frame
-		panelLibrarianMenu.setLayout(new BoxLayout(panelLibrarianMenu,BoxLayout.Y_AXIS));
+		panelLibrarianMenu.setLayout(new BoxLayout(panelLibrarianMenu, BoxLayout.Y_AXIS));
 		panelLibrarianSubmenu.setLayout(new BoxLayout(panelLibrarianSubmenu, BoxLayout.Y_AXIS));
 		panelBorrowerMenu.setLayout(new BoxLayout(panelBorrowerMenu, BoxLayout.Y_AXIS));
 		panelBorrowerSubmenu.setLayout(new BoxLayout(panelBorrowerSubmenu, BoxLayout.Y_AXIS));
@@ -243,7 +243,7 @@ public class Main implements ActionListener {
 			final JPanel paneladdNewBook = new JPanel();
 			GridLayout layoutaddNewBook = new GridLayout(ROWS, COLUMNS);
 			paneladdNewBook.setLayout(layoutaddNewBook);
-			addNewBookFrame.setPreferredSize(new Dimension (500, 230));
+			addNewBookFrame.setPreferredSize(new Dimension (500, 240));
 			addNewBookFrame.setLocationRelativeTo(null);
 			
 			
@@ -260,10 +260,12 @@ public class Main implements ActionListener {
 		//make reportCheckOutBooks frame and panel
 			final JFrame reportCheckedoutBooksFrame = new JFrame("Report Checked out Books");
 			final JPanel toppanelreportCheckedoutBooks = new JPanel();
-			toppanelreportCheckedoutBooks.setLayout(new BorderLayout());
+			toppanelreportCheckedoutBooks.setLayout(new BoxLayout(toppanelreportCheckedoutBooks, BoxLayout.Y_AXIS));
 			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
 			final JPanel panelreportCheckedoutBooksNorth = new JPanel(); //has multiple things inside so we need to make a panel to contain it
+			
 			panelreportCheckedoutBooksNorth.setLayout(new FlowLayout()); //set the layout to go from left->right
+			
 			
 			//final JPanel panelreportCheckedoutBooksCenter = new JPanel();
 			//final JPanel panelreportCheckedoutBooksSouth = new JPanel();
@@ -289,12 +291,14 @@ public class Main implements ActionListener {
 			
 		//making labels
 			JLabel isbn = new JLabel("ISBN:");
+			JLabel isbnaddNewBook = new JLabel("ISBN:");
 			JLabel title = new JLabel("Title:");
 			JLabel mainAuthor = new JLabel("Main Author:");
 			JLabel publisher = new JLabel("Publisher:");
 			JLabel year = new JLabel("Year:");
 			JLabel subjects = new JLabel("Subjects: (place commas in between)");
 			JLabel authors = new JLabel("Authors: (place commas in between)");
+			JLabel reportCheckedOutBooksSubject = new JLabel("Subject:");
 			
 		//making buttons
 			JButton addBook = new JButton("Add Book");
@@ -308,10 +312,12 @@ public class Main implements ActionListener {
 			JButton enteraddNewBookCopy = new JButton("Enter");
 			JButton canceladdNewBook = new JButton("Cancel");
 			JButton canceladdNewBookCopy = new JButton("Cancel");
-			JButton okayreportCheckedoutBooks = new JButton("Okay");
+			JButton enterreportCheckedOutBooks = new JButton("Enter");
+			JButton okayreportCheckedOutBooks = new JButton("Okay");
 			
 		//making text field
 			final JTextField isbntxt = new JTextField();
+			final JTextField isbntxtaddNewBook = new JTextField();
 			final JTextField titletxt = new JTextField();
 			final JTextField mainAuthortxt = new JTextField();
 			final JTextField publishertxt = new JTextField();
@@ -319,6 +325,9 @@ public class Main implements ActionListener {
 			final JTextField subjectstxt = new JTextField();
 			final JTextField authorstxt = new JTextField();
 			final JTextField reportCheckedOutBookstxt = new JTextField();
+			
+		//set size of text field
+			reportCheckedOutBookstxt.setPreferredSize(new Dimension(400, 30));
 			
 		//make text area
 			final JTextArea reportCheckedOutBookstxtarea = new JTextArea();
@@ -351,8 +360,8 @@ public class Main implements ActionListener {
 			panelLibrarianSubmenu.add(back);
 			
 		//attaching labels and txt field to the panel
-			paneladdNewBook.add(isbn);
-			paneladdNewBook.add(isbntxt);
+			paneladdNewBook.add(isbnaddNewBook);
+			paneladdNewBook.add(isbntxtaddNewBook);
 			paneladdNewBook.add(title);
 			paneladdNewBook.add(titletxt);
 			paneladdNewBook.add(mainAuthor);
@@ -372,6 +381,13 @@ public class Main implements ActionListener {
 			paneladdNewBookCopy.add(isbntxt);
 			paneladdNewBookCopy.add(enteraddNewBookCopy);
 			paneladdNewBookCopy.add(canceladdNewBookCopy);
+			
+			panelreportCheckedoutBooksNorth.add(reportCheckedOutBooksSubject);
+			panelreportCheckedoutBooksNorth.add(reportCheckedOutBookstxt);
+			panelreportCheckedoutBooksNorth.add(enterreportCheckedOutBooks);
+			toppanelreportCheckedoutBooks.add(panelreportCheckedoutBooksNorth);
+			toppanelreportCheckedoutBooks.add(reportCheckedOutBookstxtarea);
+			toppanelreportCheckedoutBooks.add(okayreportCheckedOutBooks);
 			
 			//splitpanelreportCheckedoutBooksV.add(reportCheckedOutBookstxt);
 			//splitpanelreportCheckedoutBooksBottomV.add(reportCheckedOutBookstxtarea);
