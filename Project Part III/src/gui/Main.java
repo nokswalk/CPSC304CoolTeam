@@ -235,7 +235,7 @@ public class Main implements ActionListener {
 		//System.setOut(new PrintStream(taOutputStream));
 		if (user == 1){ //user is librarian
 		//make addNewBook frame and panel
-			int ROWS = 5;
+			int ROWS = 6;
 			int COLUMNS = 2;
 			final JFrame addNewBookFrame = new JFrame("Add a New Book");
 			final JPanel paneladdNewBook = new JPanel();
@@ -270,13 +270,15 @@ public class Main implements ActionListener {
 			JButton addNewBookCopy = new JButton("Add New Book Copy");
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
+			JButton enter = new JButton("Enter");
+			JButton cancel = new JButton("Cancel");
 			
-		//making textarea
-			JTextField isbntxt = new JTextField();
-			JTextField titletxt = new JTextField();
-			JTextField mainAuthortxt = new JTextField();
-			JTextField publishertxt = new JTextField();
-			JTextField yeartxt = new JTextField();
+		//making text field
+			final JTextField isbntxt = new JTextField();
+			final JTextField titletxt = new JTextField();
+			final JTextField mainAuthortxt = new JTextField();
+			final JTextField publishertxt = new JTextField();
+			final JTextField yeartxt = new JTextField();
 			
 			//setupButton(addBook, panelLibrarianMenu);
 			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
@@ -289,6 +291,8 @@ public class Main implements ActionListener {
 			addNewBookCopy.setAlignmentX(Component.CENTER_ALIGNMENT);
 			back.setAlignmentX(Component.CENTER_ALIGNMENT);
 			quit.setAlignmentX(Component.CENTER_ALIGNMENT);
+			enter.setAlignmentX(Component.CENTER_ALIGNMENT);
+			cancel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			
 			menu.setPreferredSize(new Dimension(200, 300));
 			
@@ -313,6 +317,8 @@ public class Main implements ActionListener {
 			paneladdNewBook.add(publishertxt);
 			paneladdNewBook.add(year);
 			paneladdNewBook.add(yeartxt);
+			paneladdNewBook.add(enter);
+			paneladdNewBook.add(cancel);
 			
 		//add the panel into JFrame
 			
@@ -328,7 +334,7 @@ public class Main implements ActionListener {
 	    	});
 			reportCheckedOutBooks.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			LibrarianUser.reportCheckedOutBooks();
+	    			
 	    		}
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
@@ -358,6 +364,32 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			menu.dispose();
 	    			System.exit(0);
+	    		}
+	    	});
+			enter.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			isbntxt.setText(null);
+	    			titletxt.setText(null);
+	    			mainAuthortxt.setText(null);
+	    			publishertxt.setText(null);
+	    			yeartxt.setText(null);
+	    			String isbnstr = isbntxt.getText();
+	    			String titlestr = titletxt.getText();
+	    			String mainAuthorstr = mainAuthortxt.getText();
+	    			String publisherstr = publishertxt.getText();
+	    			String yearstr = yeartxt.getText();
+	    			//LibrarianUser.addNewBook(isbnstr, titlestr, mainAuthorstr, publisherstr, yearstr);
+	    			addNewBookFrame.dispose();
+	    		}
+	    	});
+			cancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			isbntxt.setText(null);
+	    			titletxt.setText(null);
+	    			mainAuthortxt.setText(null);
+	    			publishertxt.setText(null);
+	    			yeartxt.setText(null);
+	    			addNewBookFrame.dispose();
 	    		}
 	    	});
 			
