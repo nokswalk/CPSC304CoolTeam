@@ -305,8 +305,6 @@ public class LibrarianUser {
 			ps.close();
 			s.close();
 		}
-
-
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -342,6 +340,7 @@ public class LibrarianUser {
 		try {
 			Statement s = Main.con.createStatement();
 			ResultSet rs;
+
 			//IF THE STRING IS EMPTY, IT WILL PRINT OUT EVERYTHING
 			System.out.println("Please enter a subject to report. \n "
 					+ "If no subject is inputted, the report will contain all subjects.): \n>> ");
@@ -446,8 +445,7 @@ public class LibrarianUser {
 			
 		} catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
-		} 
-		
+		}
 	}
 	
 	
@@ -465,11 +463,13 @@ public class LibrarianUser {
 			System.out.println("Generating a report with most popular items.");
 			System.out.println("Please specify how many books you wish to add into the report:\n>>");
 			//int amount = Integer.parseInt(Main.in.readLine());
+			
 			if(amount < 0){
 				System.out.println("Negatives are not allowed.");
 				return;
 			}
 			System.out.println("Please specify the year you wish to report:\n>>");
+
 			//String year = Main.in.readLine();
 			Statement statement = Main.con.createStatement();
 
@@ -515,7 +515,7 @@ public class LibrarianUser {
 			
 		} catch (SQLException e) {
 			System.err.println("Message: " + e.getMessage());
-		} 
+		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}

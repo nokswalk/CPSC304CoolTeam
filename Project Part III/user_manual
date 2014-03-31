@@ -1,0 +1,74 @@
+INTRODUCTION
+
+This system is a basic library database with a simple user interface to view and make changes to the data.
+There are three account types, one for each of the three user types: borrower, clerk and librarian.  Each
+user type has several transactions that can be performed by the user.
+
+
+USER MANUAL
+ 
+Please make sure that your SQLPlus session has dates in YYYY-MM-DD format before starting.  This can be done 
+with the following command:  
+								alter session set nls_date_format='YYYY-MM-DD'
+ 	
+Borrower:
+	1. Search for books
+		Select a book field (title, author, or subject) to perform a keyword search on.
+		Searches are case-sensitive.  Please capitalize the first letter of title and author keywords.
+		Please do not capitalize subject keywords.
+		Only one keyword may be searched at a time.
+ 		
+	2. Check borrower account
+		Enter your borrower id (the number on your library card) to view account details such as the items 
+		you are currently borrowing, outstanding fines and hold requests you've placed.
+		
+	3. Place a hold request
+		Enter the call number of the book that you wish to place a hold request for.
+		When a copy of the book is returned to the library, you will be notified by email.
+		A hold request cannot be placed on an item which has copies available in the library.
+		
+	4. Pay a fine
+		Enter your borrower id to view your outstanding fines.
+		Select the fine id of the fine you wish to pay.
+		If you elect to pay for a fine, it must be paid in full.
+		
+		
+Clerk:
+	1. Add new borrower
+		Enter values into all required borrower info fields.
+		If the SIN or student number provided isn't already associated with a borrower account, a new 
+		account is created and the borrower id is returned.
+		
+	2. Check out items
+		Enter list of call numbers of items to be checked out.  Call numbers should be separated by commas.
+		Enter the copy number of each of the items.
+		The system prints the call number and copy number of each item, and the due date of the items.
+		
+	3. Process a return
+		Enter the call number and copy number of the item that is being returned.
+		The system checks the item in.
+		If the item is overdue a fine is placed on the last borrower.
+		If the book has a hold request the requester is notified via email.
+		
+	4. Check overdue items
+		System displays a list of all overdue items and the borrowers who have checked them out.
+		Email addresses of the borrowers are provided, you may elect to send a message to any one of them.
+		
+
+Librarian:
+	1. Add new book
+		Select whether a new book or a new book copy is to be added.
+		Please select the new book option if a copy of the book doesn't already exist in the library.
+		Otherwise please select the new copy option.
+		Enter values into all required book info fields.
+		
+	2. Checked out books report
+		The system outputs a list of all checked out items and flags overdue items with a *.
+		If a subject is provided, the report only lists books related to that subject.
+		
+	3. Most popular items report
+		Enter the year that you wish to generate a report for, and the number n most popular items you wish
+		to report.  The system outputs a list of items from most popular to least popular (top to bottom).
+		If the number of items borrowed in a year is less than the n specified, the system generates a report
+		on all of the items borrowed that year.
+		

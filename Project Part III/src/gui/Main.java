@@ -316,7 +316,7 @@ public class Main implements ActionListener {
 			JButton okayreportCheckedOutBooks = new JButton("Okay");
 			
 		//making text field
-			final JTextField isbntxt = new JTextField();
+			final JTextField isbntxtaddNewBookCopy = new JTextField();
 			final JTextField isbntxtaddNewBook = new JTextField();
 			final JTextField titletxt = new JTextField();
 			final JTextField mainAuthortxt = new JTextField();
@@ -378,7 +378,7 @@ public class Main implements ActionListener {
 			paneladdNewBook.add(canceladdNewBook);
 			
 			paneladdNewBookCopy.add(isbn);
-			paneladdNewBookCopy.add(isbntxt);
+			paneladdNewBookCopy.add(isbntxtaddNewBookCopy);
 			paneladdNewBookCopy.add(enteraddNewBookCopy);
 			paneladdNewBookCopy.add(canceladdNewBookCopy);
 			
@@ -419,7 +419,8 @@ public class Main implements ActionListener {
 	    	});
 			okayreportCheckedOutBooks.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+	    			reportCheckedOutBookstxt.setText(null);
+	    			reportCheckedoutBooksFrame.dispose();
 	    		}
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
@@ -455,13 +456,6 @@ public class Main implements ActionListener {
 	    	});
 			enteraddNewBook.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			isbntxtaddNewBook.setText(null);
-	    			titletxt.setText(null);
-	    			mainAuthortxt.setText(null);
-	    			publishertxt.setText(null);
-	    			yeartxt.setText(null);
-	    			subjectstxt.setText(null);
-	    			authorstxt.setText(null);
 	    			String isbnstr = isbntxtaddNewBook.getText();
 	    			String titlestr = titletxt.getText();
 	    			String mainAuthorstr = mainAuthortxt.getText();
@@ -482,16 +476,15 @@ public class Main implements ActionListener {
 	    	});
 			enteraddNewBookCopy.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			isbntxt.setText(null);
-	    			String isbnstr = isbntxt.getText();
+	    			String isbnstr = isbntxtaddNewBookCopy.getText();
 	    			LibrarianUser.addNewBookCopy(isbnstr);
-	    			isbntxt.setText(null);
+	    			isbntxtaddNewBookCopy.setText(null);
 	    			addNewBookCopyFrame.dispose();
 	    		}
 			});
 			canceladdNewBook.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			isbntxt.setText(null);
+	    			isbntxtaddNewBook.setText(null);
 	    			titletxt.setText(null);
 	    			mainAuthortxt.setText(null);
 	    			publishertxt.setText(null);
@@ -501,7 +494,7 @@ public class Main implements ActionListener {
 	    	});
 			canceladdNewBookCopy.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			isbntxt.setText(null);
+	    			isbntxtaddNewBookCopy.setText(null);
 	    			addNewBookFrame.dispose();
 	    		}
 	    	});

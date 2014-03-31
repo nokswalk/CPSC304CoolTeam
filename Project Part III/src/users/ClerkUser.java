@@ -230,8 +230,6 @@ public class ClerkUser {
 			// print due date
 			System.out.println("Checked out items due " + getDueDate(bid, sqlToday));
 		}
-
-
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -432,7 +430,6 @@ public class ClerkUser {
 			ps4.close();
 
 		}
-
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -452,7 +449,7 @@ public class ClerkUser {
 
 		Statement statement;
 		ResultSet rs;
-
+		
 		List<Integer> overdueBids = new ArrayList<Integer>();  // for storing overdue item borrower ids, for emailing
 
 		try {
@@ -528,11 +525,8 @@ public class ClerkUser {
 				}
 			}
 
-
 			// Clerk can send an email to each user or all users
-			
 			List<String> bidsS = Arrays.asList(bidsSS.split(","));
-
 
 			System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
 					+ "or input 'all' to send a message to all borrowers: ");
@@ -606,9 +600,9 @@ public class ClerkUser {
 		try {
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bookTimeLimit "
-					+ "FROM Borrower B, BorrowerType C "
-					+ "WHERE B.type = C.type "
-					+ "AND B.bid = " + bid);
+										+ "FROM Borrower B, BorrowerType C "
+										+ "WHERE B.type = C.type "
+										+ "AND B.bid = " + bid);
 			while (rs.next()){
 				bookTimeLimit = rs.getInt(1);
 			}
@@ -635,7 +629,7 @@ public class ClerkUser {
 		return sqlDate;		
 	}
 
-
+	
 	// Returns true of dueDate < today's date
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
