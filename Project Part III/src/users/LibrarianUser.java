@@ -412,7 +412,7 @@ public class LibrarianUser {
 				System.out.printf("%-20.20s", duedate);
 				
 				if(ClerkUser.overdue(duedate)){
-					System.out.println("This item missed dueDate:" + duedate);
+					System.out.println("This item is overdue. (dueDate:" + duedate + ")");
 					//TODO: let it flag.
 				}
 				else
@@ -457,7 +457,7 @@ public class LibrarianUser {
 												+ "FROM Borrowing B "
 												+ "LEFT JOIN Book A "
 												+ "ON B.callNumber=A.callNumber "
-												+ "WHERE B.outDate > '"+year+"-01-01' AND B.outDate < '"+year+"-12-31' "
+												+ "WHERE B.outDate > TO_DATE('"+year+"-01-01', 'YYYY-MM-DD') AND B.outDate < TO_DATE('"+year+"-12-31', 'YYYY-MM-DD') "
 												+ "GROUP BY A.callNumber, A.title, A.mainAuthor, A.isbn "
 												+ "ORDER BY rating desc");
 			// get info on ResultSet
