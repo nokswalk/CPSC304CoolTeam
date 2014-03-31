@@ -47,14 +47,14 @@ create table Borrower
 	address varchar(50) null,
 	phone char(10) null,
 	emailAddress varchar(50) null,
-	sinOrStNo varchar(10) not null,
+	sinOrStNo varchar(10) not null UNIQUE,
 	expiryDate date null,
 	type varchar(10) not null,
 	FOREIGN KEY (type) references BorrowerType ON DELETE CASCADE);
 
 create table Book
 	(callNumber integer not null PRIMARY KEY,
-	isbn char(9) not null,
+	isbn char(9) not null UNIQUE,
 	title varchar(50) null,
 	mainAuthor varchar(20) null,
 	publisher varchar(20) null,
@@ -77,7 +77,7 @@ create table HasSubject
 	(callNumber integer not null,
 	subject varchar(50) not null,
 	PRIMARY KEY (callNumber, subject),
-	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
+	FOREIGN KEY (callNumber) references Book(callNumber) ON DELETE CASCADE);
 
 create table HoldRequest
 	(hid integer not null PRIMARY KEY,
@@ -85,7 +85,7 @@ create table HoldRequest
 	callNumber integer not null,
 	issuedDate date null,
 	FOREIGN KEY (bid) references Borrower,
-	FOREIGN KEY (callNumber) references Book ON DELELTE CASCADE);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table Borrowing
 	(borid integer not null PRIMARY KEY,
