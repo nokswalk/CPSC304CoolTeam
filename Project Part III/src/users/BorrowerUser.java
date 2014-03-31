@@ -184,7 +184,6 @@ public class BorrowerUser {
 			System.out.println("\n No more search results");
 			s.close();
 		}
-
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -268,7 +267,6 @@ public class BorrowerUser {
 			s.close();
 		}
 
-
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -351,7 +349,6 @@ public class BorrowerUser {
 			System.out.println("\n No more search results");
 			s.close();
 		}
-
 
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -537,7 +534,6 @@ public class BorrowerUser {
 
 		} catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
-
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
@@ -728,7 +724,6 @@ public class BorrowerUser {
 				System.exit(-1);
 			}
 		}
-
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
