@@ -191,18 +191,20 @@ public class Main implements ActionListener {
 	
 	private void showMenu(int user) throws ParseException{
 		JTextArea textArea = new JTextArea();
-		JPanel panel = new JPanel();
+		final JPanel panel = new JPanel();
+		final JPanel panelSubmenu = new JPanel();
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
 		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
 		//panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
 		//System.setOut(new PrintStream(taOutputStream));
-		JFrame menu = null;
+		final JFrame menu = new JFrame("Menu");
 		if (user == 1){ //user is librarian
-			menu = new JFrame("Librarian Menu");
 			
 			JButton addBook = new JButton("Add Book");
 			JButton reportCheckedOutBooks = new JButton("Report Checked Out Books");
 			JButton mostPopular = new JButton("Most Popular Books");
+			JButton addNewBook = new JButton("Add New Book");
+			JButton addNewBookCopy = new JButton("Add New Book Copy");
 			
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
 			reportCheckedOutBooks.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -213,11 +215,15 @@ public class Main implements ActionListener {
 			panel.add(reportCheckedOutBooks);
 			panel.add(mostPopular);
 			//panel.add(textArea);
+			panelSubmenu.add(addNewBook);
+			panelSubmenu.add(addNewBookCopy);
+			
 			
 			//add listeners to the buttons
 			addBook.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+					panel.setVisible(false);
+					panelSubmenu.setVisible(true);
 	    		}
 	    	});
 			reportCheckedOutBooks.addActionListener(new ActionListener() {
@@ -232,7 +238,9 @@ public class Main implements ActionListener {
 	    	});
 			
 			//add the panel into JFrame
+			menu.getContentPane().add(panelSubmenu);
 			menu.getContentPane().add(panel);
+			panelSubmenu.setVisible(false);
 			
 			//display the window
 			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -243,7 +251,6 @@ public class Main implements ActionListener {
 			//LibrarianUser.main();
 		}
 		else if (user == 2){ //user is borrower
-			menu = new JFrame("Borrower");
 			menu.setPreferredSize(new Dimension(700, 800));
 			menu.add(textArea);
 			menu.pack();
@@ -251,8 +258,6 @@ public class Main implements ActionListener {
 			BorrowerUser.main();
 		}
 		else if (user == 3){ //user is clerk
-			menu = new JFrame("Clerk");
-
 			JButton addBorrower = new JButton("Add Borrower");
 			JButton checkOutItems = new JButton("Check out Items");
 			JButton processReturn = new JButton("Process Return");
