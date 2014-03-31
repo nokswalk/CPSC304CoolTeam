@@ -150,7 +150,7 @@ public class ClerkUser {
 	 * Checks out items borrowed by a borrower.  Borrowers provide their bid and a list
 	 * of callNumbers and copyNos of the items they wish to check out. 
 	 */
-	private static void checkOutItems() throws ParseException {
+	private static void checkOutItems() {
 		int 			   bid;
 		List<String>	   callNumbers;
 		Statement  		   s;
@@ -175,6 +175,8 @@ public class ClerkUser {
 				System.out.println("Invalid borrower ID.");
 				return;
 			}
+
+			System.out.println("Items on loan: \n");
 			
 			// check out all items that borrower listed
 			for (String c: callNumbers){
@@ -182,34 +184,8 @@ public class ClerkUser {
 				checkOutItem(bid, callNumber, sqlToday);
 			}
 
-			// after checking out items using helper function, 
-			// display all that were successfully checked out
-			ResultSet rs2 = s.executeQuery("SELECT callNumber, copyNo "
-					+ "FROM Borrowing "
-					+ "WHERE bid=" + bid + " AND outDate=" + sqlToday.toString());
-
-			// display columns
-			ResultSetMetaData rsmd = rs2.getMetaData();
-			int numCols = rsmd.getColumnCount();
-			System.out.println(" ");
-
-			for (int i = 0; i < numCols; i++)
-			{
-				System.out.printf("%-15s", rsmd.getColumnName(i+1));    
-			}
-
-			System.out.println(" ");
-
-			// display checked out items
-			while(rs2.next())
-			{
-				int iCallNumber = rs.getInt(1);
-				System.out.printf("%-10.10s", iCallNumber);
-
-				int iCopyNo = rs.getInt(2);
-				System.out.printf("%-20.20s", iCopyNo); 
-			}
-			System.out.println("Items due " + sqlToday);
+			// print due date
+			System.out.println("Items due " + getDueDate(bid, sqlToday));
 		}
 
 		catch (IOException e) {
@@ -230,125 +206,75 @@ public class ClerkUser {
 		}
 	}
 
-	private static void checkOutItem(int bid, int callNumber, Date outDate) throws ParseException {
+	private static void checkOutItem(int bid, int callNumber, Date outDate) {
 
-		Statement			s;
+		int				   copyNo;
+		Statement          s;
+		PreparedStatement  ps1;
+		PreparedStatement  ps2;
+		
+		try {
+			
+			System.out.print("Copy number of item " + callNumber + ": ");
+			copyNo = Integer.parseInt(Main.in.readLine());
 
-		try 
-		{
 			//check if book is in library
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT callNumber "
 					+ "FROM BookCopy  "
 					+ "WHERE status = 'in' "
-					+ "AND callNumber = " + callNumber);
-
+					+ "AND callNumber = " + callNumber + "AND copyNo = " + copyNo);
 			if (!rs.next()){
-				System.out.println("Book not available for borrowing at this time.");
-
-			}
-			else {
-				addBorrowingHelper(bid, callNumber, outDate);
+				System.out.println("Book " + callNumber + " " + copyNo + " is not available for borrowing at this time."
+						+ "Please check the call number and copy number entered.");
 			}
 
+			// if book is in library
+			else {		
+				
+				// create new borrowing tuple
+				ps1 = Main.con.prepareStatement("INSERT INTO Borrowing VALUES (borid_c.nextval,?,?,?,TO_DATE(?, 'YYYY-MM-DD'),null)");
+
+				ps1.setInt(1, bid);
+				ps1.setInt(2, callNumber);
+				ps1.setInt(3, copyNo);
+				ps1.setDate(4, outDate);		
+
+				ps1.executeUpdate();
+				System.out.println(callNumber + " " + copyNo);
+				
+				
+				// update book copy status
+				ps2 = Main.con.prepareStatement("UPDATE bookCopy SET status = 'out' WHERE callNumber = ? AND copyNo = ?");
+
+				ps2.setInt(1, callNumber);
+				ps2.setInt(2, copyNo);
+				ps2.execute();
+
+				// commit work 
+				Main.con.commit();
+				ps1.close();
+				ps2.close();
+			}
 		}
 
-		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
-			try 
-			{
-				// undo the insert
-				Main.con.rollback();	
-			}
-			catch (SQLException ex2)
-			{
-				System.out.println("Message: " + ex2.getMessage());
-				System.exit(-1);
-			}
-		}
-	}
-
-	private static void addBorrowingHelper(int bid, int callNumber, Date outDate) throws ParseException {
-
-		int				   copyNo;
-		PreparedStatement  ps;
-
-		try {
-			ps = Main.con.prepareStatement("INSERT INTO Borrowing VALUES (borid_c.nextval,?,?,?,TO_DATE(?, 'YYYY-MM-DD'),null)");
-
-			ps.setInt(1, bid);
-			ps.setInt(2, callNumber);
-			
-			System.out.print("Copy number of item" + callNumber + ": ");
-			copyNo = Integer.parseInt(Main.in.readLine());
-
-			ps.setDate(4, outDate);		
-			System.out.println("got past insert");
-
-			ps.executeUpdate();
-
-			updateBookCopyStatus(callNumber, copyNo);
-
-			// commit work 
-			Main.con.commit();
-			ps.close();
-		}
-		
 		catch (IOException e) {
 			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
-			try 
-			{
+			try {
 				// undo the insert
 				Main.con.rollback();	
 			}
-			catch (SQLException ex2)
-			{
+			catch (SQLException ex2) {
 				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
 	}
 
-    private static void updateBookCopyStatus(int callNumber, int copyNo)
-    {
 
-	String             status = "out";
-	PreparedStatement  ps;
-	  
-	try
-	{
-	  ps = Main.con.prepareStatement("UPDATE bookCopy SET status = 'out' WHERE callNumber = ? AND copyNo = ?");
-	
-
-	  //ps.setString(1, status);
-	  ps.setInt(1, callNumber);
-	  ps.setInt(2, copyNo);
-	  ps.execute();
-
-	  Main.con.commit();
-
-	  ps.close();
-	}
-	catch (SQLException ex)
-	{
-	    System.err.println("Message: " + ex.getMessage());
-	    
-	    try 
-	    {
-		Main.con.rollback();	
-	    }
-	    catch (SQLException ex2)
-	    {
-		System.err.println("Message: " + ex2.getMessage());
-		System.exit(-1);
-	    }
-	}	
-    }
-
-	
 	/*
 	 * Process a return.  Clerk provides item's callNumber and copyNo, and the system 
 	 * registers the item as 'in'.  
@@ -356,7 +282,7 @@ public class ClerkUser {
 	 * If there is a hold request on this item, the system registers the item as 'on hold'.
 	 */
 	private static void processReturn() {
-		
+
 		// provided by clerk
 		int 				callNumber;
 		int					copyNo;
@@ -422,6 +348,7 @@ public class ClerkUser {
 			ResultSet rs2 = s.executeQuery("SELECT bid "
 					+ "FROM HoldRequest "
 					+ "WHERE callNumber=" + callNumber);
+
 			// if there is a hold request on the book, register as on hold
 			if (rs2.next()) {
 				ps3.setInt(1, callNumber);
@@ -441,6 +368,7 @@ public class ClerkUser {
 				System.out.println("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
 						"), has been notified about their held item.");
 			}
+
 			// otherwise update book copy so that it's registered as 'in'
 			else {
 				ps4.setInt(1, callNumber);
@@ -453,6 +381,7 @@ public class ClerkUser {
 			ps1.close();
 			ps2.close();
 			ps3.close();
+			ps4.close();
 
 		}
 		catch (IOException e) {
@@ -477,11 +406,11 @@ public class ClerkUser {
 			System.out.println("List of items overdue and the borrowers who have checked them out:");
 
 			rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, B.outDate "
-							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
-							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
-							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
-							+ "ORDER BY E.bid, E.name ASC");
-			
+					+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
+					+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
+					+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "//(OR C.status = 'out')B.indate is null means item has not been returned.
+					+ "ORDER BY E.bid, E.name ASC");
+
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -503,9 +432,9 @@ public class ClerkUser {
 				Integer bid = rs.getInt("bid");
 				Date outDate = rs.getDate("outDate");
 				Date duedate = getDueDate(bid, outDate);
-				
+
 				if (overdue(duedate)) {
-					
+
 					System.out.printf("%-9.9s", bid);
 					String name = rs.getString("name");
 					if(rs.wasNull())
@@ -543,7 +472,7 @@ public class ClerkUser {
 			}
 
 			//TODO: Should be able to send email to each user or all the user.
-			
+
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
@@ -552,8 +481,8 @@ public class ClerkUser {
 		}
 	}
 
-	
-	
+
+
 	// Converts a date to string in proper format
 	public static Date stringToDate(String date) {
 		try {SimpleDateFormat fm = new SimpleDateFormat("dd/MM/yy");
@@ -607,7 +536,7 @@ public class ClerkUser {
 		java.sql.Date sqlDate = new java.sql.Date(gregCalendar.getTime().getTime());
 		return sqlDate;		
 	}
-	
+
 	// Returns true of dueDate < today's date
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();

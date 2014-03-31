@@ -455,9 +455,9 @@ public class LibrarianUser {
 												+ "FROM Borrowing B "
 												+ "LEFT JOIN Book A "
 												+ "ON B.callNumber=A.callNumber "
-												+ "WHERE B.outDate > '"+year+"-01-01' AND B.outDate < '"+year+"-12-31' "
-												+ "GROUP BY A.callNumber "
-												+ "ORDER BY rating desc");
+												+ "WHERE B.outDate > TO_DATE('"+year+"-01-01', 'YYYY-MM-DD') AND B.outDate < TO_DATE('"+year+"-12-31', 'YYYY-MM-DD') "
+												+ "GROUP BY A.callNumber, A.title, A.mainAuthor, A.isbn "
+												+ "ORDER BY count desc");
 			// get info on ResultSet
 			ResultSetMetaData rsmd = query.getMetaData();
 			// get number of columns
@@ -470,7 +470,10 @@ public class LibrarianUser {
 			System.out.println(" ");
 			
 			for(int i = 0; i < amount; i++){
-				query.next();
+				if (!query.next()) {
+					System.out.println("End of results");
+					return;
+				}
 				// simplified output formatting; truncation may occur
 				String title = query.getString("title");
 				String isbn = query.getString("isbn");
