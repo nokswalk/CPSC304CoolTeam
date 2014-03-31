@@ -92,9 +92,21 @@ public class Main implements ActionListener {
 		gb.setConstraints(loginButton, c);
 		contentPane.add(loginButton);
 
+		//TODO: please uncomment them, login process is simplified just to test gui.
 		// register password field and OK button with action event handler
-		passwordField.addActionListener(this);
-		loginButton.addActionListener(this);
+//		passwordField.addActionListener(this);
+//		loginButton.addActionListener(this);
+		loginButton.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			mainFrame.dispose();
+    			try {
+    				showUserMenu();
+    			} catch (ParseException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}     
+    		}
+    	});
 
 		// anonymous inner class for closing the window
 		mainFrame.addWindowListener(new WindowAdapter() 
@@ -305,10 +317,7 @@ public class Main implements ActionListener {
 			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			menu.pack();
 			menu.setVisible(true);
-			
-			
-			menu.add(textArea);
-			ClerkUser.main();
+			//ClerkUser.main();
 		}
 		else{
 			System.out.println("OMG THIS SHOULD NEVER HAPPEN BUT IT DID SO HAHAHA");
