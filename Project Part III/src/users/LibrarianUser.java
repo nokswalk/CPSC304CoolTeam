@@ -33,8 +33,8 @@ public class LibrarianUser {
 
 				switch (choice) {
 				case 1:  addBook(); break;
-				case 2:  reportCheckedOutBooks(); break; // TODO reportCheckedOutBooks() NOT DONE YET
-				case 3:  mostPopular(); break; // TODO mostPopular()
+				case 2:  reportCheckedOutBooks(); break;
+				case 3:  mostPopular(); break; 
 				case 4:  quit = true; 
 				}
 			}
@@ -45,24 +45,27 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
+		}
 		catch (SQLException ex)	{
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
 
 	/*
-	 * Add a new book to the library.
-	 * Librarian should provide all info for book.
+	 * Adds a new book or new copy of an existing book to the library. The librarian provides 
+	 * the information for the new book, and the system adds it to the library.
 	 */
 	private static void addBook() {
 		// Search by title or author or subject
@@ -86,14 +89,17 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
 		}
 	}
 
@@ -217,10 +223,13 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -228,7 +237,7 @@ public class LibrarianUser {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
@@ -296,10 +305,13 @@ public class LibrarianUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			try 
 			{
 				// undo the insert
@@ -307,13 +319,10 @@ public class LibrarianUser {
 			}
 			catch (SQLException ex2)
 			{
-				System.out.println("Message: " + ex2.getMessage());
+				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
 		}
-
-
-
 	}
 	
 
@@ -326,40 +335,50 @@ public class LibrarianUser {
 	 * by the report.
 	 */
 	private static void reportCheckedOutBooks() {
+		
 		String subject;
+		
 		try {
-			Statement statement = Main.con.createStatement();
+			Statement s = Main.con.createStatement();
 			ResultSet rs;
-			System.out.println("Please put subject information (if you just press enter, it will print out everything): \n>> ");
+			
+			System.out.println("Please enter a subject to report. \n "
+					+ "If no subject is inputted, the report will contain all subjects.): \n>> ");
 			subject = Main.in.readLine();
+			
 			// check that this is a valid subject
 			if (!subject.trim().equals("")) {
-				rs = statement.executeQuery("SELECT * " + "FROM HasSubject "
-						+ "WHERE subject='" + subject+"'");
-				if (rs.next() == false) {
-					System.out
-							.println("I don't see such a thing in our database HasSubject table.");
-					statement.close();
+				rs = s.executeQuery("SELECT * " 
+										  + "FROM HasSubject "
+										  + "WHERE subject='" + subject+"'");
+				if (!rs.next()) {
+					System.out.println("This subject does not exist in the library database.");
+					s.close();
 					return;
 				}
 			}
-			// query of callNumber, copyNo, title, outDate and bookTimeLimit
-			// when borrowing's inDate is
-			// null.
+			
+			// query callNumber, copyNo, title, outDate and bookTimeLimit
+			// when borrowing's inDate is null.
 			System.out.println("List of items that are out :");
 			
-			if(!subject.trim().equals(""))//subject is inputed
-				rs = statement.executeQuery("SELECT A.callNumber, C.copyNo, A.title, B.outDate, B.bid "
+			//if subject is inputed
+			if(!subject.trim().equals("")) {
+				rs = s.executeQuery("SELECT A.callNumber, C.copyNo, A.title, TO_CHAR(B.outDate, 'YYYY-MM-DD') as outDate, B.bid "
 							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E, HasSubject F "
 							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid AND F.callNumber = A.callNumber "
 							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL AND F.subject='" + subject + "' "
 							+ "ORDER BY A.callNumber, C.copyNo, A.title ASC");
-			else//empty subject, all of the items will be selected
-				rs = statement.executeQuery("SELECT A.callNumber, C.copyNo, A.title, B.outDate, B.bid "
+			}
+			
+			//empty subject, all of the items will be selected
+			else {
+				rs = s.executeQuery("SELECT A.callNumber, C.copyNo, A.title, TO_CHAR(B.outDate, 'YYYY-MM-DD') as outDate, B.bid "
 							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
 							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
 							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "
 							+ "ORDER BY A.callNumber, C.copyNo, A.title ASC");
+			}
 			
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -375,6 +394,7 @@ public class LibrarianUser {
 				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
 			}
 			System.out.printf("%-25s", "DUEDATE");
+			System.out.printf("%-25s", "OVERDUE");  // for flagging
 			
 			System.out.println(" ");
 
@@ -411,29 +431,32 @@ public class LibrarianUser {
 				Date duedate = ClerkUser.getDueDate(bid,outDate);			
 				System.out.printf("%-20.20s", duedate);
 				
+				// if item overdue, system flags it
 				if(ClerkUser.overdue(duedate)){
-					System.out.println("This item missed dueDate:" + duedate);
-					//TODO: let it flag.
+					System.out.printf("%-20.20s\n", "*");
 				}
 				else
-					System.out.println(" ");
+					System.out.printf("%-20.20s\n", " ");
 			}
+			
 			// close the statement;
 			// the ResultSet will also be closed
-			statement.close();
+			s.close();
+			
 		} catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		} catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
 	}
+	
 	
 	/*
 	 * Generate a report with the most popular items in a given year. The
@@ -444,22 +467,24 @@ public class LibrarianUser {
 	private static void mostPopular() {
 		try {
 			System.out.println("Generating a report with most popular items.");
-			System.out.println("Please specify how many books you want to add into the report:\n>>");
+			System.out.println("Please specify how many books you wish to add into the report:\n>>");
 			int amount = Integer.parseInt(Main.in.readLine());
 			if(amount < 0){
-				System.out.println("negative is not allowed.");
+				System.out.println("Negatives are not allowed.");
 				return;
 			}
-			System.out.println("Also specify the year:\n>>");
+			System.out.println("Please specify the year you wish to report:\n>>");
 			String year = Main.in.readLine();
 			Statement statement = Main.con.createStatement();
-			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS rating "  
+
+			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS count "  
 												+ "FROM Borrowing B "
 												+ "LEFT JOIN Book A "
 												+ "ON B.callNumber=A.callNumber "
-												+ "WHERE B.outDate > '"+year+"-01-01' AND B.outDate < '"+year+"-12-31' "
+												+ "WHERE B.outDate > TO_DATE('"+year+"-01-01', 'YYYY-MM-DD') AND B.outDate < TO_DATE('"+year+"-12-31', 'YYYY-MM-DD') "
 												+ "GROUP BY A.callNumber, A.title, A.mainAuthor, A.isbn "
-												+ "ORDER BY rating desc");
+												+ "ORDER BY count desc");
+
 			// get info on ResultSet
 			ResultSetMetaData rsmd = query.getMetaData();
 			// get number of columns
@@ -472,28 +497,33 @@ public class LibrarianUser {
 			System.out.println(" ");
 			
 			for(int i = 0; i < amount; i++){
-				query.next();
+				if (!query.next()) {
+					System.out.println("End of results");
+					return;
+				}
 				// simplified output formatting; truncation may occur
-				int callNumber = query.getInt("callNumber");
 				String title = query.getString("title");
 				String isbn = query.getString("isbn");
 				String mainAuthor = query.getString("mainAuthor");
-				int rating = query.getInt("rating");
+				int count = query.getInt("count");
 
-				System.out.printf("%-10.10s", callNumber);
 				System.out.printf("%-30.30s", title);
-				System.out.printf("%-10.10s", isbn);
 				System.out.printf("%-20.20s", mainAuthor);
-				System.out.printf("%-10.10s", rating);
+				System.out.printf("%-10.10s", isbn);
+				System.out.printf("%-10.10s\n", count);
 			}
 
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
+			
 		} catch (SQLException e) {
-			System.out.println("Message: " + e.getMessage());
+			System.err.println("Message: " + e.getMessage());
 		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
+			System.err.println("Message: " + e.getMessage());
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 	}
 }

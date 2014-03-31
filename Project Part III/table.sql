@@ -50,7 +50,7 @@ create table Borrower
 	sinOrStNo varchar(10) not null,
 	expiryDate date null,
 	type varchar(10) not null,
-	FOREIGN KEY (type) references BorrowerType);
+	FOREIGN KEY (type) references BorrowerType ON DELETE CASCADE);
 
 create table Book
 	(callNumber integer not null PRIMARY KEY,
@@ -65,19 +65,19 @@ create table BookCopy
 	copyNo integer not null,
 	status varchar(10) null,
 	PRIMARY KEY (callNumber, copyNo),
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table HasAuthor
 	(callNumber integer not null,
 	name varchar(20) not null,
 	PRIMARY KEY (callNumber, name),
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table HasSubject
 	(callNumber integer not null,
 	subject varchar(50) not null,
 	PRIMARY KEY (callNumber, subject),
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table HoldRequest
 	(hid integer not null PRIMARY KEY,
@@ -85,7 +85,7 @@ create table HoldRequest
 	callNumber integer not null,
 	issuedDate date null,
 	FOREIGN KEY (bid) references Borrower,
-	FOREIGN KEY (callNumber) references Book);
+	FOREIGN KEY (callNumber) references Book ON DELELTE CASCADE);
 
 create table Borrowing
 	(borid integer not null PRIMARY KEY,
@@ -95,7 +95,7 @@ create table Borrowing
 	outDate date null,
 	inDate date null,
 	FOREIGN KEY (bid) references Borrower,
-	FOREIGN KEY (callNumber, copyNo) references BookCopy);
+	FOREIGN KEY (callNumber, copyNo) references BookCopy ON DELETE CASCADE);
 
 create table Fine
 	(fid integer not null PRIMARY KEY,
@@ -103,7 +103,7 @@ create table Fine
 	issuedDate date null,
 	paidDate date null,
 	borid integer not null,
-	FOREIGN KEY (borid) references Borrowing);
+	FOREIGN KEY (borid) references Borrowing ON DELETE CASCADE);
 
 
 insert into BorrowerType values
@@ -117,15 +117,15 @@ insert into BorrowerType values
 
 
 insert into Borrower values
-(111, 'aaaa', 'Daniel', '1466 robson st', '6044443333', null, '11111111', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'student');
+(111, 'aaaa', 'Daniel', '1466 robson st', null, 'dannyboy@hotmail.com', '11111111', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'student');
 insert into Borrower values
-(222, 'bbbb', 'Vicky', 'vancouver', '6044441111', 'hello@gmaill.com', '22222222', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'staff');
+(222, 'bbbb', 'Vicky', null, '6044441111', 'hello@gmaill.com', '22222222', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'staff');
 insert into Borrower values
-(333, 'cccc', 'Zet', 'UBC', '6041233333', 'bye@gmail.com', '33333333', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'general');
+(333, 'cccc', 'Zet', null, null, 'bye@gmail.com', '33333333', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'general');
 insert into Borrower values
 (444, 'eeee', 'Rupert', '1234 granville st', '7789999999', 'o3i3@cs.ubc.ca', '44444444', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'staff');
 insert into Borrower values
-(555, 'dddd', 'Green', 'Surrey central st', '2744444222', ' ', '55555555', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'student');
+(555, 'dddd', 'Green', 'Surrey central st', '2744444222', 'leprechaun@hotmail.com', '55555555', TO_DATE('2016-04-01', 'YYYY-MM-DD'), 'student');
 
 
 insert into Book values
@@ -218,8 +218,6 @@ insert into Borrowing values
 (800, 222, 600, 2, TO_DATE('2014-03-29', 'YYYY-MM-DD'), null);
 insert into Borrowing values
 (900, 222, 999, 2, TO_DATE('2012-02-22', 'YYYY-MM-DD'), null);
-insert into Borrowing values
-(200, 222, 300, 1, TO_DATE('2014-02-22', 'YYYY-MM-DD'), null);
 insert into Borrowing values
 (300, 333, 600, 1, TO_DATE('2014-01-29', 'YYYY-MM-DD'), TO_DATE('2014-01-31', 'YYYY-MM-DD'));
 insert into Borrowing values

@@ -47,23 +47,27 @@ public class BorrowerUser {
 
 		}
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
 		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
+		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
 
 	/*
-	 * Keyword book search on titles, authors, and/or subjects.
+	 * Search for books using keyword search on titles, authors and subjects. The result is a list 
+	 * of books that match the search together with the number of copies that are in and out. 
 	 */
 	private static void searchBook() {
 
@@ -90,14 +94,17 @@ public class BorrowerUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 			try {
 				Main.con.close();
 				System.exit(-1);
 			}
 			catch (SQLException ex) {
-				System.out.println("Message: " + ex.getMessage());
+				System.err.println("Message: " + ex.getMessage());
 			}
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("Please select an option.");
 		}
 	}
 
@@ -178,10 +185,10 @@ public class BorrowerUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
@@ -258,16 +265,16 @@ public class BorrowerUser {
 				System.out.printf("%-15.15s", inLib);
 				System.out.printf("%-15.15s\n", outLib);
 			}
-			
+
 			System.out.println("\n No more search results");
 			s.close();
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 
 	}
@@ -350,20 +357,21 @@ public class BorrowerUser {
 		}
 
 		catch (IOException e) {
-			System.out.println("IOException!");
+			System.err.println("IOException!");
 		}
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
 
 	/*
-	 * Displays the items the borrower has currently borrowed and
-	 * not yet returned, any outstanding fines and 
-	 * the hold requests that have been placed by the borrower.
+	 * Check his/her account. The system will display the items the borrower has currently 
+	 * borrowed and not yet returned, any outstanding fines and the hold requests that have been 
+	 * placed by the borrower. 
 	 */
 	private static void checkAccount() {
+
 		int userBid;
 
 		String title;
@@ -374,7 +382,6 @@ public class BorrowerUser {
 		Date issuedDate;
 
 		Statement s;
-
 
 		try {
 			s = Main.con.createStatement();
@@ -392,9 +399,8 @@ public class BorrowerUser {
 				return;
 			}
 
-
-			// query of title, isbn and mainAuthor when borrowing's inDate is null.
-			System.out.println("List of items you currently borrowed:");
+			// Items on loan
+			System.out.println("\nList of items currently on loan:");
 			rs = s.executeQuery("SELECT A.title, A.isbn, A.mainAuthor "
 					+ "FROM Book A, Borrowing B, BookCopy C, Borrower D "
 					+ "WHERE B.bid = D.bid AND B.callNumber = C.callNumber "
@@ -406,15 +412,12 @@ public class BorrowerUser {
 
 			// get number of columns
 			int numCols = rsmd.getColumnCount();
-
 			System.out.println(" ");
-
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
 				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
 			}
-
 			System.out.println(" ");
 
 			while (rs.next()) {
@@ -445,9 +448,10 @@ public class BorrowerUser {
 				}
 			}
 
-			//total outstanding fine
-			System.out.println("\nOutstanding fine:");
-			rs = s.executeQuery("SELECT A.amount, A.issuedDate, E.title "
+
+			// Total outstanding fine
+			System.out.println("\nOutstanding fines:");
+			rs = s.executeQuery("SELECT A.amount, TO_CHAR(A.issuedDate, 'YYYY-MM-DD') as issuedDate, E.title "
 					+ "FROM Fine A, Borrowing B, Borrower C, BookCopy D, Book E "
 					+ "WHERE A.borid=B.borid AND B.bid=C.bid AND D.callNumber=E.callNumber "
 					+ "AND B.callNumber=D.callNumber AND B.copyNo=D.copyNo "
@@ -457,13 +461,11 @@ public class BorrowerUser {
 
 			// get number of columns
 			numCols = rsmd.getColumnCount();
-
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
 				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
 			}
-
 			System.out.println(" ");
 
 			while (rs.next()) {
@@ -479,12 +481,14 @@ public class BorrowerUser {
 					System.out.printf("%-20.20s", amount);
 				}
 				totalAmount += amount;
+
 				issuedDate = rs.getDate("issuedDate");
 				if (rs.wasNull()) {
 					System.out.printf("%-15.15s", " ");
 				} else {
 					System.out.printf("%-15.15s", issuedDate);
 				}
+
 				title = rs.getString("title");
 				if (rs.wasNull()) {
 					System.out.printf("%-50.50s\n", " ");
@@ -495,9 +499,10 @@ public class BorrowerUser {
 			System.out.println("Total amount of outstanding fine is: " + totalAmount);
 			System.out.println(" ");
 
+
 			//Hold Request List
-			System.out.println("HOLD REQUEST LIST placed by you:");
-			rs = s.executeQuery("SELECT B.title, A.issuedDate "
+			System.out.println("\nPlaced hold requests:");
+			rs = s.executeQuery("SELECT B.title, TO_CHAR(A.issuedDate, 'YYYY-MM-DD') as issuedDate "
 					+ "FROM HoldRequest A, Book B, Borrower C "
 					+ "WHERE A.callNumber=B.callNumber AND A.bid=C.bid "
 					+ "AND C.bid=" + userBid);
@@ -506,13 +511,11 @@ public class BorrowerUser {
 
 			// get number of columns
 			numCols = rsmd.getColumnCount();
-
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
 				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
 			}
-
 			System.out.println(" ");
 
 			while (rs.next()) {
@@ -537,18 +540,247 @@ public class BorrowerUser {
 			// close the statement;
 			// the ResultSet will also be closed
 			s.close();
+
 		} catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
+			System.err.println("Message: " + e.getMessage());
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
 		}
 	}
 
 
 	/*
-	 * Helper method to get # book copies in/out/on hold.
+	 * Place a hold request for a book that is out. When the item is returned, the system sends an 
+	 * email to the borrower and informs the library clerk to keep the book out of the shelves. 
 	 */
-	private static int[] statusCounts (int callNumber) {
+	private static void requestHold() {
+
+		int					bid;
+		int					callNumber;
+		Statement			s;
+		PreparedStatement   ps;
+
+		try {
+			s = Main.con.createStatement();
+
+			System.out.println("Borrower ID: ");
+			bid = Integer.parseInt(Main.in.readLine());
+			// check that this is a valid Borrower account
+			ResultSet rs = s.executeQuery("SELECT * "
+					+ "FROM Borrower "
+					+ "WHERE bid=" + bid);
+			if (rs.next() == false) {
+				System.out.println("This is not a valid borrower ID.");
+				s.close();
+				return;
+			}
+
+			System.out.println("Book call number: ");
+			callNumber = Integer.parseInt(Main.in.readLine());
+			// check that this is a valid Book call number
+			rs = s.executeQuery("SELECT * "
+					+ "FROM Borrower "
+					+ "WHERE bid=" + bid);
+			if (rs.next() == false) {
+				System.out.println("This is not a valid item call number.");
+				s.close();
+				return;
+			}
+
+			// check that book is not in library
+			rs = s.executeQuery("SELECT copyNo  "
+					+ "FROM BookCopy  "
+					+ "WHERE callNumber = " + callNumber
+					+ " AND status = 'in'");
+			if (rs.next()){
+				System.out.println("Book is currently available in the library.");
+				return;
+			}
+
+
+			// Place a hold request
+			ps = Main.con.prepareStatement("INSERT INTO holdRequest VALUES (hid_c.nextval,?,?,?)");
+
+			java.sql.Date 			issuedDate;
+			GregorianCalendar gregCalendar = new GregorianCalendar();  // issuedDate is today
+			issuedDate = new java.sql.Date(gregCalendar.getTime().getTime());
+
+			ps.setInt(1, bid);
+			ps.setInt(2, callNumber);
+			ps.setDate(3, issuedDate);
+
+			ps.executeUpdate();
+
+			// commit work 
+			Main.con.commit();
+			ps.close();
+
+			System.out.println("Hold request placed. You will be notified by email when the book is available.");
+		}
+
+		catch (SQLException ex) {
+			System.err.println("Message: " + ex.getMessage());
+			try {
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2) {
+				System.err.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+		catch (IOException e) {
+			System.err.println("Message: " + e.getMessage());
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
+		}
+	}
+
+
+	/*
+	 * Pay a fine.
+	 */
+	private static void payFine()
+	{
+		int		   bid;
+		Statement  s;
+
+		int		   sfid;
+		String	   ans;
+
+		try
+		{
+			s = Main.con.createStatement();
+
+			System.out.print("Borrower ID: ");
+			bid = Integer.parseInt(Main.in.readLine());
+			// check that this is a valid Borrower account
+			ResultSet rs = s.executeQuery("SELECT * "
+					+ "FROM Borrower "
+					+ "WHERE bid=" + bid);
+			if (rs.next() == false) {
+				System.out.println("This is not a valid borrower ID.");
+				s.close();
+				return;
+			}
+
+			// Get all fines owed by borrower
+			rs = s.executeQuery("SELECT fid, amount, TO_CHAR(issuedDate, 'YYYY-MM-DD') as issDate "
+					+ "FROM Fine F, Borrowing B "
+					+ "WHERE F.borid = B.borid "
+					+ "AND B.bid = " + bid);
+
+			// get info on ResultSet
+			ResultSetMetaData rsmd = rs.getMetaData();
+			// get number of columns
+			int numCols = rsmd.getColumnCount();
+
+			System.out.println(" ");
+			// display column names;
+			for (int i = 0; i < numCols; i++)
+			{
+				// get column name and print it
+				System.out.printf("%-15s", rsmd.getColumnName(i+1));    
+			}
+			System.out.println(" ");
+
+			while(rs.next())
+			{
+				// simplified output formatting; truncation may occur
+
+				int fid = rs.getInt(1);
+				System.out.printf("%-15.15s", fid);
+
+				double amount = rs.getDouble(2);
+				System.out.printf("%-15.15s", amount);
+
+				Date issuedDate = rs.getDate(3);
+				System.out.printf("%-15.15s", issuedDate);
+			}
+
+
+			// Ask borrower to select which fine to pay for
+			System.out.println("\n\nSelect ID of fine you wish to pay: ");
+			String ans1 = Main.in.readLine();
+			
+			if (ans1.trim().equals("")){
+				return;
+			}
+			
+			sfid = Integer.parseInt(ans1);
+
+			System.out.println("Proceed with payment?(y/n)");
+			ans = Main.in.readLine();
+
+			if (ans.equals("y")){
+				updateFine(sfid);
+				System.out.println("Fine has been paid.");
+			}
+			else {
+				System.out.println("Payment cancelled.");
+			}
+		}
+
+		catch (SQLException ex) {
+			System.err.println("Message: " + ex.getMessage());
+			try {
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2) {
+				System.err.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+		catch (IOException e) {
+			System.err.println("Message: " + e.getMessage());
+		}
+		catch (NumberFormatException ne) {
+			System.err.println("A required field was left blank.");
+		}
+	}
+
+	private static void updateFine(int fid)
+	{
+		Date			   paidDate;
+		PreparedStatement  ps;
+
+		try
+		{
+			ps = Main.con.prepareStatement("UPDATE fine SET paidDate = ? WHERE fid = ?");
+
+			GregorianCalendar gregCalendar = new GregorianCalendar();
+			paidDate = new java.sql.Date(gregCalendar.getTime().getTime());
+			
+			ps.setDate(1, paidDate);
+			ps.setInt(2, fid);
+			
+			ps.execute();
+			Main.con.commit();
+
+			ps.close();
+		}
+		
+		catch (SQLException ex) {
+			System.err.println("Message: " + ex.getMessage());
+			try {
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2) {
+				System.err.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}	
+	}
+
+
+
+	//Helper method to get # book copies in/out/on hold.
+	public static int[] statusCounts (int callNumber) {
 
 		// result array
 		int[] statusCounts = new int[3];
@@ -571,7 +803,7 @@ public class BorrowerUser {
 			if (rso.next()) {
 				statusCounts[1] = rso.getInt(1);
 			}
-			
+
 			// # on hold
 			ResultSet rsh = s.executeQuery("SELECT COUNT(*) "
 					+ "FROM BookCopy "
@@ -579,305 +811,14 @@ public class BorrowerUser {
 			if (rsh.next()) {
 				statusCounts[2] = rsh.getInt(1);
 			}
-			
+
 			return statusCounts;
 		}
-		
+
 		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
+			System.err.println("Message: " + ex.getMessage());
 			return null;
 		}
 	}
-	
-private static void requestHold() {
-		int					bid = 0;
-		int					callNumber = 0;
-		Statement			s;
-		Statement			s2;
-		
-		System.out.println("Borrower ID: ");
-		try {
-			bid = Integer.parseInt(Main.in.readLine());
-		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		}
-		System.out.println("Book call number: ");
-		try {
-			callNumber = Integer.parseInt(Main.in.readLine());
-		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		
-		try 
-		{
-			s2 = Main.con.createStatement();
-			ResultSet rs2 = s2.executeQuery("SELECT copyNo  "
-										+ "FROM BookCopy  "
-										+ "WHERE callNumber = " + callNumber
-										+ "AND status = 'in'");
-
-			if (rs2.next()){
-				System.out.println("Book is available for borrowing");
-				return;
-			}
-			else {
-
-				s = Main.con.createStatement();
-				ResultSet rs = s.executeQuery("SELECT copyNo  "
-						+ "FROM BookCopy  "
-						+ "WHERE callNumber = " + callNumber
-						+ "AND status = 'out'");
-
-				if (rs.next()){
-				updateBookCopyStatus(callNumber, rs.getInt(1));
-				addHoldRequest(bid, callNumber);
-				System.out.println("Hold request successful! An email will be sent to you when the book is available.");
-				}
-			else {
-					System.out.println("No books available for hold");
-				}
-			
-			}
-		}
-
-		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
-			try 
-			{
-				// undo the insert
-				Main.con.rollback();	
-			}
-			catch (SQLException ex2)
-			{
-				System.out.println("Message: " + ex2.getMessage());
-				System.exit(-1);
-			}
-		}
-	}
-
-private static void updateBookCopyStatus(int callNumber, int copyNo)
-{
-
-	PreparedStatement  ps;
-
-	try
-	{
-		ps = Main.con.prepareStatement("UPDATE bookCopy SET status = 'on hold' WHERE callNumber = ? AND copyNo = ?");
-
-
-		ps.setInt(1, callNumber);
-		ps.setInt(2, copyNo);
-		ps.execute();
-
-		Main.con.commit();
-
-		ps.close();
-	}
-	catch (SQLException ex)
-	{
-		System.out.println("Message: " + ex.getMessage());
-
-		try 
-		{
-			Main.con.rollback();	
-		}
-		catch (SQLException ex2)
-		{
-			System.out.println("Message: " + ex2.getMessage());
-			System.exit(-1);
-		}
-	}	
-}
-
-private static void addHoldRequest(int bid, int callNumber) {
-
-
-	java.sql.Date 			issuedDate;
-	PreparedStatement  ps;
-
-	try {
-		ps = Main.con.prepareStatement("INSERT INTO holdRequest VALUES (hid_c.nextval,?,?,?)");
-
-		
-		ps.setInt(1, bid);
-		ps.setInt(2, callNumber);
-		GregorianCalendar gregCalendar = new GregorianCalendar();
-		issuedDate = new java.sql.Date(gregCalendar.getTime().getTime());
-		ps.setDate(3, issuedDate);
-
-
-		ps.executeUpdate();
-
-		// commit work 
-		Main.con.commit();
-		ps.close();
-
-	}
-
-
-	catch (SQLException ex) {
-		System.out.println("Message: " + ex.getMessage());
-		try 
-		{
-			// undo the insert
-			Main.con.rollback();	
-		}
-		catch (SQLException ex2)
-		{
-			System.out.println("Message: " + ex2.getMessage());
-			System.exit(-1);
-		}
-	}
-}
-
-private static void payFine()
-{
-	int		   bid = 0;
-	Statement  s;
-	int		   fid = 0;
-	String	   ans = "";
-
-	try
-	{
-		
-		System.out.print("Borrower ID: ");
-		try {
-			bid = Integer.parseInt(Main.in.readLine());
-		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		s = Main.con.createStatement();
-
-		ResultSet rs = s.executeQuery("SELECT fid, amount, issuedDate "
-				+ "FROM Fine F, Borrowing B "
-				+ "WHERE F.borid = B.borid "
-				+ "AND B.bid = " + bid);
-		
-		// get info on ResultSet
-		ResultSetMetaData rsmd = rs.getMetaData();
-
-		// get number of columns
-		int numCols = rsmd.getColumnCount();
-
-		System.out.println(" ");
-
-		
-		// display column names;
-		for (int i = 0; i < numCols; i++)
-		{
-			// get column name and print it
-
-			System.out.printf("%-15s", rsmd.getColumnName(i+1));    
-		}
-		
-		System.out.println(" ");
-
-		while(rs.next())
-		{
-			// simplified output formatting; truncation may occur
-
-			fid = rs.getInt(1);
-			System.out.printf("%-15.15s", fid);
-
-			double amount = rs.getDouble(2);
-			System.out.printf("%-15.15s", amount);
-
-			Date issuedDate = rs.getDate(3);
-			System.out.printf("%-15.15s", issuedDate);
-
-		}
-		System.out.println("\n\nSelect ID of fine that will be paid for: ");
-		try {
-			fid = Integer.parseInt(Main.in.readLine());
-		} catch (NumberFormatException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		}
-		System.out.println("Proceed with payment?(y/n)");
-		try {
-			ans = Main.in.readLine();
-		} catch (IOException e) {
-			System.out.println("Message: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		if (ans.equals("y")){
-			updateFine(fid);
-			System.out.println("Fine has been paid.");
-		}
-		else{
-			System.out.println("Payment cancelled.");
-		}
-	}
-
-	catch (SQLException ex) {
-		System.out.println("Message: " + ex.getMessage());
-		try 
-		{
-			// undo the insert
-			Main.con.rollback();	
-		}
-		catch (SQLException ex2)
-		{
-			System.out.println("Message: " + ex2.getMessage());
-			System.exit(-1);
-		}
-	}
-}
-
-private static void updateFine(int fid)
-{
-
-	Date			   paidDate;
-	PreparedStatement  ps;
-
-	try
-	{
-		ps = Main.con.prepareStatement("UPDATE fine SET paidDate = ? WHERE fid = ?");
-
-
-		GregorianCalendar gregCalendar = new GregorianCalendar();
-		paidDate = new java.sql.Date(gregCalendar.getTime().getTime());
-		ps.setDate(1, paidDate);
-		ps.setInt(2, fid);
-		ps.execute();
-
-		Main.con.commit();
-
-		ps.close();
-	}
-	catch (SQLException ex)
-	{
-		System.out.println("Message: " + ex.getMessage());
-
-		try 
-		{
-			Main.con.rollback();	
-		}
-		catch (SQLException ex2)
-		{
-			System.out.println("Message: " + ex2.getMessage());
-			System.exit(-1);
-		}
-	}	
-}
 
 }
-
