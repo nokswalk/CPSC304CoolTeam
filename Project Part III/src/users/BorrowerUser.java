@@ -693,7 +693,13 @@ public class BorrowerUser {
 
 			// Ask borrower to select which fine to pay for
 			System.out.println("\n\nSelect ID of fine you wish to pay: ");
-			sfid = Integer.parseInt(Main.in.readLine());
+			String ans1 = Main.in.readLine();
+			
+			if (ans1.trim().equals("")){
+				return;
+			}
+			
+			sfid = Integer.parseInt(ans1);
 
 			System.out.println("Proceed with payment?(y/n)");
 			ans = Main.in.readLine();
