@@ -445,11 +445,13 @@ public class Main implements ActionListener {
 	    	});
 			enteraddNewBook.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			isbntxt.setText(null);
+	    			isbntxtaddNewBook.setText(null);
 	    			titletxt.setText(null);
 	    			mainAuthortxt.setText(null);
 	    			publishertxt.setText(null);
 	    			yeartxt.setText(null);
+	    			subjectstxt.setText(null);
+	    			authorstxt.setText(null);
 	    			String isbnstr = isbntxt.getText();
 	    			String titlestr = titletxt.getText();
 	    			String mainAuthorstr = mainAuthortxt.getText();
@@ -458,11 +460,13 @@ public class Main implements ActionListener {
 	    			String subjectsstr= subjectstxt.getText();
 	    			String authorsstr = authorstxt.getText();
 	    			LibrarianUser.addNewBook(isbnstr, titlestr, mainAuthorstr, publisherstr, yearstr, subjectsstr, authorsstr);
-	    			isbntxt.setText(null);
+	    			isbntxtaddNewBook.setText(null);
 	    			titletxt.setText(null);
 	    			mainAuthortxt.setText(null);
 	    			publishertxt.setText(null);
 	    			yeartxt.setText(null);
+	    			subjectstxt.setText(null);
+	    			authorstxt.setText(null);
 	    			addNewBookFrame.dispose();
 	    		}
 	    	});
