@@ -92,10 +92,8 @@ public class Main implements ActionListener {
 		gb.setConstraints(loginButton, c);
 		contentPane.add(loginButton);
 
-		//TODO: please uncomment them, login process is simplified just to test gui.
-		// register password field and OK button with action event handler
-//		passwordField.addActionListener(this);
-//		loginButton.addActionListener(this);
+		passwordField.addActionListener(this);
+		loginButton.addActionListener(this);
 		loginButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			mainFrame.dispose();
@@ -201,7 +199,13 @@ public class Main implements ActionListener {
 
 	}
 	
+	private void setupButton(JButton button, JPanel panel){ //aligns and places button to the proper panel
+		button.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.add(button);
+	}
+	
 	private void showMenu(int user) throws ParseException{
+		
 		final JFrame menu = new JFrame("Menu");
 		final JPanel panelLibrarianMenu = new JPanel();
 		final JPanel panelLibrarianSubmenu = new JPanel();
@@ -209,6 +213,11 @@ public class Main implements ActionListener {
 		final JPanel panelBorrowerSubmenu = new JPanel();
 		final JPanel panelClerkMenu = new JPanel();
 		final JPanel panelClerkSubmenu = new JPanel();
+		
+		final JFrame oneInputWindow = new JFrame("Input");
+		final JPanel panelSomethingWindow = new JPanel();
+		
+		
 		
 		JTextArea textArea = new JTextArea();
 
@@ -225,6 +234,33 @@ public class Main implements ActionListener {
 		//panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
 		//System.setOut(new PrintStream(taOutputStream));
 		if (user == 1){ //user is librarian
+		//make addNewBook frame and panel
+			int ROWS = 5;
+			int COLUMNS = 2;
+			final JFrame addNewBookFrame = new JFrame("Add a New Book");
+			final JPanel paneladdNewBook = new JPanel();
+			GridLayout layout = new GridLayout(ROWS, COLUMNS);
+			paneladdNewBook.setLayout(layout);
+			addNewBookFrame.setPreferredSize(new Dimension (300, 200));
+			addNewBookFrame.setLocationRelativeTo(null);
+			
+			
+		//make addNewBookCopy frame and panel
+			final JFrame addNewBookCopyFrame = new JFrame("Add a New Book Copy");
+			final JPanel paneladdNewBookCopy = new JPanel();
+		//make reportCheckOutBooks frame and panel
+			final JFrame reportCheckedoutBooksFrame = new JFrame("Report Checked out Books");
+			final JPanel panelreportCheckedoutBooks = new JPanel();
+		//make mostPopular frame and panel
+			final JFrame mostPopularFrame = new JFrame("Most Popular");
+			final JPanel panelmostPopular = new JPanel();
+			
+		//making labels
+			JLabel isbn = new JLabel("ISBN:");
+			JLabel title = new JLabel("Title:");
+			JLabel mainAuthor = new JLabel("Main Author:");
+			JLabel publisher = new JLabel("Publisher:");
+			JLabel year = new JLabel("Year:");
 			
 		//making buttons
 			JButton addBook = new JButton("Add Book");
@@ -234,6 +270,16 @@ public class Main implements ActionListener {
 			JButton addNewBookCopy = new JButton("Add New Book Copy");
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
+			
+		//making textarea
+			JTextField isbntxt = new JTextField();
+			JTextField titletxt = new JTextField();
+			JTextField mainAuthortxt = new JTextField();
+			JTextField publishertxt = new JTextField();
+			JTextField yeartxt = new JTextField();
+			
+			//setupButton(addBook, panelLibrarianMenu);
+			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
 			
 		//center align buttons
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -246,7 +292,7 @@ public class Main implements ActionListener {
 			
 			menu.setPreferredSize(new Dimension(200, 300));
 			
-		//attaching buttons to the frame
+		//attaching buttons to the panel
 			panelLibrarianMenu.add(addBook);
 			panelLibrarianMenu.add(reportCheckedOutBooks);
 			panelLibrarianMenu.add(mostPopular);
@@ -256,9 +302,17 @@ public class Main implements ActionListener {
 			panelLibrarianSubmenu.add(addNewBookCopy);
 			panelLibrarianSubmenu.add(back);
 			
-			
-			
-			//panel.add(textArea);
+		//attaching labels and txt field to the panel
+			paneladdNewBook.add(isbn);
+			paneladdNewBook.add(isbntxt);
+			paneladdNewBook.add(title);
+			paneladdNewBook.add(titletxt);
+			paneladdNewBook.add(mainAuthor);
+			paneladdNewBook.add(mainAuthortxt);
+			paneladdNewBook.add(publisher);
+			paneladdNewBook.add(publishertxt);
+			paneladdNewBook.add(year);
+			paneladdNewBook.add(yeartxt);
 			
 		//add the panel into JFrame
 			
@@ -274,7 +328,7 @@ public class Main implements ActionListener {
 	    	});
 			reportCheckedOutBooks.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+	    			LibrarianUser.reportCheckedOutBooks();
 	    		}
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
@@ -284,7 +338,9 @@ public class Main implements ActionListener {
 	    	});
 			addNewBook.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+	    			addNewBookFrame.getContentPane().add(paneladdNewBook);
+	    			addNewBookFrame.pack();
+	    			addNewBookFrame.setVisible(true);
 	    		}
 	    	});
 			addNewBookCopy.addActionListener(new ActionListener() {
@@ -513,7 +569,7 @@ public class Main implements ActionListener {
     		public void actionPerformed(ActionEvent e) {
     			try {
 					userMenu.dispose();
-					showMenu(1);
+					showMenu(1);//this is librarian
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
