@@ -262,7 +262,8 @@ public class Main implements ActionListener {
 			final JPanel toppanelreportCheckedoutBooks = new JPanel();
 			toppanelreportCheckedoutBooks.setLayout(new BorderLayout());
 			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
-			final JPanel panelreportCheckedoutBooksNorth = new JPanel();
+			final JPanel panelreportCheckedoutBooksNorth = new JPanel(); //has multiple things inside so we need to make a panel to contain it
+			panelreportCheckedoutBooksNorth.setLayout(new FlowLayout()); //set the layout to go from left->right
 			
 			//final JPanel panelreportCheckedoutBooksCenter = new JPanel();
 			//final JPanel panelreportCheckedoutBooksSouth = new JPanel();
@@ -438,7 +439,9 @@ public class Main implements ActionListener {
 	    			String mainAuthorstr = mainAuthortxt.getText();
 	    			String publisherstr = publishertxt.getText();
 	    			String yearstr = yeartxt.getText();
-	    			//LibrarianUser.addNewBook(isbnstr, titlestr, mainAuthorstr, publisherstr, yearstr);
+	    			String subjectsstr= subjectstxt.getText();
+	    			String authorsstr = authorstxt.getText();
+	    			LibrarianUser.addNewBook(isbnstr, titlestr, mainAuthorstr, publisherstr, yearstr, subjectsstr, authorsstr);
 	    			isbntxt.setText(null);
 	    			titletxt.setText(null);
 	    			mainAuthortxt.setText(null);
