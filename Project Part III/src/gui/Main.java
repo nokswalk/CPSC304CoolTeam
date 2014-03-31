@@ -165,7 +165,7 @@ public class Main implements ActionListener {
 			// remove the login window and display a text menu 
 			mainFrame.dispose();
 			try {
-				showMenu();
+				showUserMenu();
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -189,12 +189,111 @@ public class Main implements ActionListener {
 
 	}
 	
+	private void showMenu(int user) throws ParseException{
+		JTextArea textArea = new JTextArea();
+		JPanel panel = new JPanel();
+		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
+		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+		panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
+		System.setOut(new PrintStream(taOutputStream));
+		JFrame menu = null;
+		if (user == 1){ //user is librarian
+			menu = new JFrame("Librarian");
+			menu.setPreferredSize(new Dimension(700, 800));
+			menu.add(textArea);
+			menu.pack();
+			menu.setVisible(true);
+			System.out.println("HELLOLLOLOLOOLOOOOO");
+			LibrarianUser.main();
+		}
+		else if (user == 2){ //user is borrower
+			menu = new JFrame("Borrower");
+			menu.setPreferredSize(new Dimension(700, 800));
+			menu.add(textArea);
+			menu.pack();
+			menu.setVisible(true);
+			BorrowerUser.main();
+		}
+		else if (user == 3){ //user is clerk
+			menu = new JFrame("Clerk");
+			menu.setPreferredSize(new Dimension(700, 800));
+			menu.add(textArea);
+			menu.pack();
+			menu.setVisible(true);
+			ClerkUser.main();
+		}
+		else{
+			System.out.println("OMG THIS SHOULD NEVER HAPPEN BUT IT DID SO HAHAHA");
+			System.exit(1);
+		}
+	}
 	
+
 	/*
      * displays simple text interface
      */ 
-    private void showMenu() throws ParseException
+    private void showUserMenu() throws ParseException
     {
+    	
+    	final JFrame userMenu = new JFrame("Choose user");
+    	JLabel welcomeUser = new JLabel("Please choose one of the following:");
+    	JButton librarian = new JButton("Librarian");
+    	JButton borrower = new JButton("Borrower");
+    	JButton clerk = new JButton("Clerk");	
+    	JPanel panel = new JPanel(new FlowLayout());
+    	
+    	userMenu.getContentPane().add(panel);
+    	
+    	userMenu.setPreferredSize(new Dimension(350, 100));
+    	panel.add(librarian);
+    	panel.add(borrower);
+    	panel.add(clerk);
+    	userMenu.setLocationRelativeTo(null);
+    	librarian.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			try {
+					userMenu.dispose();
+					showMenu(1);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    		}
+    	});
+    	borrower.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			try {
+    				userMenu.dispose();
+					showMenu(2);	
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    		}
+    	});
+    	clerk.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			try {
+					userMenu.dispose();
+					showMenu(3);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    		}
+    	});
+    	
+    	panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+    	
+    	
+    	userMenu.pack();
+    	userMenu.setVisible(true);
+    	
+    	
+    /**
+     * the old stuff using console to use the program
+     */
+ /*
 	int choice;
 	boolean quit;
 
@@ -249,11 +348,12 @@ public class Main implements ActionListener {
 	{
 	    System.out.println("Message: " + ex.getMessage());
 	}
+*/
     }
 
     
     public static void main(String args[])
     {
-      Main m = new Main();
+    	Main m = new Main();
     }
 }
