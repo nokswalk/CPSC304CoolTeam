@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.*;
 
@@ -583,20 +585,62 @@ public class Main implements ActionListener {
 			menu.setVisible(true);
 		}
 		else if (user == 3){ //user is clerk
+		//make addNewBook frame and panel
+			int ROWS = 7;
+			int COLUMNS = 2;
+	
+			final JFrame addBorrowerFrame = new JFrame("Add a New Borrower");
+			final JPanel paneladdBorrower = new JPanel();
+			GridLayout layout = new GridLayout(ROWS, COLUMNS);
+			paneladdBorrower.setLayout(layout);
+			addBorrowerFrame.setPreferredSize(new Dimension (300, 200));
+			addBorrowerFrame.setLocationRelativeTo(null);
+			
+		//make addNewBookCopy frame and panel
+			final JFrame checkOutItemsFrame = new JFrame("Check out Items");
+			final JPanel panelcheckOutItemsCopy = new JPanel();
+		//make reportCheckOutBooks frame and panel
+			final JFrame processReturnFrame = new JFrame("Process a return");
+			final JPanel panelprocessReturnBooks = new JPanel();
+		
+		//make mostPopular frame and panel
+			final JFrame checkOverdueItemsFrame = new JFrame("Check overdue items");
+			final JPanel panelcheckOverdueItems = new JPanel();
+			
+		//making labels for addBorrower
+			JLabel password = new JLabel("Password:");
+			JLabel name = new JLabel("Name:");
+			JLabel address = new JLabel("Address:");
+			JLabel phone = new JLabel("Phone Number:");
+			JLabel email = new JLabel("Email Address:");
+			JLabel sinOrStno = new JLabel("SIN or Student Number:");
+			JLabel type = new JLabel("Type(student, staff, etc):");
+
+		//making textarea for addBorrower
+			JTextField passwordtxt = new JTextField();
+			JTextField nametxt = new JTextField();
+			JTextField addresstxt = new JTextField();
+			JTextField phonetxt = new JTextField();
+			JTextField emailtxt = new JTextField();
+			JTextField sinOrStnotxt = new JTextField();
+			JTextField typetxt = new JTextField();
+			
 		//make buttons
 			JButton addBorrower = new JButton("Add Borrower");
 			JButton checkOutItems = new JButton("Check out Items");
 			JButton processReturn = new JButton("Process Return");
 			JButton checkOverdueItems = new JButton("Check Overdue Items");
+			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
-
+			
 		//center align buttons
 			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
 			checkOutItems.setAlignmentX(Component.CENTER_ALIGNMENT);
 			processReturn.setAlignmentX(Component.CENTER_ALIGNMENT);
 			checkOverdueItems.setAlignmentX(Component.CENTER_ALIGNMENT);
+			back.setAlignmentX(Component.CENTER_ALIGNMENT);
 			quit.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+			
 		//set the menu frame's size
 			menu.setPreferredSize(new Dimension(200, 300));
 			
@@ -607,13 +651,34 @@ public class Main implements ActionListener {
 			panelClerkMenu.add(checkOverdueItems);
 			panelClerkMenu.add(quit);
 
+			
+		//attaching 
 		//attach panel to the frame
 			menu.getContentPane().add(panelClerkMenu);
+			
+			
+		//attaching labels and txt field to the panel
+			paneladdBorrower.add(password);
+			paneladdBorrower.add(passwordtxt);
+			paneladdBorrower.add(name);
+			paneladdBorrower.add(nametxt);
+			paneladdBorrower.add(address);
+			paneladdBorrower.add(addresstxt);
+			paneladdBorrower.add(phone);
+			paneladdBorrower.add(phonetxt);
+			paneladdBorrower.add(email);
+			paneladdBorrower.add(emailtxt);
+			paneladdBorrower.add(sinOrStno);
+			paneladdBorrower.add(sinOrStnotxt);
+			paneladdBorrower.add(type);
+			paneladdBorrower.add(typetxt);
 			
 		//add listeners to the buttons
 			addBorrower.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+	    			addBorrowerFrame.getContentPane().add(paneladdBorrower);
+	    			addBorrowerFrame.pack();
+	    			addBorrowerFrame.setVisible(true);
 	    		}
 	    	});
 			checkOutItems.addActionListener(new ActionListener() {
@@ -629,6 +694,12 @@ public class Main implements ActionListener {
 			checkOverdueItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			
+	    		}
+	    	});
+			back.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			panelClerkSubmenu.setVisible(false);
+	    			panelClerkMenu.setVisible(true);
 	    		}
 	    	});
 			quit.addActionListener(new ActionListener() {
