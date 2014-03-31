@@ -219,12 +219,6 @@ public class Main implements ActionListener {
 		final JFrame oneInputWindow = new JFrame("Input");
 		final JPanel panelSomethingWindow = new JPanel();
 		
-		
-		
-		JTextArea textArea = new JTextArea();
-
-		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
-		
 		//setting how we want the panel to be shown on the frame
 		panelLibrarianMenu.setLayout(new BoxLayout(panelLibrarianMenu, BoxLayout.Y_AXIS));
 		panelLibrarianSubmenu.setLayout(new BoxLayout(panelLibrarianSubmenu, BoxLayout.Y_AXIS));
@@ -233,8 +227,6 @@ public class Main implements ActionListener {
 		panelClerkMenu.setLayout(new BoxLayout(panelClerkMenu, BoxLayout.Y_AXIS));
 		panelClerkSubmenu.setLayout(new BoxLayout(panelClerkSubmenu, BoxLayout.Y_AXIS));
 		
-		//panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
-		//System.setOut(new PrintStream(taOutputStream));
 		if (user == 1){ //user is librarian
 		//make addNewBook frame and panel
 			int ROWS = 8;
@@ -262,26 +254,8 @@ public class Main implements ActionListener {
 			final JPanel toppanelreportCheckedoutBooks = new JPanel();
 			toppanelreportCheckedoutBooks.setLayout(new BoxLayout(toppanelreportCheckedoutBooks, BoxLayout.Y_AXIS));
 			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
-			final JPanel panelreportCheckedoutBooksNorth = new JPanel(); //has multiple things inside so we need to make a panel to contain it
-			
-			panelreportCheckedoutBooksNorth.setLayout(new FlowLayout()); //set the layout to go from left->right
-			
-			
-			//final JPanel panelreportCheckedoutBooksCenter = new JPanel();
-			//final JPanel panelreportCheckedoutBooksSouth = new JPanel();
-			
-			//panelreportCheckedoutBooksNorth.setLayout(new FlowLayout());
-			
-			//JSplitPane splitpanelreportCheckedoutBooksV = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-			//JSplitPane splitpanelreportCheckedoutBooksBottomV = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-			//toppanelreportCheckedoutBooks.add(splitpanelreportCheckedoutBooksV, BorderLayout.CENTER);
-			
-			//splitpanelreportCheckedoutBooksV.setTopComponent(panelreportCheckedoutBooksNorth);
-			//splitpanelreportCheckedoutBooksV.setBottomComponent(panelreportCheckedoutBooksCenter);
-			//splitpanelreportCheckedoutBooksBottomV.setTopComponent(splitpanelreportCheckedoutBooksV);
-			//splitpanelreportCheckedoutBooksBottomV.setBottomComponent(panelreportCheckedoutBooksSouth);
-			//toppanelreportCheckedoutBooks.add(splitpanelreportCheckedoutBooksBottomV);
-			
+			final JPanel panelreportCheckedoutBooksNorth = new JPanel(); //has multiple things inside so we need to make a panel to contain it			
+			panelreportCheckedoutBooksNorth.setLayout(new FlowLayout()); //set the layout to go from left->right			
 			reportCheckedoutBooksFrame.setPreferredSize(new Dimension(800,600));
 			reportCheckedoutBooksFrame.setLocationRelativeTo(null);
 			
@@ -313,6 +287,7 @@ public class Main implements ActionListener {
 			JButton canceladdNewBook = new JButton("Cancel");
 			JButton canceladdNewBookCopy = new JButton("Cancel");
 			JButton enterreportCheckedOutBooks = new JButton("Enter");
+			JButton clearreportCheckedOutBooks = new JButton("Clear");
 			JButton okayreportCheckedOutBooks = new JButton("Okay");
 			
 		//making text field
@@ -331,8 +306,14 @@ public class Main implements ActionListener {
 			
 		//make text area
 			final JTextArea reportCheckedOutBookstxtarea = new JTextArea();
+			reportCheckedOutBookstxtarea.setPreferredSize(new Dimension(800, 500));
 			//setupButton(addBook, panelLibrarianMenu);
 			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
+			
+		//we set standard output stream to printstream instead so that it can go to the GUI now
+			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(reportCheckedOutBookstxtarea, "Console output");
+			System.setOut(new PrintStream(taOutputStream));
+			//reportCheckedOutBookstxtarea.add(new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
 			
 		//center align buttons
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -385,6 +366,7 @@ public class Main implements ActionListener {
 			panelreportCheckedoutBooksNorth.add(reportCheckedOutBooksSubject);
 			panelreportCheckedoutBooksNorth.add(reportCheckedOutBookstxt);
 			panelreportCheckedoutBooksNorth.add(enterreportCheckedOutBooks);
+			panelreportCheckedoutBooksNorth.add(clearreportCheckedOutBooks);
 			toppanelreportCheckedoutBooks.add(panelreportCheckedoutBooksNorth);
 			toppanelreportCheckedoutBooks.add(reportCheckedOutBookstxtarea);
 			toppanelreportCheckedoutBooks.add(okayreportCheckedOutBooks);
@@ -414,13 +396,20 @@ public class Main implements ActionListener {
 	    	});
 			enterreportCheckedOutBooks.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+	    			String subject =  reportCheckedOutBookstxt.getText();
+	    			LibrarianUser.reportCheckedOutBooks(subject);
+	    			reportCheckedOutBookstxt.setText(null);
 	    		}
 	    	});
-			okayreportCheckedOutBooks.addActionListener(new ActionListener() {
+			okayreportCheckedOutBooks.addActionListener(new ActionListener() { //kill the frame
 	    		public void actionPerformed(ActionEvent e) {
 	    			reportCheckedOutBookstxt.setText(null);
 	    			reportCheckedoutBooksFrame.dispose();
+	    		}
+	    	});
+			clearreportCheckedOutBooks.addActionListener(new ActionListener() { //kill the frame
+	    		public void actionPerformed(ActionEvent e) {
+	    			reportCheckedOutBookstxtarea.setText(null);
 	    		}
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
@@ -498,17 +487,11 @@ public class Main implements ActionListener {
 	    			addNewBookFrame.dispose();
 	    		}
 	    	});
-			
-			
-			//panelSubmenu.setVisible(false);
-			
+
 			//display the window
 			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			menu.pack();
-			menu.setVisible(true);
-			
-			//System.out.println("HELLOLLOLOLOOLOOOOO");
-			//LibrarianUser.main();
+			menu.setVisible(true);		
 		}
 		else if (user == 2){ //user is borrower
 			//menu.setPreferredSize(new Dimension(700, 800));
