@@ -325,7 +325,7 @@ public class LibrarianUser {
 	 * related to that subject, otherwise all the books that are out are listed
 	 * by the report.
 	 */
-	private static void reportCheckedOutBooks() {
+	public static void reportCheckedOutBooks() {
 		String subject;
 		try {
 			Statement statement = Main.con.createStatement();
