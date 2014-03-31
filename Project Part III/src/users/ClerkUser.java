@@ -599,7 +599,7 @@ public class ClerkUser {
 			}
 
 
-			System.out.print("\n\nList of borrower IDs you would like to send an overdue email to (or type in 'all' to send to all borrowers): ");
+			System.out.print("\n\nList of borrower IDs you would like to send an overdue email to (type in 'all' to send to all borrowers or simply press Enter to not send): ");
 			try {
 				bidsS = Arrays.asList(Main.in.readLine().split(","));
 			} catch (IOException e) {
