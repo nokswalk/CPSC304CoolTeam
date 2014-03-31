@@ -430,7 +430,7 @@ public class ClerkUser {
 		ResultSet rs;
 		
 		List<Integer> overdueBids = new ArrayList<Integer>();  // for storing overdue item borrower ids, for emailing
-		
+
 		try {
 			statement = Main.con.createStatement();
 
@@ -504,13 +504,12 @@ public class ClerkUser {
 				}
 			}
 
+			
 			// Clerk can send an email to each user or all users
-
 			List<String> bidsS = null;
 
 			System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
 					+ "or input 'all' to send a message to all borrowers: ");
-
 			bidsS = Arrays.asList(Main.in.readLine().split(","));
 
 			if (bidsS.get(0).equals("all")){
@@ -518,7 +517,6 @@ public class ClerkUser {
 					sendEmailOverdue(b);
 				}
 			}
-			
 			else {
 				for (String bs: bidsS){
 					int b = Integer.parseInt(bs.trim());
@@ -614,10 +612,10 @@ public class ClerkUser {
 		return sqlDate;		
 	}
 
+		
 	// Returns true of dueDate < today's date
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
-
 		String[] tokens = dueDateString.split("-");
 
 		GregorianCalendar gregCalendar2 = new GregorianCalendar(Integer.parseInt(tokens[0]), 
