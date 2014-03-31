@@ -104,7 +104,7 @@ public class Main implements ActionListener {
 				System.exit(0); 
 			}
 		});
-
+		
 		// size the window to obtain a best fit for the components
 		mainFrame.pack();
 
@@ -252,10 +252,57 @@ public class Main implements ActionListener {
 		}
 		else if (user == 3){ //user is clerk
 			menu = new JFrame("Clerk");
-			menu.setPreferredSize(new Dimension(700, 800));
-			menu.add(textArea);
+
+			JButton addBorrower = new JButton("Add Borrower");
+			JButton checkOutItems = new JButton("Check out Items");
+			JButton processReturn = new JButton("Process Return");
+			JButton checkOverdueItems = new JButton("Check Overdue Items");
+
+			
+			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
+			checkOutItems.setAlignmentX(Component.CENTER_ALIGNMENT);
+			processReturn.setAlignmentX(Component.CENTER_ALIGNMENT);
+			checkOverdueItems.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+			menu.setPreferredSize(new Dimension(200, 300));
+			panel.add(addBorrower);
+			panel.add(checkOutItems);
+			panel.add(processReturn);
+			panel.add(checkOverdueItems);
+
+			//add listeners to the buttons
+			addBorrower.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			checkOutItems.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			processReturn.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			checkOverdueItems.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			
+
+			//add the panel into JFrame
+			menu.getContentPane().add(panel);
+			
+			//display the window
+			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			menu.pack();
 			menu.setVisible(true);
+			
+			
+			menu.add(textArea);
 			ClerkUser.main();
 		}
 		else{
@@ -387,7 +434,6 @@ public class Main implements ActionListener {
 */
     }
 
-    
     public static void main(String args[])
     {
     	Main m = new Main();
