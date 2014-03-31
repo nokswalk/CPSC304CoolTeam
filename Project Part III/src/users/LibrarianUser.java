@@ -268,7 +268,7 @@ public class LibrarianUser {
 			s = Main.con.createStatement();
 			ResultSet rs1 = s.executeQuery("SELECT callNumber "
 					+ "FROM Book "
-					+ "WHERE isbn=" + isbn);
+					+ "WHERE isbn='" + isbn + "'");
 
 			while (rs1.next()) {
 				callNumber = rs1.getInt(1);
