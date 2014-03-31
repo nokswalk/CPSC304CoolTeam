@@ -34,9 +34,9 @@ public class BorrowerUser {
 
 				switch(choice) {
 				case 1:  searchBook(); break;
-				case 2:  checkAccount(); break;
-				case 3:  requestHold(); break;
-				case 4:  payFine(); break;
+//				case 2:  checkAccount(); break;
+//				case 3:  requestHold(); break;
+//				case 4:  payFine(); break;
 				case 5:  quit = true; 
 				}
 			}
@@ -69,6 +69,7 @@ public class BorrowerUser {
 	 * Search for books using keyword search on titles, authors and subjects. The result is a list 
 	 * of books that match the search together with the number of copies that are in and out. 
 	 */
+	 //DON'T USE THIS ONE FOR MAIN!!! D: OMG
 	private static void searchBook() {
 
 		// Search by title or author or subject
@@ -86,9 +87,9 @@ public class BorrowerUser {
 			System.out.println(" ");
 
 			switch (choice) {
-			case 1:  searchBookByTitle(); break;
-			case 2:  searchBookByAuthor(); break;
-			case 3:  searchBookBySubject(); break;
+//			case 1:  searchBookByTitle(); break;
+//			case 2:  searchBookByAuthor(); break;
+//			case 3:  searchBookBySubject(); break;
 			case 4:  return;
 			}
 		}
@@ -108,10 +109,10 @@ public class BorrowerUser {
 		}
 	}
 
-	private static void searchBookByTitle() {	
+	public static void searchBookByTitle(String titleS) {	
 
 		// searched title
-		String             sTitle;
+		String             sTitle = titleS;
 
 		// search results
 		int          	   callNumber;
@@ -129,7 +130,7 @@ public class BorrowerUser {
 		try {
 			// first search Book table based on title keyword
 			System.out.print("\n Title keyword: ");
-			sTitle = Main.in.readLine();
+			//sTitle = Main.in.readLine();
 
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
@@ -183,19 +184,15 @@ public class BorrowerUser {
 			System.out.println("\n No more search results");
 			s.close();
 		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
 	}
 
-	private static void searchBookByAuthor() {
+	public static void searchBookByAuthor(String authorS) {
 
 		// searched author
-		String             sAuthor;
+		String             sAuthor = authorS;
 
 		// search results
 		int          	   callNumber;
@@ -213,7 +210,7 @@ public class BorrowerUser {
 		try {
 			// first search Book table based on author name
 			System.out.print("\n Author name: ");
-			sAuthor = Main.in.readLine();
+			//sAuthor = Main.in.readLine();
 
 			s = Main.con.createStatement();
 
@@ -270,19 +267,16 @@ public class BorrowerUser {
 			s.close();
 		}
 
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
 
 	}
 
-	private static void searchBookBySubject() {
+	public static void searchBookBySubject(String subjectS) {
 
 		// searched subject
-		String             sSubject;
+		String             sSubject = subjectS;
 
 		// search results
 		int          	   callNumber;
@@ -300,7 +294,7 @@ public class BorrowerUser {
 		try {
 			// first search Book table based on subject name
 			System.out.print("\n Subject: ");
-			sSubject = Main.in.readLine();
+			//sSubject = Main.in.readLine();
 
 			s = Main.con.createStatement();
 
@@ -356,9 +350,6 @@ public class BorrowerUser {
 			s.close();
 		}
 
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
@@ -370,9 +361,9 @@ public class BorrowerUser {
 	 * borrowed and not yet returned, any outstanding fines and the hold requests that have been 
 	 * placed by the borrower. 
 	 */
-	private static void checkAccount() {
+	public static void checkAccount(String userBidS) {
 
-		int userBid;
+		int userBid = Integer.parseInt(userBidS);
 
 		String title;
 		String isbn;
@@ -387,7 +378,7 @@ public class BorrowerUser {
 			s = Main.con.createStatement();
 
 			System.out.printf("Please enter your Borrower ID: ");
-			userBid = Integer.parseInt(Main.in.readLine());
+			//userBid = Integer.parseInt(Main.in.readLine());
 
 			// check that this is a valid Borrower account
 			ResultSet rs = s.executeQuery("SELECT * "
@@ -543,8 +534,6 @@ public class BorrowerUser {
 
 		} catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
-		} catch (IOException e) {
-			System.err.println("Message: " + e.getMessage());
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
@@ -556,10 +545,10 @@ public class BorrowerUser {
 	 * Place a hold request for a book that is out. When the item is returned, the system sends an 
 	 * email to the borrower and informs the library clerk to keep the book out of the shelves. 
 	 */
-	private static void requestHold() {
+	public static void requestHold(String bidS, String callNumberS) {
 
-		int					bid;
-		int					callNumber;
+		int					bid = Integer.parseInt(bidS);
+		int					callNumber = Integer.parseInt(callNumberS);
 		Statement			s;
 		PreparedStatement   ps;
 
@@ -567,7 +556,7 @@ public class BorrowerUser {
 			s = Main.con.createStatement();
 
 			System.out.println("Borrower ID: ");
-			bid = Integer.parseInt(Main.in.readLine());
+			//bid = Integer.parseInt(Main.in.readLine());
 			// check that this is a valid Borrower account
 			ResultSet rs = s.executeQuery("SELECT * "
 					+ "FROM Borrower "
@@ -579,7 +568,7 @@ public class BorrowerUser {
 			}
 
 			System.out.println("Book call number: ");
-			callNumber = Integer.parseInt(Main.in.readLine());
+			//callNumber = Integer.parseInt(Main.in.readLine());
 			// check that this is a valid Book call number
 			rs = s.executeQuery("SELECT * "
 					+ "FROM Borrower "
@@ -632,9 +621,6 @@ public class BorrowerUser {
 				System.exit(-1);
 			}
 		}
-		catch (IOException e) {
-			System.err.println("Message: " + e.getMessage());
-		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -644,9 +630,10 @@ public class BorrowerUser {
 	/*
 	 * Pay a fine.
 	 */
-	private static void payFine()
+	 //Tony! this one is tricky theres a string input -> display fines -> input fid string
+	public static void payFine(String bidS, String fidS)
 	{
-		int		   bid;
+		int		   bid = Integer.parseInt(bidS);
 		Statement  s;
 
 		int		   sfid;
@@ -657,7 +644,7 @@ public class BorrowerUser {
 			s = Main.con.createStatement();
 
 			System.out.print("Borrower ID: ");
-			bid = Integer.parseInt(Main.in.readLine());
+			//bid = Integer.parseInt(Main.in.readLine());
 			// check that this is a valid Borrower account
 			ResultSet rs = s.executeQuery("SELECT * "
 					+ "FROM Borrower "
@@ -705,24 +692,25 @@ public class BorrowerUser {
 
 			// Ask borrower to select which fine to pay for
 			System.out.println("\n\nSelect ID of fine you wish to pay: ");
-			String ans1 = Main.in.readLine();
-			
+			//String ans1 = Main.in.readLine();
+			String ans1 = fidS;
+
 			if (ans1.trim().equals("")){
 				return;
 			}
-			
+			//this is where the chosen fid is inputted
 			sfid = Integer.parseInt(ans1);
 
 			System.out.println("Proceed with payment?(y/n)");
-			ans = Main.in.readLine();
+//			ans = Main.in.readLine();
 
-			if (ans.equals("y")){
+//			if (ans.equals("y")){
 				updateFine(sfid);
-				System.out.println("Fine has been paid.");
-			}
-			else {
-				System.out.println("Payment cancelled.");
-			}
+//				System.out.println("Fine has been paid.");
+//			}
+//			else {
+//				System.out.println("Payment cancelled.");
+//			}
 		}
 
 		catch (SQLException ex) {
@@ -735,9 +723,6 @@ public class BorrowerUser {
 				System.err.println("Message: " + ex2.getMessage());
 				System.exit(-1);
 			}
-		}
-		catch (IOException e) {
-			System.err.println("Message: " + e.getMessage());
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");

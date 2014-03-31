@@ -33,8 +33,8 @@ public class LibrarianUser {
 
 				switch (choice) {
 				case 1:  addBook(); break;
-				case 2:  reportCheckedOutBooks(); break;
-				case 3:  mostPopular(); break; 
+//				case 2:  reportCheckedOutBooks(); break;
+//				case 3:  mostPopular(); break; 
 				case 4:  quit = true; 
 				}
 			}
@@ -67,6 +67,7 @@ public class LibrarianUser {
 	 * Adds a new book or new copy of an existing book to the library. The librarian provides 
 	 * the information for the new book, and the system adds it to the library.
 	 */
+	 //THIS IS NOT THE ONE USED IN MAIN
 	private static void addBook() {
 		// Search by title or author or subject
 		int choice;
@@ -82,8 +83,8 @@ public class LibrarianUser {
 			System.out.println(" ");
 
 			switch (choice) {
-			case 1:  addNewBook(); break;
-			case 2:  addNewBookCopy(); break;
+//			case 1:  addNewBook(); break;
+//			case 2:  addNewBookCopy(); break;
 			case 3:  return;
 			}
 		}
@@ -103,18 +104,20 @@ public class LibrarianUser {
 		}
 	}
 
-	private static void addNewBook() {
+	public static void addNewBook(String isbnS, String titleS, String mainAuthorS, String publisherS, String yearS, String subjectsS, String authorsS) {
 
 		// attributes of new book
-		String 	           isbn;
-		String             title;
-		String             mainAuthor;
-		String             publisher;
-		int                year;
+		String 	           isbn = isbnS;
+		String             title = titleS;
+		String             mainAuthor = mainAuthorS;
+		String             publisher = publisherS;	
+		int                year = Integer.parseInt(yearS);
 
 		//
-		List<String>       subjects;
-		List<String>       authors;
+		String			temp = subjectsS;
+		List<String>	subjects = Arrays.asList(temp.split(","));
+		String 			temp2 = authorsS;
+		List<String>    authors;
 
 		Statement          s;    // to check if added book already exists in database
 
@@ -151,19 +154,19 @@ public class LibrarianUser {
 			ps1.setString(1, isbn);
 
 			System.out.print("Book title: ");
-			title = Main.in.readLine();
+//			title = Main.in.readLine();
 			ps1.setString(2, title);
 
 			System.out.print("Book main author: ");
-			mainAuthor = Main.in.readLine();
+//			mainAuthor = Main.in.readLine();
 			ps1.setString(3, mainAuthor);
 
 			System.out.print("Book publisher: ");
-			publisher = Main.in.readLine();
+//			publisher = Main.in.readLine();
 			ps1.setString(4,  publisher);
 
 			System.out.print("Book published year: ");
-			year = Integer.parseInt(Main.in.readLine());
+//			year = Integer.parseInt(Main.in.readLine());
 			ps1.setInt(5, year);
 
 			ps1.executeUpdate();
@@ -178,8 +181,8 @@ public class LibrarianUser {
 
 			// add subjects of book
 			System.out.print("Book subjects: ");
-			String temp = Main.in.readLine();
-			subjects = Arrays.asList(temp.split(","));
+//			String temp = Main.in.readLine();
+//			subjects = Arrays.asList(temp.split(","));
 
 			for (String subject : subjects) {				
 				if (subject.trim().length() == 0) {
@@ -194,7 +197,7 @@ public class LibrarianUser {
 
 			// add other authors of book
 			System.out.print("Book's other authors: ");
-			String temp2 = Main.in.readLine();
+//			String temp2 = Main.in.readLine();
 			
 			if (temp2.length() != 0) {
 				authors = Arrays.asList(temp2.split(","));
@@ -243,7 +246,7 @@ public class LibrarianUser {
 		}
 	}
 
-	private static void addNewBookCopy() {
+	public static void addNewBookCopy(String isbnS) {
 
 		// attributes of new copy
 		int                callNumber = 0;
@@ -251,7 +254,7 @@ public class LibrarianUser {
 		String             status     = "in";
 
 		// to get existing callNumber of this book
-		String             isbn; 
+		String             isbn = isbnS;
 		Statement          s; 
 
 		// to add new copy into database
@@ -260,7 +263,7 @@ public class LibrarianUser {
 		try {
 			// use ISBN to get existing callNumber
 			System.out.print("Book ISBN: ");
-			isbn = Main.in.readLine();
+		//	isbn = Main.in.readLine();
 
 			s = Main.con.createStatement();
 			ResultSet rs1 = s.executeQuery("SELECT callNumber "
@@ -303,10 +306,6 @@ public class LibrarianUser {
 			ps.close();
 			s.close();
 		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -334,17 +333,18 @@ public class LibrarianUser {
 	 * related to that subject, otherwise all the books that are out are listed
 	 * by the report.
 	 */
-	private static void reportCheckedOutBooks() {
-		
-		String subject;
+	public static void reportCheckedOutBooks(String subjectS) {
+
+		String subject = subjectS;
 		
 		try {
 			Statement s = Main.con.createStatement();
 			ResultSet rs;
-			
+
+			//IF THE STRING IS EMPTY, IT WILL PRINT OUT EVERYTHING
 			System.out.println("Please enter a subject to report. \n "
 					+ "If no subject is inputted, the report will contain all subjects.): \n>> ");
-			subject = Main.in.readLine();
+			//subject = Main.in.readLine();
 			
 			// check that this is a valid subject
 			if (!subject.trim().equals("")) {
@@ -445,15 +445,6 @@ public class LibrarianUser {
 			
 		} catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
-		} catch (IOException e) {
-			System.err.println("IOException!");
-			try {
-				Main.con.close();
-				System.exit(-1);
-			}
-			catch (SQLException ex) {
-				System.err.println("Message: " + ex.getMessage());
-			}
 		}
 	}
 	
@@ -464,17 +455,22 @@ public class LibrarianUser {
 	 * books that where borrowed the most times during that year. The books are
 	 * ordered by the number of times they were borrowed.
 	 */
-	private static void mostPopular() {
+	public static void mostPopular(String amountS, String yearS) {		
+		int 		amount = Integer.parseInt(amountS);
+		String 		year = yearS;
+		
 		try {
 			System.out.println("Generating a report with most popular items.");
 			System.out.println("Please specify how many books you wish to add into the report:\n>>");
-			int amount = Integer.parseInt(Main.in.readLine());
+			//int amount = Integer.parseInt(Main.in.readLine());
+			
 			if(amount < 0){
 				System.out.println("Negatives are not allowed.");
 				return;
 			}
 			System.out.println("Please specify the year you wish to report:\n>>");
-			String year = Main.in.readLine();
+
+			//String year = Main.in.readLine();
 			Statement statement = Main.con.createStatement();
 
 			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS count "  
@@ -518,8 +514,6 @@ public class LibrarianUser {
 			statement.close();
 			
 		} catch (SQLException e) {
-			System.err.println("Message: " + e.getMessage());
-		} catch (IOException e) {
 			System.err.println("Message: " + e.getMessage());
 		}
 		catch (NumberFormatException ne) {
