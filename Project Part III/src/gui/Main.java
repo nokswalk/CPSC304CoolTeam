@@ -190,40 +190,62 @@ public class Main implements ActionListener {
 	}
 	
 	private void showMenu(int user) throws ParseException{
-		JTextArea textArea = new JTextArea();
+		final JFrame menu = new JFrame("Menu");
 		final JPanel panel = new JPanel();
-		final JPanel panelSubmenu = new JPanel();
+		final JPanel panelLibrarianSubmenu = new JPanel();
+		JTextArea textArea = new JTextArea();
+
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
+		
+		//setting how we want the panel to be shown on the frame
 		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+		panelLibrarianSubmenu.setLayout(new BoxLayout(panelLibrarianSubmenu, BoxLayout.Y_AXIS));
+		
 		//panel.add(new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
 		//System.setOut(new PrintStream(taOutputStream));
-		final JFrame menu = new JFrame("Menu");
 		if (user == 1){ //user is librarian
 			
+		//making buttons
 			JButton addBook = new JButton("Add Book");
 			JButton reportCheckedOutBooks = new JButton("Report Checked Out Books");
 			JButton mostPopular = new JButton("Most Popular Books");
 			JButton addNewBook = new JButton("Add New Book");
 			JButton addNewBookCopy = new JButton("Add New Book Copy");
+			JButton back = new JButton("Go Back");
 			
+		//center align buttons
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
 			reportCheckedOutBooks.setAlignmentX(Component.CENTER_ALIGNMENT);
 			mostPopular.setAlignmentX(Component.CENTER_ALIGNMENT);
+			addNewBook.setAlignmentX(Component.CENTER_ALIGNMENT);
+			addNewBookCopy.setAlignmentX(Component.CENTER_ALIGNMENT);
+			back.setAlignmentX(Component.CENTER_ALIGNMENT);
 			
 			menu.setPreferredSize(new Dimension(200, 300));
+			
+		//attaching buttons to the frame
 			panel.add(addBook);
 			panel.add(reportCheckedOutBooks);
 			panel.add(mostPopular);
-			//panel.add(textArea);
-			panelSubmenu.add(addNewBook);
-			panelSubmenu.add(addNewBookCopy);
 			
+			panelLibrarianSubmenu.add(addNewBook);
+			panelLibrarianSubmenu.add(addNewBookCopy);
+			panelLibrarianSubmenu.add(back);
+			
+			
+			
+			//panel.add(textArea);
+			
+		//add the panel into JFrame
+			
+			menu.getContentPane().add(panel);
 			
 			//add listeners to the buttons
-			addBook.addActionListener(new ActionListener() {
+			addBook.addActionListener(new ActionListener() { //go into submenu
 	    		public void actionPerformed(ActionEvent e) {
+	    			menu.getContentPane().add(panelLibrarianSubmenu); //attach submenu to the frame
 					panel.setVisible(false);
-					panelSubmenu.setVisible(true);
+					panelLibrarianSubmenu.setVisible(true);
 	    		}
 	    	});
 			reportCheckedOutBooks.addActionListener(new ActionListener() {
@@ -236,11 +258,25 @@ public class Main implements ActionListener {
 	    			
 	    		}
 	    	});
+			addNewBook.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			addNewBookCopy.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			
+	    		}
+	    	});
+			back.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			panelLibrarianSubmenu.setVisible(false);
+	    			panel.setVisible(true);
+	    		}
+	    	});
 			
-			//add the panel into JFrame
-			menu.getContentPane().add(panelSubmenu);
-			menu.getContentPane().add(panel);
-			panelSubmenu.setVisible(false);
+			
+			//panelSubmenu.setVisible(false);
 			
 			//display the window
 			menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
