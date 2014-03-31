@@ -17,6 +17,29 @@ import java.util.List;
  */
 public class ClerkUser {
 
+	private static int newbid;
+	
+	public static int getNewBid(String sinOrStNo){
+		int bid = -1;
+		// get new borrower's bid
+		Statement s;
+		try {
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT bid "
+					+ "FROM Borrower "
+					+ "WHERE sinOrStNo= '" + sinOrStNo + "'");
+			if(rs.next())
+				bid = rs.getInt(1);
+			else
+				return bid;
+			s.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Message: " + e.getMessage());
+		}
+		return bid;
+	}
+	
 	/*
 	 * Loads clerk's side of application.
 	 * Uses buffer line reader and connection established in Main class.
@@ -40,7 +63,7 @@ public class ClerkUser {
 				System.out.println(" ");
 
 				switch (choice) {
-				case 1:  addBorrower(); break;
+//				case 1:  addBorrower(); break;
 //				case 2:  checkOutItems(); break;
 //				case 3:  processReturn(); break;
 //				case 4:  checkOverdueItems(); break;
@@ -76,7 +99,7 @@ public class ClerkUser {
 	 * Add a new borrower to the library.  
 	 * User should provide all required info.
 	 */
-	private static void addBorrower() {
+	public static void addBorrower(String passwordstr, String namestr, String addressstr, String phonestr, String emailstr, String sinOrStnostr, String typestr) {
 		String             password; 
 		String             name;
 		String             address;
@@ -86,49 +109,50 @@ public class ClerkUser {
 		String             type;
 
 		PreparedStatement  ps;
-
 		try {
 			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,?,?)");
 
-			System.out.println("Please fill out required fields (*).");
-
-			System.out.print("Borrower password *: ");
-			password = Main.in.readLine();
-			ps.setString(1, password);
-
-			System.out.print("Borrower name *: ");
-			name = Main.in.readLine();
-			ps.setString(2, name);
-
-			System.out.print("Borrower address: ");
-			address = Main.in.readLine();
-			if (address.length() == 0) {
+//			System.out.println("Please fill out required fields (*).");
+//
+//			System.out.print("Borrower password *: ");
+//			password = Main.in.readLine();
+			System.out.println(passwordstr);
+			ps.setString(1, passwordstr);
+			System.out.println(namestr);
+//			System.out.print("Borrower name *: ");
+//			name = Main.in.readLine();
+			ps.setString(2, namestr);
+			System.out.println(addressstr);
+//			System.out.print("Borrower address: ");
+//			address = Main.in.readLine();
+			if (addressstr.length() == 0) {
 				ps.setString(3, null);
 			} else {
-				ps.setString(3, address);
+				ps.setString(3, addressstr);
 			}
-
-			System.out.print("Borrower phone number: ");
-			phone = Main.in.readLine();
-			if (phone.length() == 0) {
+			System.out.println(phonestr);
+//			System.out.print("Borrower phone number: ");
+//			phone = Main.in.readLine();
+			if (phonestr.length() == 0) {
 				ps.setString(4, null);
 			} else {
-				ps.setString(4,  phone);
+				ps.setString(4,  phonestr);
 			}
-
-			System.out.print("Borrower email address *: ");
-			emailAddress = Main.in.readLine();
-			ps.setString(5, emailAddress);
-
-			System.out.print("Borrower SIN or student number *: ");
-			sinOrStNo = Integer.parseInt(Main.in.readLine());
+			System.out.println(emailstr);
+//			System.out.print("Borrower email address *: ");
+//			emailAddress = Main.in.readLine();
+			ps.setString(5, emailstr);
+			System.out.println(sinOrStnostr);
+//			System.out.print("Borrower SIN or student number *: ");
+			//sinOrStNo = Integer.parseInt(Main.in.readLine());
+			sinOrStNo = Integer.parseInt(sinOrStnostr);
 			// check if account already exists for this sinOrStNo
 			Statement s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT * "
 					+ "FROM Borrower "
 					+ "WHERE sinOrStNo='" + sinOrStNo + "'");
 			if (rs.next()) {
-				System.out.println("This SIN or student number is already associated with an account."
+				System.err.println("This SIN or student number is already associated with an account."
 						+ "Please check the digits with the borrower.");
 				s.close();
 				ps.close();
@@ -141,10 +165,11 @@ public class ClerkUser {
 			gregToday.add(Calendar.YEAR, 5);
 			java.sql.Date expiryDate = new java.sql.Date(gregToday.getTime().getTime());
 			ps.setDate(7, expiryDate);
-
-			System.out.print("Borrower type: ");
-			type = Main.in.readLine();
-			ps.setString(8, type);
+			System.out.println(expiryDate);
+			System.out.println(typestr);
+//			System.out.print("Borrower type: ");
+//			type = Main.in.readLine();
+			ps.setString(8, typestr);
 
 			ps.executeUpdate();
 			// commit work 
@@ -153,20 +178,20 @@ public class ClerkUser {
 
 			System.out.println("New borrower successfully added to database.");
 
-			int bid;
-			// get new borrower's bid
-			rs = s.executeQuery("SELECT bid "
-					+ "FROM Borrower "
-					+ "WHERE sinOrStNo= '" + sinOrStNo + "'");
-			bid = rs.getInt(1);
-			s.close();
-
-			System.out.println("New borrower id: " + bid);
+//			int bid;
+//			// get new borrower's bid
+//			rs = s.executeQuery("SELECT bid "
+//					+ "FROM Borrower "
+//					+ "WHERE sinOrStNo= '" + sinOrStNo + "'");
+//			bid = rs.getInt(1);
+//			s.close();
+//
+//			System.out.println("New borrower id: " + bid);
 		}
 
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
+//		catch (IOException e) {
+//			System.err.println("IOException!");
+//		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
