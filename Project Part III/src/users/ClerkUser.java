@@ -237,9 +237,7 @@ public class ClerkUser {
 
 				ps1.executeUpdate();
 
-				System.out.println(callNumber + " " + copyNo + " has been checked out.");
 				BorrowerUser.infoBox(callNumber + " " + copyNo + " has been checked out.", "success");
-
 
 
 				// update book copy status
@@ -310,10 +308,16 @@ public class ClerkUser {
 			s = Main.con.createStatement();
 			
 			// check that this item is out of the library
-			ResultSet rs = s.executeQuery("SELECT * from BookCopy where status='out' "
+			ResultSet rs = s.executeQuery("SELECT * from BookCopy where status='in' "
 					+ "AND callNumber=" + callNumber + " AND copyNo=" + copyNo);
-			if (!rs.next()) {
+			if (rs.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
+				ps1.close();
+				ps2.close();
+				ps3.close();
+				ps4.close();
+				s.close();
+				return;
 			}
 
 			// get borid and bid of borrowing
@@ -324,6 +328,11 @@ public class ClerkUser {
 			if (!rs1.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
 				BorrowerUser.infoBox("This item has not been borrowed, please check the call number and copy number.", "error");
+				ps1.close();
+				ps2.close();
+				ps3.close();
+				ps4.close();
+				s.close();
 				return;
 			}
 			borid = rs1.getInt(1);
@@ -393,6 +402,7 @@ public class ClerkUser {
 			ps2.close();
 			ps3.close();
 			ps4.close();
+			s.close();
 
 		}
 		catch (NumberFormatException ne) {

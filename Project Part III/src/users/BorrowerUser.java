@@ -562,8 +562,8 @@ public class BorrowerUser {
 			// Get all fines owed by borrower
 			rs = s.executeQuery("SELECT fid, amount, TO_CHAR(issuedDate, 'YYYY-MM-DD') as issDate "
 					+ "FROM Fine F, Borrowing B "
-					+ "WHERE F.borid = B.borid "
-					+ "AND B.bid = " + bid);
+					+ "WHERE F.borid = B.borid AND B.bid = " + bid
+					+ " AND paidDate is null");
 
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
