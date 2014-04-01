@@ -3,11 +3,24 @@ package users;
 import gui.Main;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 public class BorrowerUser {
+	private static List<Object[]> searchByData;
+	private static List<Object[]> payFineData;
+	public static List<Object[]> getSearByData(){
+		return searchByData;
+	}
+	public static List<Object[]> getPayFineData(){
+		return payFineData;
+	}
+	
+
+		private static Statement s;
 
 
 
@@ -40,7 +53,7 @@ public class BorrowerUser {
 			// to execute queries
 			Statement          s;
 
-			s = Main.con.createStatement();
+			s= Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
 					+ "FROM Book B "
 					+ "WHERE B.title LIKE '%" + sTitle + "%'");
@@ -65,28 +78,34 @@ public class BorrowerUser {
 			System.out.printf("%-15s", "out/on hold");
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();	
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
-
+				Object[] row = new Object[6];
 				callNumber = rs.getInt(1);
 				System.out.printf("%-15.15s", callNumber);
-
+				row[0] = callNumber;
 				isbn = rs.getString(2);
 				System.out.printf("%-15.15s", isbn);
-
+				row[1] = isbn;
 				title = rs.getString(3);
 				System.out.printf("%-15.15s", title);
-
+				row[2] = title;
 				mainAuthor = rs.getString(4);
 				System.out.printf("%-15.15s", mainAuthor);
-
+				row[3] = mainAuthor;
 				int[] statusCounts = statusCounts(callNumber);
 				inLib = statusCounts[0];
 				outLib = statusCounts[1] + statusCounts[2];
+				row[4] = inLib;
+				row[5] = outLib;
 				System.out.printf("%-15.15s", inLib);
 				System.out.printf("%-15.15s\n", outLib);
+				searchByData.add(row);
 			}
 
 			System.out.println("\n No more search results");
@@ -134,7 +153,10 @@ public class BorrowerUser {
 			int numCols = rsmd.getColumnCount();
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();
 			// display column names;
 			for (int i = 0; i < numCols; i++)
 			{
@@ -147,11 +169,13 @@ public class BorrowerUser {
 			System.out.printf("%-15s", "out/on hold");
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();	
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
-
 				callNumber = rs.getInt(1);
 				System.out.printf("%-15.15s", callNumber);
 
@@ -169,6 +193,15 @@ public class BorrowerUser {
 				outLib = statusCounts[1] + statusCounts[2];
 				System.out.printf("%-15.15s", inLib);
 				System.out.printf("%-15.15s\n", outLib);
+				
+				Object[] row = new Object[6];
+				row[0] = callNumber;
+				row[1] = isbn;
+				row[2] = title;
+				row[3] = mainAuthor;
+				row[4] = inLib;
+				row[5] = outLib;
+				searchByData.add(row);
 			}
 
 			System.out.println("\n No more search results");
@@ -230,7 +263,10 @@ public class BorrowerUser {
 			System.out.printf("%-15s", "out/on hold");
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();	
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
@@ -252,6 +288,15 @@ public class BorrowerUser {
 				outLib = statusCounts[1] + statusCounts[2];
 				System.out.printf("%-15.15s", inLib);
 				System.out.printf("%-15.15s\n", outLib);
+				
+				Object[] row = new Object[6];
+				row[0] = callNumber;
+				row[1] = isbn;
+				row[2] = title;
+				row[3] = mainAuthor;
+				row[4] = inLib;
+				row[5] = outLib;
+				searchByData.add(row);
 			}
 
 			System.out.println("\n No more search results");
@@ -562,8 +607,9 @@ public class BorrowerUser {
 			// Get all fines owed by borrower
 			rs = s.executeQuery("SELECT fid, amount, TO_CHAR(issuedDate, 'YYYY-MM-DD') as issDate "
 					+ "FROM Fine F, Borrowing B "
-					+ "WHERE F.borid = B.borid AND B.bid = " + bid
-					+ " AND paidDate is null");
+					+ "WHERE F.borid = B.borid "
+					+ "AND F.paidDate is null "
+					+ "AND B.bid = " + bid);
 
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -579,10 +625,10 @@ public class BorrowerUser {
 			}
 			System.out.println(" ");
 
+			payFineData = new ArrayList<Object[]>();
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
-
 				int fid = rs.getInt(1);
 				System.out.printf("%-15.15s", Integer.toString(fid));
 
@@ -591,6 +637,11 @@ public class BorrowerUser {
 
 				Date issuedDate = rs.getDate(3);
 				System.out.printf("%-15.15s", issuedDate);
+				Object[] row = new Object[3];
+				row[0] = fid;
+				row[1] = amount;
+				row[2] = issuedDate;
+				payFineData.add(row);
 			}
 			System.out.println("\nEnd of results\n");
 			
@@ -615,12 +666,16 @@ public class BorrowerUser {
 
 	public static void payFine(String fidS)
 	{
+		
 		try
 		{
 			int fid = Integer.parseInt(fidS);
 			
 			Date			   paidDate;
 			PreparedStatement  ps;
+			s = null;
+			
+
 			
 			ps = Main.con.prepareStatement("UPDATE fine SET paidDate = ? WHERE fid = ?");
 
@@ -635,8 +690,10 @@ public class BorrowerUser {
 
 			ps.close();
 			
+
 			System.out.println("Fine has been paid");
-			infoBox("Fine has been paid", "success");
+			infoBox("Transaction has been sent for processing.", "success");
+			
 		}
 
 		catch (SQLException ex) {
@@ -651,7 +708,7 @@ public class BorrowerUser {
 		}	
 		catch (NumberFormatException ne) {
 			System.err.println("Fine ID is not valid.");
-			infoBox("Fine has been paid", "success");
+			infoBox("Fine ID is not valid.", "error");
 		}
 	}
 
