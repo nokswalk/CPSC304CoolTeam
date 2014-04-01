@@ -395,7 +395,7 @@ public class BorrowerUser {
 				}
 			}
 			System.out.println("Total amount of outstanding fine is: " + totalAmount);
-			System.out.println(" ");
+			System.out.println("\n");
 
 
 			//Hold Request List
@@ -531,6 +531,7 @@ public class BorrowerUser {
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			infoBox("A required field was left blank.", "error");
 		}
 	}
 
@@ -583,7 +584,7 @@ public class BorrowerUser {
 				// simplified output formatting; truncation may occur
 
 				int fid = rs.getInt(1);
-				System.out.printf("%-15.15s", fid);
+				System.out.printf("%-15.15s", Integer.toString(fid));
 
 				double amount = rs.getDouble(2);
 				System.out.printf("%-15.15s", amount);
@@ -591,6 +592,8 @@ public class BorrowerUser {
 				Date issuedDate = rs.getDate(3);
 				System.out.printf("%-15.15s", issuedDate);
 			}
+			System.out.println("\nEnd of results\n");
+			
 		}
 
 		catch (SQLException ex) {
