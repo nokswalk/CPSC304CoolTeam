@@ -3,12 +3,17 @@ package users;
 import gui.Main;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 public class BorrowerUser {
-
+	private static List<Object[]> searchByData;
+	public static List<Object[]> getSearByData(){
+		return searchByData;
+	}
 
 
 		public static void infoBox(String infoMessage, String titleBarMessage)
@@ -40,7 +45,7 @@ public class BorrowerUser {
 			// to execute queries
 			Statement          s;
 
-			s = Main.con.createStatement();
+			s= Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
 					+ "FROM Book B "
 					+ "WHERE B.title LIKE '%" + sTitle + "%'");
@@ -65,28 +70,34 @@ public class BorrowerUser {
 			System.out.printf("%-15s", "out/on hold");
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();	
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
-
+				Object[] row = new Object[6];
 				callNumber = rs.getInt(1);
 				System.out.printf("%-15.15s", callNumber);
-
+				row[0] = callNumber;
 				isbn = rs.getString(2);
 				System.out.printf("%-15.15s", isbn);
-
+				row[1] = isbn;
 				title = rs.getString(3);
 				System.out.printf("%-15.15s", title);
-
+				row[2] = title;
 				mainAuthor = rs.getString(4);
 				System.out.printf("%-15.15s", mainAuthor);
-
+				row[3] = mainAuthor;
 				int[] statusCounts = statusCounts(callNumber);
 				inLib = statusCounts[0];
 				outLib = statusCounts[1] + statusCounts[2];
+				row[4] = inLib;
+				row[5] = outLib;
 				System.out.printf("%-15.15s", inLib);
 				System.out.printf("%-15.15s\n", outLib);
+				searchByData.add(row);
 			}
 
 			System.out.println("\n No more search results");
@@ -134,7 +145,10 @@ public class BorrowerUser {
 			int numCols = rsmd.getColumnCount();
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();
 			// display column names;
 			for (int i = 0; i < numCols; i++)
 			{
@@ -147,11 +161,13 @@ public class BorrowerUser {
 			System.out.printf("%-15s", "out/on hold");
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();	
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
-
 				callNumber = rs.getInt(1);
 				System.out.printf("%-15.15s", callNumber);
 
@@ -169,6 +185,15 @@ public class BorrowerUser {
 				outLib = statusCounts[1] + statusCounts[2];
 				System.out.printf("%-15.15s", inLib);
 				System.out.printf("%-15.15s\n", outLib);
+				
+				Object[] row = new Object[6];
+				row[0] = callNumber;
+				row[1] = isbn;
+				row[2] = title;
+				row[3] = mainAuthor;
+				row[4] = inLib;
+				row[5] = outLib;
+				searchByData.add(row);
 			}
 
 			System.out.println("\n No more search results");
@@ -230,7 +255,10 @@ public class BorrowerUser {
 			System.out.printf("%-15s", "out/on hold");
 
 			System.out.println(" ");
-
+			if(searchByData == null)
+				searchByData = new ArrayList<Object[]>();
+			else
+				searchByData.clear();	
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
@@ -252,6 +280,15 @@ public class BorrowerUser {
 				outLib = statusCounts[1] + statusCounts[2];
 				System.out.printf("%-15.15s", inLib);
 				System.out.printf("%-15.15s\n", outLib);
+				
+				Object[] row = new Object[6];
+				row[0] = callNumber;
+				row[1] = isbn;
+				row[2] = title;
+				row[3] = mainAuthor;
+				row[4] = inLib;
+				row[5] = outLib;
+				searchByData.add(row);
 			}
 
 			System.out.println("\n No more search results");

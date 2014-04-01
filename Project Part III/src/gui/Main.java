@@ -510,9 +510,10 @@ public class Main implements ActionListener {
 	    	});
 			clearmostPopular.addActionListener(new ActionListener() { //kill the frame
 	    		public void actionPerformed(ActionEvent e) {
-	    			int rowCount=modelMP.getRowCount();
-	    			for (int i = 0;i<rowCount;i++) {
-	    			    modelMP.removeRow(i);
+	    			if (modelMP.getRowCount() > 0) {
+	    			    for (int i = modelMP.getRowCount() - 1; i > -1; i--) {
+	    			    	modelMP.removeRow(i);
+	    			    }
 	    			}
 	    			mostPopulartxtarea.setText(null);
 	    		}
@@ -613,6 +614,12 @@ public class Main implements ActionListener {
 			searchAuthorFrame.getContentPane().add(toppanelsearchAuthor);
 			searchAuthorFrame.setPreferredSize(new Dimension(800, 600));
 			searchAuthorFrame.setLocationRelativeTo(null);
+			//making table
+			String[] columnNamesSearchbyA = {"CallNumber", "ISBN", "Title", "MainAuthor","In Library", "Out/On Hold"};
+			final DefaultTableModel modelsearchbyA = new DefaultTableModel(null, columnNamesSearchbyA);
+			final JTable tableSearchbyA = new JTable(modelsearchbyA);
+			JScrollPane scrollPaneSearchbyA = new JScrollPane(tableSearchbyA);
+			tableSearchbyA.setFillsViewportHeight(true);
 			
 		//make searchbysubject
 			final JFrame searchSubjectFrame = new JFrame("Search Book by Subject");
@@ -625,6 +632,12 @@ public class Main implements ActionListener {
 			searchSubjectFrame.getContentPane().add(toppanelsearchSubject);
 			searchSubjectFrame.setPreferredSize(new Dimension(800, 600));
 			searchSubjectFrame.setLocationRelativeTo(null);
+			//making table
+			String[] columnNamesSearchbyS = {"CallNumber", "ISBN", "Title", "MainAuthor"};
+			final DefaultTableModel modelsearchbyS = new DefaultTableModel(null, columnNamesSearchbyS);
+			final JTable tableSearchbyS = new JTable(modelsearchbyS);
+			JScrollPane scrollPaneSearchbyS = new JScrollPane(tableSearchbyS);
+			tableSearchbyS.setFillsViewportHeight(true);
 			
 		//make searchbytitle
 			final JFrame searchTitleFrame = new JFrame("Search Book by Title");
@@ -637,6 +650,12 @@ public class Main implements ActionListener {
 			searchTitleFrame.getContentPane().add(toppanelsearchTitle);
 			searchTitleFrame.setPreferredSize(new Dimension(800, 600));
 			searchTitleFrame.setLocationRelativeTo(null);
+			//making table
+			String[] columnNamesSearchbyT = {"CallNumber", "ISBN", "Title", "MainAuthor"};
+			final DefaultTableModel modelsearchbyT = new DefaultTableModel(null, columnNamesSearchbyT);
+			final JTable tableSearchbyT = new JTable(modelsearchbyT);
+			JScrollPane scrollPaneSearchbyT = new JScrollPane(tableSearchbyT);
+			tableSearchbyT.setFillsViewportHeight(true);
 			
 		//make checkaccount
 			final JFrame checkAccountFrame = new JFrame("Check Account");
@@ -784,7 +803,8 @@ public class Main implements ActionListener {
 			panelsearchAuthorNorth.add(searchAuthorClear);
 			panelsearchAuthorNorth.add(searchAuthorCancel);
 			toppanelsearchAuthor.add(panelsearchAuthorNorth);
-			toppanelsearchAuthor.add(authortxtarea);
+			toppanelsearchAuthor.add(scrollPaneSearchbyA);
+//			toppanelsearchAuthor.add(authortxtarea);
 			//Search by Subject
 			panelsearchSubjectNorth.add(subjectLabel);
 			panelsearchSubjectNorth.add(subjecttxt);
@@ -792,7 +812,8 @@ public class Main implements ActionListener {
 			panelsearchSubjectNorth.add(searchSubjectClear);
 			panelsearchSubjectNorth.add(searchSubjectCancel);
 			toppanelsearchSubject.add(panelsearchSubjectNorth);
-			toppanelsearchSubject.add(subjecttxtarea);
+			toppanelsearchSubject.add(scrollPaneSearchbyS);
+//			toppanelsearchSubject.add(subjecttxtarea);
 			//Search by Title
 			panelsearchTitleNorth.add(titleLabel);
 			panelsearchTitleNorth.add(titletxt);
@@ -800,7 +821,8 @@ public class Main implements ActionListener {
 			panelsearchTitleNorth.add(searchTitleClear);
 			panelsearchTitleNorth.add(searchTitleCancel);
 			toppanelsearchTitle.add(panelsearchTitleNorth);
-			toppanelsearchTitle.add(titletxtarea);
+			toppanelsearchTitle.add(scrollPaneSearchbyT);
+//			toppanelsearchTitle.add(titletxtarea);
 			//Check Account
 			panelcheckAccountNorth.add(checkAccountLabel);
 			panelcheckAccountNorth.add(checkAccounttxt);
@@ -852,11 +874,19 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String title = titletxt.getText();
 	    			BorrowerUser.searchBookByTitle(title);
+	    			for(Object[] row: BorrowerUser.getSearByData()){
+	    				modelsearchbyT.addRow(row);
+	    			}
 	    			titletxt.setText(null);
 	    		}
 	    	});
 			searchTitleClear.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			if (modelsearchbyT.getRowCount() > 0) {
+	    			    for (int i = modelsearchbyT.getRowCount() - 1; i > -1; i--) {
+	    			    	modelsearchbyT.removeRow(i);
+	    			    }
+	    			}
 	    			titletxtarea.setText(null);
 	    		}
 	    	});
@@ -880,11 +910,19 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String subject = subjecttxt.getText();
 	    			BorrowerUser.searchBookBySubject(subject);
+	    			for(Object[] row: BorrowerUser.getSearByData()){
+	    				modelsearchbyS.addRow(row);
+	    			}
 	    			subjecttxt.setText(null);
 	    		}
 	    	});
 			searchSubjectClear.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			if (modelsearchbyS.getRowCount() > 0) {
+	    			    for (int i = modelsearchbyS.getRowCount() - 1; i > -1; i--) {
+	    			    	modelsearchbyS.removeRow(i);
+	    			    }
+	    			}
 	    			subjecttxtarea.setText(null);
 	    		}
 	    	});
@@ -908,11 +946,20 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String author = authortxt.getText();
 	    			BorrowerUser.searchBookByAuthor(author);
+	    			for(Object[] row: BorrowerUser.getSearByData()){
+	    				System.out.println(row.toString());
+	    				modelsearchbyA.addRow(row);
+	    			}
 	    			authortxt.setText(null);
 	    		}
 	    	});
-			searchAuthorClear.addActionListener(new ActionListener() {
+			searchAuthorClear.addActionListener(new ActionListener() {//TODO
 	    		public void actionPerformed(ActionEvent e) {
+	    			if (modelsearchbyA.getRowCount() > 0) {
+	    			    for (int i = modelsearchbyA.getRowCount() - 1; i > -1; i--) {
+	    			    	modelsearchbyA.removeRow(i);
+	    			    }
+	    			}
 	    			authortxtarea.setText(null);
 	    		}
 	    	});
