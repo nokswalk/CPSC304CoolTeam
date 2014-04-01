@@ -625,7 +625,16 @@ public class Main implements ActionListener {
 			holdRequestFrame.setLocationRelativeTo(null);
 			
 		//make payfines
-			//TODO
+			final JFrame payFinesFrame = new JFrame("Pay Fines");
+			final JPanel toppayFinespanel = new JPanel();
+			final JPanel panelpayFinesNorth = new JPanel();
+			final JPanel panelpayFinesSouth = new JPanel();
+			toppayFinespanel.setLayout(new BoxLayout(toppayFinespanel, BoxLayout.Y_AXIS));
+			panelpayFinesNorth.setLayout(new FlowLayout());
+			panelpayFinesSouth.setLayout(new FlowLayout());
+			payFinesFrame.getContentPane().add(toppayFinespanel);
+			payFinesFrame.setPreferredSize(new Dimension(500, 600));
+			payFinesFrame.setLocationRelativeTo(null);
 			
 		//making labels
 			//Search Book
@@ -637,6 +646,9 @@ public class Main implements ActionListener {
 			//Hold Request
 			JLabel holdRequestBorrowerLabel = new JLabel("Borrower ID:");
 			JLabel holdRequestBookLabel = new JLabel("Book call number:");
+			//Pay Fines
+			JLabel payFinesBorrowerLabel = new JLabel("Borrower ID:");
+			JLabel payFinesFinesLabel = new JLabel("Pay fine: (Input fine ID)");
 		
 		//make some buttons
 			JButton searchBook = new JButton("Search Book");
@@ -665,6 +677,10 @@ public class Main implements ActionListener {
 			//Request Hold buttons
 			JButton requestHoldHold = new JButton("Hold");
 			JButton requestHoldCancel = new JButton("Cancel");
+			//Pay Fines buttons
+			JButton payFinesSearch = new JButton("Search");
+			JButton payFinesCancel = new JButton("Cancel");
+			JButton payFinesPay = new JButton("Pay");
 
 		//making text field
 			//Search Book
@@ -676,6 +692,9 @@ public class Main implements ActionListener {
 			//Request Hold
 			final JTextField requestHoldBorrowertxt = new JTextField();
 			final JTextField requestHoldBooktxt = new JTextField();
+			//Pay Fines
+			final JTextField payFinesBorrowertxt = new JTextField();
+			final JTextField payFinesFinetxt = new JTextField();
 			
 		//set size of text field
 			//Search Book
@@ -684,6 +703,9 @@ public class Main implements ActionListener {
 			titletxt.setPreferredSize(new Dimension(400, 30));
 			//Check Account
 			checkAccounttxt.setPreferredSize(new Dimension(400,30));
+			//Pay Fines
+			payFinesBorrowertxt.setPreferredSize(new Dimension(200, 30));
+			payFinesFinetxt.setPreferredSize(new Dimension(150,30));
 			
 		//making text area
 			//Search Book
@@ -692,6 +714,8 @@ public class Main implements ActionListener {
 			final JTextArea titletxtarea = new JTextArea();
 			//Check Account
 			final JTextArea checkAccounttxtarea = new JTextArea();
+			//Pay FIne
+			final JTextArea payFinestxtarea = new JTextArea();
 
 		//center align buttons
 			searchBook.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -758,6 +782,17 @@ public class Main implements ActionListener {
 			panelholdRequest.add(requestHoldBooktxt);
 			panelholdRequest.add(requestHoldHold);
 			panelholdRequest.add(requestHoldCancel);
+			//Pay Fines
+			panelpayFinesNorth.add(payFinesBorrowerLabel);
+			panelpayFinesNorth.add(payFinesBorrowertxt);
+			panelpayFinesNorth.add(payFinesSearch);
+			panelpayFinesSouth.add(payFinesFinesLabel);
+			panelpayFinesSouth.add(payFinesFinetxt);
+			panelpayFinesSouth.add(payFinesPay);
+			panelpayFinesSouth.add(payFinesCancel);
+			toppayFinespanel.add(panelpayFinesNorth);
+			toppayFinespanel.add(payFinestxtarea);
+			toppayFinespanel.add(panelpayFinesSouth);
 			
 		//add borrower menu to the frame
 			menu.getContentPane().add(panelBorrowerMenu);
@@ -897,7 +932,28 @@ public class Main implements ActionListener {
 	    	});
 			payFines.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-
+	    			payFinesFrame.getContentPane().add(toppayFinespanel);
+	    			payFinesFrame.pack();
+	    			payFinesFrame.setVisible(true);
+	    		}
+	    	});
+			payFinesSearch.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String borrower = payFinesBorrowertxt.getText();
+	    			//BorrowerUser.payFineSearch(borrower);
+	    		}
+	    	});
+			payFinesCancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			payFinesBorrowertxt.setText(null);
+	    			payFinesFinetxt.setText(null);
+	    			payFinesFrame.dispose();
+	    		}
+	    	});
+			payFinesPay.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String fineID = payFinesFinetxt.getText();
+	    			//BorrowerUser.payFine(fineID);
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {
