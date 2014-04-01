@@ -226,7 +226,7 @@ public class Main implements ActionListener {
 		TextAreaOutputStream taOutputStream = new TextAreaOutputStream(textArea, "Console output");
 		
 		//setting how we want the panel to be shown on the frame
-		panelLibrarianMenu.setLayout(new BoxLayout(panelLibrarianMenu, BoxLayout.Y_AXIS));
+		panelLibrarianMenu.setLayout(new BoxLayout(panelLibrarianMenu,BoxLayout.Y_AXIS));
 		panelLibrarianSubmenu.setLayout(new BoxLayout(panelLibrarianSubmenu, BoxLayout.Y_AXIS));
 		panelBorrowerMenu.setLayout(new BoxLayout(panelBorrowerMenu, BoxLayout.Y_AXIS));
 		panelBorrowerSubmenu.setLayout(new BoxLayout(panelBorrowerSubmenu, BoxLayout.Y_AXIS));
@@ -237,68 +237,32 @@ public class Main implements ActionListener {
 		//System.setOut(new PrintStream(taOutputStream));
 		if (user == 1){ //user is librarian
 		//make addNewBook frame and panel
-			int ROWS = 8;
+			int ROWS = 6;
 			int COLUMNS = 2;
 			final JFrame addNewBookFrame = new JFrame("Add a New Book");
 			final JPanel paneladdNewBook = new JPanel();
-			GridLayout layoutaddNewBook = new GridLayout(ROWS, COLUMNS);
-			paneladdNewBook.setLayout(layoutaddNewBook);
-			addNewBookFrame.setPreferredSize(new Dimension (500, 240));
+			GridLayout layout = new GridLayout(ROWS, COLUMNS);
+			paneladdNewBook.setLayout(layout);
+			addNewBookFrame.setPreferredSize(new Dimension (300, 200));
 			addNewBookFrame.setLocationRelativeTo(null);
 			
 			
 		//make addNewBookCopy frame and panel
-			int ROWSaddNewBookCopy = 2;
-			int COLUMNSaddNewBookCopy = 2;
 			final JFrame addNewBookCopyFrame = new JFrame("Add a New Book Copy");
 			final JPanel paneladdNewBookCopy = new JPanel();
-			GridLayout layoutaddNewBookCopy = new GridLayout(ROWSaddNewBookCopy, COLUMNSaddNewBookCopy);
-			paneladdNewBookCopy.setLayout(layoutaddNewBookCopy);
-			addNewBookCopyFrame.setPreferredSize(new Dimension (500, 80));
-			addNewBookCopyFrame.setLocationRelativeTo(null);
-			
 		//make reportCheckOutBooks frame and panel
 			final JFrame reportCheckedoutBooksFrame = new JFrame("Report Checked out Books");
-			final JPanel toppanelreportCheckedoutBooks = new JPanel();
-			toppanelreportCheckedoutBooks.setLayout(new BoxLayout(toppanelreportCheckedoutBooks, BoxLayout.Y_AXIS));
-			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
-			final JPanel panelreportCheckedoutBooksNorth = new JPanel(); //has multiple things inside so we need to make a panel to contain it
-			
-			panelreportCheckedoutBooksNorth.setLayout(new FlowLayout()); //set the layout to go from left->right
-			
-			
-			//final JPanel panelreportCheckedoutBooksCenter = new JPanel();
-			//final JPanel panelreportCheckedoutBooksSouth = new JPanel();
-			
-			//panelreportCheckedoutBooksNorth.setLayout(new FlowLayout());
-			
-			//JSplitPane splitpanelreportCheckedoutBooksV = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-			//JSplitPane splitpanelreportCheckedoutBooksBottomV = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-			//toppanelreportCheckedoutBooks.add(splitpanelreportCheckedoutBooksV, BorderLayout.CENTER);
-			
-			//splitpanelreportCheckedoutBooksV.setTopComponent(panelreportCheckedoutBooksNorth);
-			//splitpanelreportCheckedoutBooksV.setBottomComponent(panelreportCheckedoutBooksCenter);
-			//splitpanelreportCheckedoutBooksBottomV.setTopComponent(splitpanelreportCheckedoutBooksV);
-			//splitpanelreportCheckedoutBooksBottomV.setBottomComponent(panelreportCheckedoutBooksSouth);
-			//toppanelreportCheckedoutBooks.add(splitpanelreportCheckedoutBooksBottomV);
-			
-			reportCheckedoutBooksFrame.setPreferredSize(new Dimension(800,600));
-			reportCheckedoutBooksFrame.setLocationRelativeTo(null);
-			
+			final JPanel panelreportCheckedoutBooks = new JPanel();
 		//make mostPopular frame and panel
 			final JFrame mostPopularFrame = new JFrame("Most Popular");
 			final JPanel panelmostPopular = new JPanel();
 			
 		//making labels
 			JLabel isbn = new JLabel("ISBN:");
-			JLabel isbnaddNewBook = new JLabel("ISBN:");
 			JLabel title = new JLabel("Title:");
 			JLabel mainAuthor = new JLabel("Main Author:");
 			JLabel publisher = new JLabel("Publisher:");
 			JLabel year = new JLabel("Year:");
-			JLabel subjects = new JLabel("Subjects: (place commas in between)");
-			JLabel authors = new JLabel("Authors: (place commas in between)");
-			JLabel reportCheckedOutBooksSubject = new JLabel("Subject:");
 			
 		//making buttons
 			JButton addBook = new JButton("Add Book");
@@ -308,29 +272,16 @@ public class Main implements ActionListener {
 			JButton addNewBookCopy = new JButton("Add New Book Copy");
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
-			JButton enteraddNewBook = new JButton("Enter");
-			JButton enteraddNewBookCopy = new JButton("Enter");
-			JButton canceladdNewBook = new JButton("Cancel");
-			JButton canceladdNewBookCopy = new JButton("Cancel");
-			JButton enterreportCheckedOutBooks = new JButton("Enter");
-			JButton okayreportCheckedOutBooks = new JButton("Okay");
+			JButton enter = new JButton("Enter");
+			JButton cancel = new JButton("Cancel");
 			
 		//making text field
-			final JTextField isbntxtaddNewBookCopy = new JTextField();
-			final JTextField isbntxtaddNewBook = new JTextField();
+			final JTextField isbntxt = new JTextField();
 			final JTextField titletxt = new JTextField();
 			final JTextField mainAuthortxt = new JTextField();
 			final JTextField publishertxt = new JTextField();
 			final JTextField yeartxt = new JTextField();
-			final JTextField subjectstxt = new JTextField();
-			final JTextField authorstxt = new JTextField();
-			final JTextField reportCheckedOutBookstxt = new JTextField();
 			
-		//set size of text field
-			reportCheckedOutBookstxt.setPreferredSize(new Dimension(400, 30));
-			
-		//make text area
-			final JTextArea reportCheckedOutBookstxtarea = new JTextArea();
 			//setupButton(addBook, panelLibrarianMenu);
 			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
 			
@@ -342,10 +293,8 @@ public class Main implements ActionListener {
 			addNewBookCopy.setAlignmentX(Component.CENTER_ALIGNMENT);
 			back.setAlignmentX(Component.CENTER_ALIGNMENT);
 			quit.setAlignmentX(Component.CENTER_ALIGNMENT);
-			enteraddNewBook.setAlignmentX(Component.CENTER_ALIGNMENT);
-			enteraddNewBookCopy.setAlignmentX(Component.CENTER_ALIGNMENT);
-			canceladdNewBook.setAlignmentX(Component.CENTER_ALIGNMENT);
-			canceladdNewBookCopy.setAlignmentX(Component.CENTER_ALIGNMENT);
+			enter.setAlignmentX(Component.CENTER_ALIGNMENT);
+			cancel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			
 			menu.setPreferredSize(new Dimension(200, 300));
 			
@@ -360,8 +309,8 @@ public class Main implements ActionListener {
 			panelLibrarianSubmenu.add(back);
 			
 		//attaching labels and txt field to the panel
-			paneladdNewBook.add(isbnaddNewBook);
-			paneladdNewBook.add(isbntxtaddNewBook);
+			paneladdNewBook.add(isbn);
+			paneladdNewBook.add(isbntxt);
 			paneladdNewBook.add(title);
 			paneladdNewBook.add(titletxt);
 			paneladdNewBook.add(mainAuthor);
@@ -370,28 +319,8 @@ public class Main implements ActionListener {
 			paneladdNewBook.add(publishertxt);
 			paneladdNewBook.add(year);
 			paneladdNewBook.add(yeartxt);
-			paneladdNewBook.add(subjects);
-			paneladdNewBook.add(subjectstxt);
-			paneladdNewBook.add(authors);
-			paneladdNewBook.add(authorstxt);
-			paneladdNewBook.add(enteraddNewBook);
-			paneladdNewBook.add(canceladdNewBook);
-			
-			paneladdNewBookCopy.add(isbn);
-			paneladdNewBookCopy.add(isbntxtaddNewBookCopy);
-			paneladdNewBookCopy.add(enteraddNewBookCopy);
-			paneladdNewBookCopy.add(canceladdNewBookCopy);
-			
-			panelreportCheckedoutBooksNorth.add(reportCheckedOutBooksSubject);
-			panelreportCheckedoutBooksNorth.add(reportCheckedOutBookstxt);
-			panelreportCheckedoutBooksNorth.add(enterreportCheckedOutBooks);
-			toppanelreportCheckedoutBooks.add(panelreportCheckedoutBooksNorth);
-			toppanelreportCheckedoutBooks.add(reportCheckedOutBookstxtarea);
-			toppanelreportCheckedoutBooks.add(okayreportCheckedOutBooks);
-			
-			//splitpanelreportCheckedoutBooksV.add(reportCheckedOutBookstxt);
-			//splitpanelreportCheckedoutBooksBottomV.add(reportCheckedOutBookstxtarea);
-			//splitpanelreportCheckedoutBooksBottomV.add(okayreportCheckedoutBooks);
+			paneladdNewBook.add(enter);
+			paneladdNewBook.add(cancel);
 			
 		//add the panel into JFrame
 			
@@ -407,20 +336,7 @@ public class Main implements ActionListener {
 	    	});
 			reportCheckedOutBooks.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
-	    			reportCheckedoutBooksFrame.pack();
-	    			reportCheckedoutBooksFrame.setVisible(true);
-	    		}
-	    	});
-			enterreportCheckedOutBooks.addActionListener(new ActionListener() {
-	    		public void actionPerformed(ActionEvent e) {
 	    			
-	    		}
-	    	});
-			okayreportCheckedOutBooks.addActionListener(new ActionListener() {
-	    		public void actionPerformed(ActionEvent e) {
-	    			reportCheckedOutBookstxt.setText(null);
-	    			reportCheckedoutBooksFrame.dispose();
 	    		}
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
@@ -437,9 +353,7 @@ public class Main implements ActionListener {
 	    	});
 			addNewBookCopy.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			addNewBookCopyFrame.getContentPane().add(paneladdNewBookCopy);
-	    			addNewBookCopyFrame.pack();
-	    			addNewBookCopyFrame.setVisible(true);
+	    			
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {
@@ -454,47 +368,29 @@ public class Main implements ActionListener {
 	    			System.exit(0);
 	    		}
 	    	});
-			enteraddNewBook.addActionListener(new ActionListener() {
+			enter.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			String isbnstr = isbntxtaddNewBook.getText();
+	    			isbntxt.setText(null);
+	    			titletxt.setText(null);
+	    			mainAuthortxt.setText(null);
+	    			publishertxt.setText(null);
+	    			yeartxt.setText(null);
+	    			String isbnstr = isbntxt.getText();
 	    			String titlestr = titletxt.getText();
 	    			String mainAuthorstr = mainAuthortxt.getText();
 	    			String publisherstr = publishertxt.getText();
 	    			String yearstr = yeartxt.getText();
-	    			String subjectsstr= subjectstxt.getText();
-	    			String authorsstr = authorstxt.getText();
-	    			LibrarianUser.addNewBook(isbnstr, titlestr, mainAuthorstr, publisherstr, yearstr, subjectsstr, authorsstr);
-	    			isbntxtaddNewBook.setText(null);
+	    			//LibrarianUser.addNewBook(isbnstr, titlestr, mainAuthorstr, publisherstr, yearstr);
+	    			addNewBookFrame.dispose();
+	    		}
+	    	});
+			cancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			isbntxt.setText(null);
 	    			titletxt.setText(null);
 	    			mainAuthortxt.setText(null);
 	    			publishertxt.setText(null);
 	    			yeartxt.setText(null);
-	    			subjectstxt.setText(null);
-	    			authorstxt.setText(null);
-	    			addNewBookFrame.dispose();
-	    		}
-	    	});
-			enteraddNewBookCopy.addActionListener(new ActionListener() {
-	    		public void actionPerformed(ActionEvent e) {
-	    			String isbnstr = isbntxtaddNewBookCopy.getText();
-	    			LibrarianUser.addNewBookCopy(isbnstr);
-	    			isbntxtaddNewBookCopy.setText(null);
-	    			addNewBookCopyFrame.dispose();
-	    		}
-			});
-			canceladdNewBook.addActionListener(new ActionListener() {
-	    		public void actionPerformed(ActionEvent e) {
-	    			isbntxtaddNewBook.setText(null);
-	    			titletxt.setText(null);
-	    			mainAuthortxt.setText(null);
-	    			publishertxt.setText(null);
-	    			yeartxt.setText(null);
-	    			addNewBookFrame.dispose();
-	    		}
-	    	});
-			canceladdNewBookCopy.addActionListener(new ActionListener() {
-	    		public void actionPerformed(ActionEvent e) {
-	    			isbntxtaddNewBookCopy.setText(null);
 	    			addNewBookFrame.dispose();
 	    		}
 	    	});
