@@ -994,6 +994,8 @@ public class Main implements ActionListener {
 	    			payFinesBorrowertxt.setText(null);
 	    			payFinesFinetxt.setText(null);
 	    			payFinesFrame.dispose();
+	    			payFinesFinetxt.setText(null);
+	    			payFinesFrame.dispose();
 	    		}
 	    	});
 			payFinesPay.addActionListener(new ActionListener() {
