@@ -940,7 +940,7 @@ public class Main implements ActionListener {
 			payFinesSearch.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String borrower = payFinesBorrowertxt.getText();
-	    			//BorrowerUser.payFineSearch(borrower);
+	    			BorrowerUser.displayFines(borrower);
 	    		}
 	    	});
 			payFinesCancel.addActionListener(new ActionListener() {
@@ -953,7 +953,7 @@ public class Main implements ActionListener {
 			payFinesPay.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String fineID = payFinesFinetxt.getText();
-	    			//BorrowerUser.payFine(fineID);
+	    			BorrowerUser.payFine(fineID);
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {

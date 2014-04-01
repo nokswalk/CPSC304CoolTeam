@@ -161,7 +161,7 @@ insert into BookCopy values
 insert into BookCopy values
 (500, 2, 'in');
 insert into BookCopy values
-(600, 1, 'out');
+(600, 1, 'in');
 insert into BookCopy values
 (600, 2, 'out');
 insert into BookCopy values
