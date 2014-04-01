@@ -523,13 +523,11 @@ public class BorrowerUser {
 	 * Pay a fine.
 	 */
 	//Tony! this one is tricky theres a string input -> display fines -> input fid string
-	public static void payFine(String bidS, String fidS) {
+	public static void displayFines(String bidS) {
 		try
 		{
 			int		   bid = Integer.parseInt(bidS);
 			Statement  s;
-
-			int		   sfid;
 			
 			s = Main.con.createStatement();
 
@@ -576,19 +574,6 @@ public class BorrowerUser {
 				Date issuedDate = rs.getDate(3);
 				System.out.printf("%-15.15s", issuedDate);
 			}
-
-
-			// Ask borrower to select which fine to pay for
-			String ans1 = fidS;
-
-			if (ans1.trim().equals("")){
-				return;
-			}
-			//this is where the chosen fid is inputted
-			sfid = Integer.parseInt(ans1);
-			updateFine(sfid);
-			
-			System.out.println("Fine has been paid.");
 		}
 
 		catch (SQLException ex) {
@@ -607,13 +592,15 @@ public class BorrowerUser {
 		}
 	}
 
-	private static void updateFine(int fid)
+	public static void payFine(String fidS)
 	{
-		Date			   paidDate;
-		PreparedStatement  ps;
-
 		try
 		{
+			int fid = Integer.parseInt(fidS);
+			
+			Date			   paidDate;
+			PreparedStatement  ps;
+			
 			ps = Main.con.prepareStatement("UPDATE fine SET paidDate = ? WHERE fid = ?");
 
 			GregorianCalendar gregCalendar = new GregorianCalendar();
@@ -638,6 +625,9 @@ public class BorrowerUser {
 				System.exit(-1);
 			}
 		}	
+		catch (NumberFormatException ne) {
+			System.err.println("That fine ID is not valid.");
+		}
 	}
 
 
