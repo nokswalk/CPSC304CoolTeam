@@ -850,8 +850,8 @@ public class Main implements ActionListener {
 			panelpayFinesSouth.add(payFinesPay);
 			panelpayFinesSouth.add(payFinesCancel);
 			toppayFinespanel.add(panelpayFinesNorth);
-			toppayFinespanel.add(scrollPanePF);
-			toppayFinespanel.add(payFinestxtarea);//TODO
+			toppayFinespanel.add(scrollPanePF);// here
+//			toppayFinespanel.add(payFinestxtarea);//TODO if txt area neede, just uncomment it and comment 'here'
 			toppayFinespanel.add(panelpayFinesSouth);
 			
 		//add borrower menu to the frame
