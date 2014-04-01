@@ -429,7 +429,7 @@ public class ClerkUser {
 	 */
 	//THIS METHOD TAKES IN BIDS AS INPUT TO KNOW WHICH EMAIL ADDRESSES TO SEND TO. IF 'ALL' IS INPUTTED, THEN EMAILS ALL BORROWERS
 
-	public static void checkOverdueItems(String bidsSS) {
+	public static void checkOverdueItems() {
 
 		try {
 			Statement statement;
@@ -519,25 +519,6 @@ public class ClerkUser {
 				}
 			}
 
-			// Clerk can send an email to each user or all users
-//			List<String> bidsS = Arrays.asList(bidsSS.split(","));
-
-			//System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
-			//		+ "or input 'all' to send a message to all borrowers: ");
-			//bidsS = Arrays.asList(Main.in.readLine().split(","));
-
-//			if (bidsS.get(0).equals("all")){
-//				for (int b : overdueBids) {
-//					sendEmailOverdue(b);
-//				}
-//			}
-//			else {
-//				for (String bs: bidsS){
-//					int b = Integer.parseInt(bs.trim());
-//					sendEmailOverdue(b);
-//				}
-//			}
-
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
@@ -548,8 +529,6 @@ public class ClerkUser {
 		}
 
 	}
-	
-	
 	
 	public static void sendEmail(String bidsSS){
 		List<String> bidsS = Arrays.asList(bidsSS.split(","));

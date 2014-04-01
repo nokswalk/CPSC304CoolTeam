@@ -1157,7 +1157,6 @@ public class Main implements ActionListener {
 			JLabel processReturncallNumberlabel = new JLabel("Call Number:");
 			JLabel processReturncopyNumberlabel = new JLabel("Copy Number:");
 			//checkOverdueItems
-			JLabel checkOverdueItemsborrowerlabel = new JLabel("Borrower ID:");
 			JLabel checkOverdueItemsemaillabel = new JLabel("Send email to users with Borrower ID(s):");
 
 		//making textarea for addBorrower
@@ -1199,7 +1198,6 @@ public class Main implements ActionListener {
 			JButton enterProcessReturn = new JButton("Enter");
 			JButton cancelProcessReturn = new JButton("Cancel");
 			//checkOverdueItems
-			JButton entercheckOverdueItems = new JButton("Enter");
 			JButton clearcheckOverdueItems = new JButton("Clear");
 			JButton closecheckOverdueItems = new JButton("Close");
 			JButton emailcheckOverdueItems = new JButton("Send email");
@@ -1281,10 +1279,6 @@ public class Main implements ActionListener {
 			panelprocessReturnBooks.add(enterProcessReturn);
 			panelprocessReturnBooks.add(cancelProcessReturn);
 			//checkOverdueItems
-			panelcheckOverdueItemsNorth.add(checkOverdueItemsborrowerlabel);
-			panelcheckOverdueItemsNorth.add(checkOverdueItemsborrowertxt);
-			panelcheckOverdueItemsNorth.add(entercheckOverdueItems);
-			panelcheckOverdueItemsNorth.add(clearcheckOverdueItems);
 			panelcheckOverdueItemsNorth.add(closecheckOverdueItems);
 			panelcheckOverdueItemsSouth.add(checkOverdueItemsemaillabel);
 			panelcheckOverdueItemsSouth.add(checkOverdueItemsemailtxt);
@@ -1343,22 +1337,18 @@ public class Main implements ActionListener {
 	    	});
 			checkOverdueItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			ClerkUser.checkOverdueItems();
+					List<Object[]> rows = ClerkUser.getCheckOverdueData();
+					for (Object[] row : rows) {
+						modelCheckOverdue.addRow(row);
+					}
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(checkOverdueItemstxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			checkOverdueItemsFrame.getContentPane().add(toppanelcheckOverdueItems);
 	    			checkOverdueItemsFrame.pack();
 	    			checkOverdueItemsFrame.setVisible(true);
 	    		}
 	    	});
-			entercheckOverdueItems.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					String bid = checkOverdueItemsborrowertxt.getText();
-					ClerkUser.checkOverdueItems(bid);
-					List<Object[]> rows = ClerkUser.getCheckOverdueData();
-					for (Object[] row : rows) {
-						modelCheckOverdue.addRow(row);
-					}
-
-				}
-			});
 			clearcheckOverdueItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			checkOverdueItemstxtarea.setText(null);
@@ -1373,7 +1363,7 @@ public class Main implements ActionListener {
 			emailcheckOverdueItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String emailBid = checkOverdueItemsemailtxt.getText();
-	    			//sendEmail(emailBid);
+	    			ClerkUser.sendEmail(emailBid);
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {
