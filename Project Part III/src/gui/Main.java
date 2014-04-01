@@ -957,14 +957,10 @@ public class Main implements ActionListener {
 			payFinesSearch.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String borrower = payFinesBorrowertxt.getText();
-<<<<<<< HEAD
 	    			setString1(borrower);
 	    			//System.out.println("Search: " + borrower);
 	    			//BorrowerUser.payFineSearch(borrower);
 	    			
-=======
-	    			BorrowerUser.displayFines(borrower);
->>>>>>> 9ef27a25988015fa40d2363191a9e2def12fa88c
 	    		}
 	    	});
 			payFinesCancel.addActionListener(new ActionListener() {
@@ -977,13 +973,9 @@ public class Main implements ActionListener {
 			payFinesPay.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String fineID = payFinesFinetxt.getText();
-<<<<<<< HEAD
 	    			String borrower = getString1();
 	    			//System.out.println("Pay: " + borrower);
 	    			//BorrowerUser.payFine(borrower, fineID);
-=======
-	    			BorrowerUser.payFine(fineID);
->>>>>>> 9ef27a25988015fa40d2363191a9e2def12fa88c
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {
