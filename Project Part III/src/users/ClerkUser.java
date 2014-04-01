@@ -30,7 +30,7 @@ public class ClerkUser {
 			while (!quit) {
 				System.out.print("\n\nPlease choose one of the following: \n");
 				System.out.print("1.  Add borrower\n");
-				System.out.print("2.  Check out item\n");;
+				System.out.print("2.  Check out items\n");;
 				System.out.print("3.  Process a return\n");
 				System.out.print("4.  Check overdue items\n");
 				System.out.print("5.  Quit\n>>");
@@ -195,7 +195,7 @@ public class ClerkUser {
 	 */
 	private static void checkOutItems() {
 		int 			   bid;
-		List<String>	   callNumbers;
+		List<String>	   callAndCopyNumbers;
 		Statement  		   s;
 
 		// today's date
@@ -206,8 +206,9 @@ public class ClerkUser {
 			System.out.print("Borrower ID: ");
 			bid = Integer.parseInt(Main.in.readLine());
 
-			System.out.print("List of call numbers to be checked out: ");
-			callNumbers = Arrays.asList(Main.in.readLine().split(","));
+			System.out.print("List of items to be checked out, separated by commas."
+					+ "\nItem call number and copy number should be separated by a space: ");
+			callAndCopyNumbers = Arrays.asList(Main.in.readLine().split(","));
 
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bid "
@@ -220,9 +221,8 @@ public class ClerkUser {
 			}
 
 			// check out all items that borrower listed
-			for (String c: callNumbers){
-				int callNumber = Integer.parseInt(c.trim());
-				checkOutItem(bid, callNumber, sqlToday);
+			for (String c: callAndCopyNumbers){
+				checkOutItem(bid, c.trim(), sqlToday);
 			}
 
 			// print due date
@@ -250,17 +250,21 @@ public class ClerkUser {
 		}
 	}
 
-	private static void checkOutItem(int bid, int callNumber, Date outDate) {
+	private static void checkOutItem(int bid, String callAndCopyNumber, Date outDate) {
 
+		List<String>       callAndCopyNo;
+		int				   callNumber;
 		int				   copyNo;
 		Statement          s;
 		PreparedStatement  ps1;
 		PreparedStatement  ps2;
 
 		try {
-			// get copy number of item to be checked out
-			System.out.print("Copy number of item " + callNumber + ": ");
-			copyNo = Integer.parseInt(Main.in.readLine());
+			// get call and copy number of item to be checked out
+			callAndCopyNo = Arrays.asList(callAndCopyNumber.split(" "));
+			
+			callNumber = Integer.parseInt(callAndCopyNo.get(0));
+			copyNo = Integer.parseInt(callAndCopyNo.get(1));
 
 			//check if book is in library
 			s = Main.con.createStatement();
@@ -301,10 +305,7 @@ public class ClerkUser {
 				ps2.close();
 			}
 		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
-		}
+		
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -353,10 +354,11 @@ public class ClerkUser {
 			ps4 = Main.con.prepareStatement("UPDATE BookCopy SET status='in' WHERE callNumber= ? AND copyNo= ?");
 
 			// first enter callNumber and copyNo
-			System.out.print("Book call number: ");
-			callNumber = Integer.parseInt(Main.in.readLine());
-			System.out.print("Book copy number: ");
-			copyNo = Integer.parseInt(Main.in.readLine());
+			System.out.print("Book call and copy number: ");
+			List<String> callAndCopyNo = Arrays.asList(Main.in.readLine().split(" "));
+			
+			callNumber = Integer.parseInt(callAndCopyNo.get(0).trim());
+			copyNo = Integer.parseInt(callAndCopyNo.get(1).trim());
 
 			s = Main.con.createStatement();
 

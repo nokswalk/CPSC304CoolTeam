@@ -40,14 +40,15 @@ Clerk:
 		account is created and the borrower id is returned.
 		
 	2. Check out items
-		Enter list of call numbers of items to be checked out.  Call numbers should be separated by commas.
-		Enter the copy number of each of the items.
+		Enter list of call numbers and copy numbers of items to be checked out.  
+		Call numbers and copy numbers should be separated by a space.
+		Call and copy number pairs (items) should be separated by commas.
 		The system prints the call number and copy number of each item, and the due date of the items.
 		
 	3. Process a return
-		Enter the call number and copy number of the item that is being returned.
-		The system checks the item in.
-		If the item is overdue a fine is placed on the last borrower.
+		Enter the call number and copy number of the item that is being returned.  
+		The call and copy number should be separated by a space.
+		The system checks the item in.  If the item is overdue a fine is placed on the last borrower.
 		If the book has a hold request the requester is notified via email.
 		
 	4. Check overdue items
