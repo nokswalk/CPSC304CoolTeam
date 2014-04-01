@@ -712,6 +712,7 @@ public class Main implements ActionListener {
 			JButton payFinesSearch = new JButton("Search");
 			JButton payFinesCancel = new JButton("Cancel");
 			JButton payFinesPay = new JButton("Pay");
+			JButton payFinesClear = new JButton("Clear");
 
 		//making text field
 			//Search Book
@@ -817,6 +818,7 @@ public class Main implements ActionListener {
 			panelpayFinesNorth.add(payFinesBorrowerLabel);
 			panelpayFinesNorth.add(payFinesBorrowertxt);
 			panelpayFinesNorth.add(payFinesSearch);
+			panelpayFinesNorth.add(payFinesClear);
 			panelpayFinesSouth.add(payFinesFinesLabel);
 			panelpayFinesSouth.add(payFinesFinetxt);
 			panelpayFinesSouth.add(payFinesPay);
@@ -996,6 +998,11 @@ public class Main implements ActionListener {
 	    			payFinesFrame.dispose();
 	    			payFinesFinetxt.setText(null);
 	    			payFinesFrame.dispose();
+	    		}
+	    	});
+			payFinesClear.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			payFinestxtarea.setText(null);
 	    		}
 	    	});
 			payFinesPay.addActionListener(new ActionListener() {
