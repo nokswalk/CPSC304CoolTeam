@@ -16,6 +16,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.JOptionPane;
 
 import users.BorrowerUser;
 import users.ClerkUser;
@@ -26,6 +27,7 @@ import users.LibrarianUser;
  * Loads application.
  * Using simple text interface like "branch" tutorial until GUI is set up
  */
+
 public class Main implements ActionListener {
 
 	// command line reader 
@@ -40,7 +42,23 @@ public class Main implements ActionListener {
 	private JTextField usernameField;
 	private JPasswordField passwordField;
 	private JFrame mainFrame;
-
+	
+	//special method, we call multiple methods, so we need to hold string values for JtextFields
+	String str1 = null;
+	String str2 = null;
+	
+	public void setString1(String str){
+		this.str1 = str;
+	}
+	public void setString2(String str){
+		this.str2 = str;
+	}
+	public String getString1(){
+		return str1;
+	}
+	public String getString2(){
+		return str2;
+	}
 
     /*
      * constructs login window and loads JDBC driver
@@ -823,6 +841,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyTitle.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(titletxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchTitleFrame.getContentPane().add(toppanelsearchTitle);
 	    			searchTitleFrame.pack();
 	    			searchTitleFrame.setVisible(true);
@@ -849,6 +869,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbySubject.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(subjecttxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchSubjectFrame.getContentPane().add(toppanelsearchSubject);
 	    			searchSubjectFrame.pack();
 	    			searchSubjectFrame.setVisible(true);
@@ -875,6 +897,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyAuthor.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(authortxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchAuthorFrame.getContentPane().add(toppanelsearchAuthor);
 	    			searchAuthorFrame.pack();
 	    			searchAuthorFrame.setVisible(true);
@@ -937,6 +961,9 @@ public class Main implements ActionListener {
 	    			String borrower = requestHoldBorrowertxt.getText();
 	    			String book = requestHoldBooktxt.getText();
 	    			BorrowerUser.requestHold(borrower, book);
+	    			requestHoldBorrowertxt.setText(null);
+	    			requestHoldBooktxt.setText(null);
+	    			holdRequestFrame.dispose();
 	    		}
 	    	});
 			requestHoldCancel.addActionListener(new ActionListener() {
@@ -956,7 +983,9 @@ public class Main implements ActionListener {
 			payFinesSearch.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String borrower = payFinesBorrowertxt.getText();
-	    			BorrowerUser.displayFines(borrower);
+	    			setString1(borrower);
+	    			BorrowerUser.payFineSearch(borrower);
+	    			
 	    		}
 	    	});
 			payFinesCancel.addActionListener(new ActionListener() {
