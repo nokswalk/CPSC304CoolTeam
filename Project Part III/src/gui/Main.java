@@ -216,9 +216,6 @@ public class Main implements ActionListener {
 		final JPanel panelClerkMenu = new JPanel();
 		final JPanel panelClerkSubmenu = new JPanel();
 
-		final JFrame oneInputWindow = new JFrame("Input");
-		final JPanel panelSomethingWindow = new JPanel();
-
 		//setting how we want the panel to be shown on the frame
 		panelLibrarianMenu.setLayout(new BoxLayout(panelLibrarianMenu, BoxLayout.Y_AXIS));
 		panelLibrarianSubmenu.setLayout(new BoxLayout(panelLibrarianSubmenu, BoxLayout.Y_AXIS));
@@ -319,7 +316,6 @@ public class Main implements ActionListener {
 			final JTextField reportCheckedOutBookstxt = new JTextField();
 			final JTextField mostPopulartxt1 = new JTextField();
 			final JTextField mostPopulartxt2 = new JTextField();
-			//final JTextField mostPopulartxt3 = new JTextField();
 			
 		//set size of text field
 			reportCheckedOutBookstxt.setPreferredSize(new Dimension(400, 30));
@@ -330,10 +326,6 @@ public class Main implements ActionListener {
 			
 			reportCheckedOutBookstxtarea.setPreferredSize(new Dimension(800, 500));
 			mostPopulartxtarea.setPreferredSize(new Dimension(800, 500));
-			//setupButton(addBook, panelLibrarianMenu);
-			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
-			//reportCheckedOutBookstxtarea.add(new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
-
 		//center align buttons
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
 			reportCheckedOutBooks.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -406,10 +398,6 @@ public class Main implements ActionListener {
 			toppanelmostPopular.add(mostPopulartxtarea);
 			toppanelmostPopular.add(panelmostPopularSouth);
 
-			//splitpanelreportCheckedoutBooksV.add(reportCheckedOutBookstxt);
-			//splitpanelreportCheckedoutBooksBottomV.add(reportCheckedOutBookstxtarea);
-			//splitpanelreportCheckedoutBooksBottomV.add(okayreportCheckedoutBooks);
-
 		//add the panel into JFrame
 
 			menu.getContentPane().add(panelLibrarianMenu);
@@ -470,10 +458,16 @@ public class Main implements ActionListener {
 	    			mostPopulartxt2.setText(null);
 	    		}
 	    	});
+			clearmostPopular.addActionListener(new ActionListener() { //kill the frame
+	    		public void actionPerformed(ActionEvent e) {
+	    			mostPopulartxtarea.setText(null);
+	    		}
+	    	});
 			cancelmostPopular.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			mostPopulartxt1.setText(null);
 	    			mostPopulartxt2.setText(null);
+	    			mostPopulartxtarea.setText(null);
 	    			mostPopularFrame.dispose();
 	    		}
 	    	});
@@ -544,7 +538,7 @@ public class Main implements ActionListener {
 			canceladdNewBookCopy.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			isbntxtaddNewBookCopy.setText(null);
-	    			addNewBookFrame.dispose();
+	    			addNewBookCopyFrame.dispose();
 	    		}
 	    	});
 
@@ -554,9 +548,64 @@ public class Main implements ActionListener {
 			menu.setVisible(true);		
 		}
 		else if (user == 2){ //user is borrower
-			//menu.setPreferredSize(new Dimension(700, 800));
-			//menu.add(textArea);
+		//make searchbyauthor
+			final JFrame searchAuthorFrame = new JFrame("Search Book by Author");
+			final JPanel toppanelsearchAuthor = new JPanel();
+			final JPanel panelsearchAuthorNorth = new JPanel();
+			final JPanel panelsearchAuthorSouth = new JPanel();
+			toppanelsearchAuthor.setLayout(new BoxLayout(toppanelsearchAuthor, BoxLayout.Y_AXIS));
+			panelsearchAuthorNorth.setLayout(new FlowLayout());
+			panelsearchAuthorSouth.setLayout(new FlowLayout());
+			searchAuthorFrame.getContentPane().add(toppanelsearchAuthor);
+			searchAuthorFrame.setPreferredSize(new Dimension(800, 600));
+			searchAuthorFrame.setLocationRelativeTo(null);
+			
+		//make searchbysubject
+			final JFrame searchSubjectFrame = new JFrame("Search Book by Subject");
+			final JPanel toppanelsearchSubject = new JPanel();
+			final JPanel panelsearchSubjectNorth = new JPanel();
+			final JPanel panelsearchSubjectSouth = new JPanel();
+			toppanelsearchSubject.setLayout(new BoxLayout(toppanelsearchSubject, BoxLayout.Y_AXIS));
+			panelsearchSubjectNorth.setLayout(new FlowLayout());
+			panelsearchSubjectSouth.setLayout(new FlowLayout());
+			searchSubjectFrame.getContentPane().add(toppanelsearchSubject);
+			searchSubjectFrame.setPreferredSize(new Dimension(800, 600));
+			searchSubjectFrame.setLocationRelativeTo(null);
+			
+		//make searchbytitle
+			final JFrame searchTitleFrame = new JFrame("Search Book by Title");
+			final JPanel toppanelsearchTitle = new JPanel();
+			final JPanel panelsearchTitleNorth = new JPanel();
+			//final JPanel panelsearchTitleSouth = new JPanel();
+			toppanelsearchTitle.setLayout(new BoxLayout(toppanelsearchTitle, BoxLayout.Y_AXIS));
+			panelsearchTitleNorth.setLayout(new FlowLayout());
+			//panelsearchTitleSouth.setLayout(new FlowLayout());
+			searchTitleFrame.getContentPane().add(toppanelsearchTitle);
+			searchTitleFrame.setPreferredSize(new Dimension(800, 600));
+			searchTitleFrame.setLocationRelativeTo(null);
+			
+		//make checkaccount
+			final JFrame checkAccountFrame = new JFrame("Check Account");
+			final JPanel toppanelcheckAccount = new JPanel();
+			final JPanel panelcheckAccountNorth = new JPanel();
+			toppanelcheckAccount.setLayout(new BoxLayout(toppanelcheckAccount, BoxLayout.Y_AXIS));
+			panelcheckAccountNorth.setLayout(new FlowLayout());
+			checkAccountFrame.getContentPane().add(toppanelcheckAccount);
+			checkAccountFrame.setPreferredSize(new Dimension(800, 600));
+			checkAccountFrame.setLocationRelativeTo(null);
+			
+		//make holdrequest
+			
+		//make payfines
 
+		//making labels
+			//Search Book
+			JLabel titleLabel = new JLabel("Title keyword:");
+			JLabel subjectLabel = new JLabel("Subject keyword:");
+			JLabel authorLabel = new JLabel("Author keyword:");
+			//Check Account
+			JLabel checkAccountLabel = new JLabel("User Borrower ID:");
+		
 		//make some buttons
 			JButton searchBook = new JButton("Search Book");
 			JButton searchBookbyTitle = new JButton("Search Book by Title");
@@ -567,7 +616,44 @@ public class Main implements ActionListener {
 			JButton payFines = new JButton("Pay Fines");
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
-
+			//Search Book buttons
+			JButton searchAuthorSearch = new JButton("Search");
+			JButton searchSubjectSearch = new JButton("Search");
+			JButton searchTitleSearch = new JButton("Search");
+			JButton searchAuthorClear = new JButton("Clear");
+			JButton searchSubjectClear = new JButton("Clear");
+			JButton searchTitleClear = new JButton("Clear");
+			JButton searchAuthorCancel = new JButton("Cancel");
+			JButton searchSubjectCancel = new JButton("Cancel");
+			JButton searchTitleCancel = new JButton("Cancel");
+			//Check Account buttons
+			JButton checkAccountSearch = new JButton("Search");
+			JButton checkAccountClear = new JButton("Clear");
+			JButton checkAccountCancel = new JButton("Cancel");
+			
+		//making text field
+			//Search Book
+			final JTextField authortxt = new JTextField();
+			final JTextField subjecttxt = new JTextField();
+			final JTextField titletxt = new JTextField();
+			//Check Account
+			final JTextField checkAccounttxt = new JTextField();
+			
+		//set size of text field
+			//Search Book
+			authortxt.setPreferredSize(new Dimension(400, 30));
+			subjecttxt.setPreferredSize(new Dimension(400, 30));
+			titletxt.setPreferredSize(new Dimension(400, 30));
+			//Check Account
+			checkAccounttxt.setPreferredSize(new Dimension(400,30));
+			
+		//making text area
+			//Search Book
+			final JTextArea authortxtarea = new JTextArea();
+			final JTextArea subjecttxtarea = new JTextArea();
+			final JTextArea titletxtarea = new JTextArea();
+			//Check Account
+			final JTextArea checkAccounttxtarea = new JTextArea();
 
 		//center align buttons
 			searchBook.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -594,7 +680,39 @@ public class Main implements ActionListener {
 			panelBorrowerSubmenu.add(searchBookbySubject);
 			panelBorrowerSubmenu.add(searchBookbyTitle);
 			panelBorrowerSubmenu.add(back);
-
+			
+			panelsearchAuthorNorth.add(authorLabel);
+			panelsearchAuthorNorth.add(authortxt);
+			panelsearchAuthorNorth.add(searchAuthorSearch);
+			panelsearchAuthorNorth.add(searchAuthorClear);
+			panelsearchAuthorNorth.add(searchAuthorCancel);
+			toppanelsearchAuthor.add(panelsearchAuthorNorth);
+			toppanelsearchAuthor.add(authortxtarea);
+			
+			panelsearchSubjectNorth.add(subjectLabel);
+			panelsearchSubjectNorth.add(subjecttxt);
+			panelsearchSubjectNorth.add(searchSubjectSearch);
+			panelsearchSubjectNorth.add(searchSubjectClear);
+			panelsearchSubjectNorth.add(searchSubjectCancel);
+			toppanelsearchSubject.add(panelsearchSubjectNorth);
+			toppanelsearchSubject.add(subjecttxtarea);
+			
+			panelsearchTitleNorth.add(titleLabel);
+			panelsearchTitleNorth.add(titletxt);
+			panelsearchTitleNorth.add(searchTitleSearch);
+			panelsearchTitleNorth.add(searchTitleClear);
+			panelsearchTitleNorth.add(searchTitleCancel);
+			toppanelsearchTitle.add(panelsearchTitleNorth);
+			toppanelsearchTitle.add(titletxtarea);
+			
+			panelcheckAccountNorth.add(checkAccountLabel);
+			panelcheckAccountNorth.add(checkAccounttxt);
+			panelcheckAccountNorth.add(checkAccountSearch);
+			panelcheckAccountNorth.add(checkAccountClear);
+			panelcheckAccountNorth.add(checkAccountCancel);
+			toppanelcheckAccount.add(panelcheckAccountNorth);
+			toppanelcheckAccount.add(checkAccounttxtarea);
+			
 		//add borrower menu to the frame
 			menu.getContentPane().add(panelBorrowerMenu);
 
@@ -608,22 +726,106 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyTitle.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-
+	    			searchTitleFrame.getContentPane().add(toppanelsearchTitle);
+	    			searchTitleFrame.pack();
+	    			searchTitleFrame.setVisible(true);
+	    		}
+	    	});
+			searchTitleSearch.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String title = titletxt.getText();
+	    			BorrowerUser.searchBookByTitle(title);
+	    			titletxt.setText(null);
+	    		}
+	    	});
+			searchTitleClear.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			titletxtarea.setText(null);
+	    		}
+	    	});
+			searchTitleCancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			titletxt.setText(null);
+	    			titletxtarea.setText(null);
+	    			searchTitleFrame.dispose();
 	    		}
 	    	});
 			searchBookbySubject.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-
+	    			searchSubjectFrame.getContentPane().add(toppanelsearchSubject);
+	    			searchSubjectFrame.pack();
+	    			searchSubjectFrame.setVisible(true);
+	    		}
+	    	});
+			searchSubjectSearch.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String subject = subjecttxt.getText();
+	    			BorrowerUser.searchBookBySubject(subject);
+	    			subjecttxt.setText(null);
+	    		}
+	    	});
+			searchSubjectClear.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			subjecttxtarea.setText(null);
+	    		}
+	    	});
+			searchSubjectCancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			subjecttxt.setText(null);
+	    			subjecttxtarea.setText(null);
+	    			searchSubjectFrame.dispose();
 	    		}
 	    	});
 			searchBookbyAuthor.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-
+	    			searchAuthorFrame.getContentPane().add(toppanelsearchAuthor);
+	    			searchAuthorFrame.pack();
+	    			searchAuthorFrame.setVisible(true);
+	    		}
+	    	});
+			searchAuthorSearch.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String author = authortxt.getText();
+	    			BorrowerUser.searchBookByAuthor(author);
+	    			authortxt.setText(null);
+	    		}
+	    	});
+			searchAuthorClear.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			authortxtarea.setText(null);
+	    		}
+	    	});
+			searchAuthorCancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			authortxt.setText(null);
+	    			authortxtarea.setText(null);
+	    			searchAuthorFrame.dispose();
 	    		}
 	    	});
 			checkAccount.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-
+	    			checkAccountFrame.getContentPane().add(toppanelcheckAccount);
+	    			checkAccountFrame.pack();
+	    			checkAccountFrame.setVisible(true);
+	    		}
+	    	});
+			checkAccountSearch.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String bid = checkAccounttxt.getText();
+	    			BorrowerUser.checkAccount(bid);;
+	    			checkAccounttxt.setText(null);
+	    		}
+	    	});
+			checkAccountClear.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			checkAccounttxtarea.setText(null);
+	    		}
+	    	});
+			checkAccountCancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			checkAccounttxt.setText(null);
+	    			checkAccounttxtarea.setText(null);
+	    			checkAccountFrame.dispose();
 	    		}
 	    	});
 			requestHold.addActionListener(new ActionListener() {
