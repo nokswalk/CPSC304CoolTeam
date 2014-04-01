@@ -221,6 +221,8 @@ public class ClerkUser {
 			if (!rs.next()){
 				System.err.println("Book " + callNumber + " " + copyNo + " is not available for borrowing at this time."
 						+ "Please check the call number and copy number entered.");
+				BorrowerUser.infoBox("Book " + callNumber + " " + copyNo + " is not available for borrowing at this time. "
+						+ "Please check the call number and copy number entered.", "error");
 			}
 
 			// if book is in library
@@ -234,7 +236,10 @@ public class ClerkUser {
 				ps1.setDate(4, outDate);		
 
 				ps1.executeUpdate();
+
 				System.out.println(callNumber + " " + copyNo + " has been checked out.");
+				BorrowerUser.infoBox(callNumber + " " + copyNo + " has been checked out.", "success");
+
 
 
 				// update book copy status
@@ -255,6 +260,7 @@ public class ClerkUser {
 
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
