@@ -548,6 +548,55 @@ public class ClerkUser {
 			BorrowerUser.infoBox("No ID entered", "error");
 		}
 		else if (bidsS.get(0).equals("all")){
+			ResultSet rs = null;
+
+			List<Integer> overdueBids = new ArrayList<Integer>();  // for storing overdue item borrower ids, for emailing
+
+			Statement statement = null;
+			try {
+				statement = Main.con.createStatement();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			System.out.println("List of items overdue and the borrowers who have checked them out:");
+
+			try {
+				rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, TO_CHAR(B.outDate, 'YYYY-MM-DD') as outDate "
+						+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
+						+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
+						+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "
+						+ "ORDER BY E.bid, E.name ASC");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// get info on ResultSet
+			try {
+				ResultSetMetaData rsmd = rs.getMetaData();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// get number of columns
+	
+			try {
+				while (rs.next()) {
+					Integer bid = rs.getInt("bid");
+					Date outDate = rs.getDate("outDate");
+					Date duedate = getDueDate(bid, outDate);
+
+					if (overdue(duedate)) {
+						overdueBids.add(bid);
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			for (int b : overdueBids) {
 				sendEmailOverdue(b);
 			}
