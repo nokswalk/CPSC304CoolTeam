@@ -96,17 +96,17 @@ public class Main implements ActionListener {
 
 		passwordField.addActionListener(this);
 		loginButton.addActionListener(this);
-//		loginButton.addActionListener(new ActionListener() {
-//    		public void actionPerformed(ActionEvent e) {
-//    			mainFrame.dispose();
-//    			try {
-//    				showUserMenu();
-//    			} catch (ParseException e1) {
-//    				// TODO Auto-generated catch block
-//    				e1.printStackTrace();
-//    			}     
-//    		}
-//    	});
+		loginButton.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			mainFrame.dispose();
+    			try {
+    				showUserMenu();
+    			} catch (ParseException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}     
+    		}
+    	});
 
 		// anonymous inner class for closing the window
 		mainFrame.addWindowListener(new WindowAdapter() 
@@ -604,7 +604,7 @@ public class Main implements ActionListener {
 			final JPanel paneladdBorrowerResult = new JPanel();
 			GridLayout layout = new GridLayout(ADDBORROWERROWS, COLUMNS);
 			paneladdBorrower.setLayout(layout);
-			addBorrowerFrame.setPreferredSize(new Dimension (300, 200));
+			addBorrowerFrame.setPreferredSize(new Dimension (400, 250));
 			addBorrowerFrame.setLocationRelativeTo(null);
 
 		//make addNewBookCopy frame and panel
@@ -626,6 +626,7 @@ public class Main implements ActionListener {
 			JLabel email = new JLabel("Email Address:");
 			JLabel sinOrStno = new JLabel("SIN or Student Number:");
 			JLabel type = new JLabel("Type(student, staff, etc):");
+			final JLabel addBorrowerResultLabel = new JLabel("");
 
 
 		//making textarea for addBorrower
@@ -744,10 +745,10 @@ public class Main implements ActionListener {
 	    			ClerkUser.addBorrower(passwordstr, namestr, addressstr, phonestr, emailstr, sinOrStnostr, typestr);
 	    			int bid = ClerkUser.getNewBid(sinOrStnostr);
 	    			if(bid == -1){
-	    				addBorrowerFrame.setPreferredSize(new Dimension (450, 200));
-	    				paneladdBorrowerResult.add(new JLabel("Not Available to Retrieve Borrower ID with this SIN or Student Number."));
+	    				addBorrowerResultLabel.setName("Not Available to Retrieve Borrower ID with this SIN or Student Number.");
 	    			}else
-	    				paneladdBorrowerResult.add(new JLabel(namestr + "'s Borrower ID (bid) is : " + bid));
+	    				addBorrowerResultLabel.setName(namestr + "'s Borrower ID (bid) is : " + bid);
+	    			paneladdBorrowerResult.add(addBorrowerResultLabel);
 	    			paneladdBorrowerResult.add(close);
 	    			addBorrowerFrame.getContentPane().add(paneladdBorrowerResult);
 	    			paneladdBorrower.setVisible(false);
