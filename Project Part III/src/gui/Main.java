@@ -305,6 +305,7 @@ public class Main implements ActionListener {
 			JButton okayreportCheckedOutBooks = new JButton("Okay");
 			JButton entermostPopular = new JButton("Enter");
 			JButton cancelmostPopular = new JButton("Cancel");
+			JButton clearmostPopular = new JButton("Clear");
 
 		//making text field
 			final JTextField isbntxtaddNewBookCopy = new JTextField();
@@ -331,10 +332,6 @@ public class Main implements ActionListener {
 			mostPopulartxtarea.setPreferredSize(new Dimension(800, 500));
 			//setupButton(addBook, panelLibrarianMenu);
 			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
-
-		//we set standard output stream to printstream instead so that it can go to the GUI now
-			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(reportCheckedOutBookstxtarea, "Console output");
-			System.setOut(new PrintStream(taOutputStream));
 			//reportCheckedOutBookstxtarea.add(new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)); //make a scrollbar for navigation purposes
 
 		//center align buttons
@@ -402,6 +399,7 @@ public class Main implements ActionListener {
 			panelmostPopularNorth.add(mostPopulartxt2);
 			toppanelmostPopular.add(mostPopulartxtarea);
 			panelmostPopularSouth.add(entermostPopular);
+			panelmostPopularSouth.add(clearmostPopular);
 			panelmostPopularSouth.add(cancelmostPopular);
 			//append panels tgt
 			toppanelmostPopular.add(panelmostPopularNorth);
@@ -426,6 +424,9 @@ public class Main implements ActionListener {
 	    	});
 			reportCheckedOutBooks.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			//we set standard output stream to printstream instead so that it can go to the GUI now
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(reportCheckedOutBookstxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
 	    			reportCheckedoutBooksFrame.pack();
 	    			reportCheckedoutBooksFrame.setVisible(true);
@@ -451,10 +452,29 @@ public class Main implements ActionListener {
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			//we set standard output stream to printstream instead so that it can go to the GUI now
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(mostPopulartxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			mostPopularFrame.getContentPane().add(toppanelmostPopular);
 	    			mostPopularFrame.pack();
 	    			mostPopularFrame.setVisible(true);
 
+	    		}
+	    	});
+			entermostPopular.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String howManyBooks = mostPopulartxt1.getText();
+	    			String year = mostPopulartxt2.getText();
+	    			LibrarianUser.mostPopular(howManyBooks, year);
+	    			mostPopulartxt1.setText(null);
+	    			mostPopulartxt2.setText(null);
+	    		}
+	    	});
+			cancelmostPopular.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			mostPopulartxt1.setText(null);
+	    			mostPopulartxt2.setText(null);
+	    			mostPopularFrame.dispose();
 	    		}
 	    	});
 			addNewBook.addActionListener(new ActionListener() {
