@@ -85,7 +85,7 @@ create table HoldRequest
 	callNumber integer not null,
 	issuedDate date null,
 	FOREIGN KEY (bid) references Borrower,
-	FOREIGN KEY (callNumber) references Book ON DELELTE CASCADE);
+	FOREIGN KEY (callNumber) references Book ON DELETE CASCADE);
 
 create table Borrowing
 	(borid integer not null PRIMARY KEY,
@@ -129,19 +129,19 @@ insert into Borrower values
 
 
 insert into Book values
-(100, '001000000', 'Hello Java world', 'Laks', 'UBC','1999');
+(100, '001000000', 'Hello Java World', 'Laks', 'UBC','1999');
 insert into Book values
-(200, '002000000', 'Hi Database', 'Laks', 'SFU','2000');
+(200, '002000000', 'Intro to Databases', 'Laks', 'SFU','2000');
 insert into Book values
-(300, '003000000', 'Advanced Data Structures and Algorithms', 'Michelle Ng', 'UBC','2008');
+(300, '003000000', 'Advanced Data Structures', 'Michelle Ng', 'UBC','2008');
 insert into Book values
-(400, '004000000', 'Design Patterns', 'Enoch Choi', 'UBC','1999');
+(400, '004000000', 'Common Design Patterns', 'Enoch Choi', 'UBC','1999');
 insert into Book values
-(500, '005000000', 'Hi C++', 'Laks', 'UBC','2014');
+(500, '005000000', 'Algorithms in C++', 'Laks', 'UBC','2014');
 insert into Book values
 (600, '006000000', 'Hardware and Software', 'Tony Chu', 'PublisherA','2002');
 insert into Book values
-(999, '123456789', 'ABCs', 'Sammy', 'Foo Readers', 2000);
+(999, '123456789', 'My ABCs', 'Sammy', 'Foo Readers', 2000);
 
 
 insert into BookCopy values

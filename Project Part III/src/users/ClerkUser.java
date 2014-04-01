@@ -5,7 +5,6 @@ import gui.Main;
 import java.io.IOException;
 import java.sql.*;
 import java.util.GregorianCalendar;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -17,135 +16,43 @@ import java.util.List;
  */
 public class ClerkUser {
 
-	private static int newbid;
-	
-	public static int getNewBid(String sinOrStNo){
-		int bid = -1;
-		// get new borrower's bid
-		Statement s;
-		try {
-			s = Main.con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT bid "
-					+ "FROM Borrower "
-					+ "WHERE sinOrStNo= '" + sinOrStNo + "'");
-			if(rs.next())
-				bid = rs.getInt(1);
-			else
-				return bid;
-			s.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.err.println("Message: " + e.getMessage());
-		}
-		return bid;
-	}
-	
-	/*
-	 * Loads clerk's side of application.
-	 * Uses buffer line reader and connection established in Main class.
-	 */
-	public static void main() throws ParseException {
-		int choice;
-		boolean quit;
-
-		quit = false;
-		try {
-			while (!quit) {
-				System.out.print("\n\nPlease choose one of the following: \n");
-				System.out.print("1.  Add borrower\n");
-				System.out.print("2.  Check out item\n");;
-				System.out.print("3.  Process a return\n");
-				System.out.print("4.  Check overdue items\n");
-				System.out.print("5.  Quit\n>>");
-
-				choice = Integer.parseInt(Main.in.readLine());
-
-				System.out.println(" ");
-
-				switch (choice) {
-//				case 1:  addBorrower(); break;
-//				case 2:  checkOutItems(); break;
-//				case 3:  processReturn(); break;
-//				case 4:  checkOverdueItems(); break;
-				case 5:  quit = true; 
-				}
-			}
-			Main.con.close();
-			Main.in.close();
-			System.out.println("\nGood Bye!\n\n");
-			System.exit(0);
-		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
-			try {
-				Main.con.close();
-				System.exit(-1);
-			}
-			catch (SQLException ex) {
-				System.err.println("Message: " + ex.getMessage());
-			}
-		}
-		catch (NumberFormatException ne) {
-			System.err.println("Please select an option.");
-		}
-		catch (SQLException ex) {
-			System.err.println("Message: " + ex.getMessage());
-		}
-	}
-
-
 	/*
 	 * Add a new borrower to the library.  
 	 * User should provide all required info.
 	 */
-	public static void addBorrower(String passwordstr, String namestr, String addressstr, String phonestr, String emailstr, String sinOrStnostr, String typestr) {
-		String             password; 
-		String             name;
-		String             address;
-		String             phone;
-		String             emailAddress;
-		int                sinOrStNo;
-		String             type;
+
+	public static void addBorrower(String passwordstr, String namestr, String addressstr, String phonestr, 
+			String emailstr, String sinOrStnostr, String typestr) {
 
 		PreparedStatement  ps;
 		try {
 			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,?,?)");
 
-//			System.out.println("Please fill out required fields (*).");
-//
-//			System.out.print("Borrower password *: ");
-//			password = Main.in.readLine();
 			System.out.println(passwordstr);
 			ps.setString(1, passwordstr);
+
 			System.out.println(namestr);
-//			System.out.print("Borrower name *: ");
-//			name = Main.in.readLine();
 			ps.setString(2, namestr);
+
 			System.out.println(addressstr);
-//			System.out.print("Borrower address: ");
-//			address = Main.in.readLine();
 			if (addressstr.length() == 0) {
 				ps.setString(3, null);
 			} else {
 				ps.setString(3, addressstr);
 			}
+
 			System.out.println(phonestr);
-//			System.out.print("Borrower phone number: ");
-//			phone = Main.in.readLine();
 			if (phonestr.length() == 0) {
 				ps.setString(4, null);
 			} else {
 				ps.setString(4,  phonestr);
 			}
+
 			System.out.println(emailstr);
-//			System.out.print("Borrower email address *: ");
-//			emailAddress = Main.in.readLine();
 			ps.setString(5, emailstr);
+
 			System.out.println(sinOrStnostr);
-//			System.out.print("Borrower SIN or student number *: ");
-			//sinOrStNo = Integer.parseInt(Main.in.readLine());
-			sinOrStNo = Integer.parseInt(sinOrStnostr);
+			int sinOrStNo = Integer.parseInt(sinOrStnostr);
 			// check if account already exists for this sinOrStNo
 			Statement s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT * "
@@ -166,9 +73,8 @@ public class ClerkUser {
 			java.sql.Date expiryDate = new java.sql.Date(gregToday.getTime().getTime());
 			ps.setDate(7, expiryDate);
 			System.out.println(expiryDate);
+
 			System.out.println(typestr);
-//			System.out.print("Borrower type: ");
-//			type = Main.in.readLine();
 			ps.setString(8, typestr);
 
 			ps.executeUpdate();
@@ -177,21 +83,8 @@ public class ClerkUser {
 			ps.close();
 
 			System.out.println("New borrower successfully added to database.");
-
-//			int bid;
-//			// get new borrower's bid
-//			rs = s.executeQuery("SELECT bid "
-//					+ "FROM Borrower "
-//					+ "WHERE sinOrStNo= '" + sinOrStNo + "'");
-//			bid = rs.getInt(1);
-//			s.close();
-//
-//			System.out.println("New borrower id: " + bid);
 		}
 
-//		catch (IOException e) {
-//			System.err.println("IOException!");
-//		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
 		}
@@ -210,6 +103,26 @@ public class ClerkUser {
 		}
 	}
 
+	public static int getNewBid(String sinOrStNo){
+		int bid = -1;
+		// get new borrower's bid
+		Statement s;
+		try {
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT bid "
+					+ "FROM Borrower "
+					+ "WHERE sinOrStNo=" + sinOrStNo + "");
+			if(rs.next())
+				bid = rs.getInt(1);
+			else
+				return bid;
+			s.close();
+		} catch (SQLException e) {
+			System.err.println("Message: " + e.getMessage());
+		}
+		return bid;
+	}
+
 
 	/*
 	 * Check-out items borrowed by a borrower. To borrow items, borrowers provide their card 
@@ -218,23 +131,19 @@ public class ClerkUser {
 	 * borrowing. Then it creates one or more borrowing records and prints a note with the 
 	 * items and their due day (which is giver to the borrower).  
 	 */
-	
-	public static void checkOutItems(String bidS, String callNumbersS) {
-		int 			   bid = Integer.parseInt(bidS);
-		
-		List<String>	   callNumbers = Arrays.asList(callNumbersS.split(","));
-		Statement  		   s;
 
-		// today's date
-		GregorianCalendar gregToday = new GregorianCalendar();
-		java.sql.Date sqlToday = new java.sql.Date(gregToday.getTime().getTime());
+	public static void checkOutItems(String bidS, String callNumbersS) {
 
 		try {
-			System.out.print("Borrower ID: ");
-			//bid = Integer.parseInt(Main.in.readLine());
+			int 			   bid = Integer.parseInt(bidS);
 
-			System.out.print("List of call numbers to be checked out: ");
-			//callNumbers = Arrays.asList(Main.in.readLine().split(","));
+			List<String>	   callNumbers = Arrays.asList(callNumbersS.split(","));
+			Statement  		   s;
+
+			// today's date
+			GregorianCalendar gregToday = new GregorianCalendar();
+			java.sql.Date sqlToday = new java.sql.Date(gregToday.getTime().getTime());
+
 
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bid "
@@ -275,12 +184,12 @@ public class ClerkUser {
 
 	private static void checkOutItem(int bid, int callNumber, Date outDate) {
 
-		int				   copyNo;
-		Statement          s;
-		PreparedStatement  ps1;
-		PreparedStatement  ps2;
-
 		try {
+			int				   copyNo;
+			Statement          s;
+			PreparedStatement  ps1;
+			PreparedStatement  ps2;
+
 			// get copy number of item to be checked out
 			System.out.print("Copy number of item " + callNumber + ": ");
 			copyNo = Integer.parseInt(Main.in.readLine());
@@ -343,6 +252,41 @@ public class ClerkUser {
 			}
 		}
 	}
+	
+	// Sends email to borrower with overdue item
+	private static void sendEmailOverdue(int bid) {
+		Statement 				s;
+		String 					emailAddrHold;
+		String					nameHold;
+
+		try 
+		{
+			s = Main.con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT emailAddress, name "
+					+ "FROM Borrower "
+					+ "WHERE bid = " + bid);
+
+			while (rs.next()){
+				emailAddrHold = rs.getString(1);
+				nameHold = rs.getString(2);
+				System.out.println("\nBorrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
+						"), has been notified about their overdue item.");
+			}
+		}
+
+		catch (SQLException ex) {
+			System.out.println("Message: " + ex.getMessage());
+			try {
+				// undo the insert
+				Main.con.rollback();	
+			}
+			catch (SQLException ex2) {
+				System.out.println("Message: " + ex2.getMessage());
+				System.exit(-1);
+			}
+		}
+
+	}
 
 
 	/*
@@ -352,34 +296,29 @@ public class ClerkUser {
 	 * borrower. If there is a hold request for this item by another borrower, the item is 
 	 * registered as "on hold" and a message is send to the borrower who made the hold request. 
 	 */
+
 	public static void processReturn(String callNumberS, String copyNoS) {
 
-		// provided by clerk
-		int 				callNumber = Integer.parseInt(callNumberS);
-		int					copyNo = Integer.parseInt(copyNoS);
-
-		// determined by system
-		int					borid;
-		int					bid;
-		Date				outDate;
-
-		Statement			s;
-		PreparedStatement   ps1;
-		PreparedStatement   ps2;
-		PreparedStatement   ps3;
-		PreparedStatement   ps4;
-
 		try {
+			// provided by clerk
+			int 				callNumber = Integer.parseInt(callNumberS);
+			int					copyNo = Integer.parseInt(copyNoS);
+
+			// determined by system
+			int					borid;
+			int					bid;
+			Date				outDate;
+
+			Statement			s;
+			PreparedStatement   ps1;
+			PreparedStatement   ps2;
+			PreparedStatement   ps3;
+			PreparedStatement   ps4;
+
 			ps1 = Main.con.prepareStatement("UPDATE Borrowing SET inDate= ? WHERE callNumber= ? AND copyNo= ?");
 			ps2 = Main.con.prepareStatement("INSERT INTO Fine VALUES (fid_c.nextval,?,?,?,?)");
 			ps3 = Main.con.prepareStatement("UPDATE BookCopy SET status='on hold' WHERE callNumber= ? AND copyNo= ?");
 			ps4 = Main.con.prepareStatement("UPDATE BookCopy SET status='in' WHERE callNumber= ? AND copyNo= ?");
-
-			// first enter callNumber and copyNo
-			System.out.print("Book call number: ");
-//			callNumber = Integer.parseInt(Main.in.readLine());
-			System.out.print("Book copy number: ");
-//			copyNo = Integer.parseInt(Main.in.readLine());
 
 			s = Main.con.createStatement();
 
@@ -470,14 +409,15 @@ public class ClerkUser {
 	 * to any of them (or to all of them). 
 	 */
 	//THIS METHOD TAKES IN BIDS AS INPUT TO KNOW WHICH EMAIL ADDRESSES TO SEND TO. IF 'ALL' IS INPUTTED, THEN EMAILS ALL BORROWERS
+
 	public static void checkOverdueItems(String bidsSS) {
 
-		Statement statement;
-		ResultSet rs;
-		
-		List<Integer> overdueBids = new ArrayList<Integer>();  // for storing overdue item borrower ids, for emailing
-
 		try {
+			Statement statement;
+			ResultSet rs;
+
+			List<Integer> overdueBids = new ArrayList<Integer>();  // for storing overdue item borrower ids, for emailing
+
 			statement = Main.con.createStatement();
 
 			System.out.println("List of items overdue and the borrowers who have checked them out:");
@@ -580,40 +520,6 @@ public class ClerkUser {
 
 	}
 
-	// Sends email to borrower with overdue item
-	private static void sendEmailOverdue(int bid) {
-		Statement 				s;
-		String 					emailAddrHold;
-		String					nameHold;
-
-		try 
-		{
-			s = Main.con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT emailAddress, name "
-					+ "FROM Borrower "
-					+ "WHERE bid = " + bid);
-
-			while (rs.next()){
-				emailAddrHold = rs.getString(1);
-				nameHold = rs.getString(2);
-				System.out.println("\nBorrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
-						"), has been notified about their overdue item.");
-			}
-		}
-
-		catch (SQLException ex) {
-			System.out.println("Message: " + ex.getMessage());
-			try {
-				// undo the insert
-				Main.con.rollback();	
-			}
-			catch (SQLException ex2) {
-				System.out.println("Message: " + ex2.getMessage());
-				System.exit(-1);
-			}
-		}
-
-	}
 
 
 
@@ -625,9 +531,9 @@ public class ClerkUser {
 		try {
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT bookTimeLimit "
-										+ "FROM Borrower B, BorrowerType C "
-										+ "WHERE B.type = C.type "
-										+ "AND B.bid = " + bid);
+					+ "FROM Borrower B, BorrowerType C "
+					+ "WHERE B.type = C.type "
+					+ "AND B.bid = " + bid);
 			while (rs.next()){
 				bookTimeLimit = rs.getInt(1);
 			}
@@ -654,7 +560,7 @@ public class ClerkUser {
 		return sqlDate;		
 	}
 
-	
+
 	// Returns true of dueDate < today's date
 	public static boolean overdue(Date dueDate){
 		String dueDateString = dueDate.toString();
@@ -685,5 +591,3 @@ public class ClerkUser {
 		return (int) diff;
 	}
 }
-
-

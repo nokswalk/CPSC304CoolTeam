@@ -2,135 +2,34 @@ package users;
 
 import gui.Main;
 
-import java.io.IOException;
 import java.sql.*;
-import java.text.ParseException;
 import java.util.GregorianCalendar;
 
 public class BorrowerUser {
-
-	/*
-	 * Loads borrower's side of application.
-	 * Uses buffer line reader and connection established in Main class.
-	 */
-	public static void main() {
-
-		int choice;
-		boolean quit;
-
-		quit = false;
-		try {
-			while (!quit) {
-				System.out.print("\n\nPlease choose one of the following: \n");
-				System.out.print("1.  Book search\n");
-				System.out.print("2.  Check account\n");
-				System.out.print("3.  Place a hold request\n");
-				System.out.print("4.  Pay fines\n");
-				System.out.print("5.  Quit\n>>");
-
-				choice = Integer.parseInt(Main.in.readLine());
-
-				System.out.println(" ");
-
-				switch(choice) {
-				case 1:  searchBook(); break;
-//				case 2:  checkAccount(); break;
-//				case 3:  requestHold(); break;
-//				case 4:  payFine(); break;
-				case 5:  quit = true; 
-				}
-			}
-			Main.con.close();
-			Main.in.close();
-			System.out.println("\nGood Bye!\n\n");
-			System.exit(0);
-
-		}
-		catch (IOException e) {
-			System.err.println("IOException!");
-			try {
-				Main.con.close();
-				System.exit(-1);
-			}
-			catch (SQLException ex) {
-				System.err.println("Message: " + ex.getMessage());
-			}
-		}
-		catch (NumberFormatException ne) {
-			System.err.println("Please select an option.");
-		}
-		catch (SQLException ex) {
-			System.err.println("Message: " + ex.getMessage());
-		}
-	}
 
 
 	/*
 	 * Search for books using keyword search on titles, authors and subjects. The result is a list 
 	 * of books that match the search together with the number of copies that are in and out. 
 	 */
-	 //DON'T USE THIS ONE FOR MAIN!!! D: OMG
-	private static void searchBook() {
-
-		// Search by title or author or subject
-		int choice;
-
-		try {
-			System.out.print("\n\nPlease choose one of the following to search by: \n");
-			System.out.print("1.  Title\n");
-			System.out.print("2.  Author\n");
-			System.out.print("3.  Subject\n");
-			System.out.print("4.  Back\n>>");
-
-			choice = Integer.parseInt(Main.in.readLine());
-
-			System.out.println(" ");
-
-			switch (choice) {
-//			case 1:  searchBookByTitle(); break;
-//			case 2:  searchBookByAuthor(); break;
-//			case 3:  searchBookBySubject(); break;
-			case 4:  return;
-			}
-		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
-			try {
-				Main.con.close();
-				System.exit(-1);
-			}
-			catch (SQLException ex) {
-				System.err.println("Message: " + ex.getMessage());
-			}
-		}
-		catch (NumberFormatException ne) {
-			System.err.println("Please select an option.");
-		}
-	}
-
 	public static void searchBookByTitle(String titleS) {	
 
-		// searched title
-		String             sTitle = titleS;
-
-		// search results
-		int          	   callNumber;
-		String             isbn;
-		String             title;
-		String             mainAuthor;
-
-		// book copies in/out
-		int inLib=0;
-		int outLib=0;
-
-		// to execute queries
-		Statement          s;
-
 		try {
-			// first search Book table based on title keyword
-			System.out.print("\n Title keyword: ");
-			//sTitle = Main.in.readLine();
+			// searched title
+			String             sTitle = titleS;
+
+			// search results
+			int          	   callNumber;
+			String             isbn;
+			String             title;
+			String             mainAuthor;
+
+			// book copies in/out
+			int inLib=0;
+			int outLib=0;
+
+			// to execute queries
+			Statement          s;
 
 			s = Main.con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT DISTINCT B.callNumber, B.isbn, B.title, B.mainAuthor "
@@ -363,22 +262,19 @@ public class BorrowerUser {
 	 */
 	public static void checkAccount(String userBidS) {
 
-		int userBid = Integer.parseInt(userBidS);
-
-		String title;
-		String isbn;
-		String mainAuthor;
-		int amount;
-		int totalAmount = 0;
-		Date issuedDate;
-
-		Statement s;
-
 		try {
-			s = Main.con.createStatement();
+			int userBid = Integer.parseInt(userBidS);
 
-			System.out.printf("Please enter your Borrower ID: ");
-			//userBid = Integer.parseInt(Main.in.readLine());
+			String title;
+			String isbn;
+			String mainAuthor;
+			int amount;
+			int totalAmount = 0;
+			Date issuedDate;
+
+			Statement s;
+			
+			s = Main.con.createStatement();
 
 			// check that this is a valid Borrower account
 			ResultSet rs = s.executeQuery("SELECT * "
@@ -547,16 +443,14 @@ public class BorrowerUser {
 	 */
 	public static void requestHold(String bidS, String callNumberS) {
 
-		int					bid = Integer.parseInt(bidS);
-		int					callNumber = Integer.parseInt(callNumberS);
-		Statement			s;
-		PreparedStatement   ps;
-
 		try {
+			int					bid = Integer.parseInt(bidS);
+			int					callNumber = Integer.parseInt(callNumberS);
+			Statement			s;
+			PreparedStatement   ps;
+			
 			s = Main.con.createStatement();
 
-			System.out.println("Borrower ID: ");
-			//bid = Integer.parseInt(Main.in.readLine());
 			// check that this is a valid Borrower account
 			ResultSet rs = s.executeQuery("SELECT * "
 					+ "FROM Borrower "
@@ -567,8 +461,6 @@ public class BorrowerUser {
 				return;
 			}
 
-			System.out.println("Book call number: ");
-			//callNumber = Integer.parseInt(Main.in.readLine());
 			// check that this is a valid Book call number
 			rs = s.executeQuery("SELECT * "
 					+ "FROM Borrower "
@@ -630,21 +522,17 @@ public class BorrowerUser {
 	/*
 	 * Pay a fine.
 	 */
-	 //Tony! this one is tricky theres a string input -> display fines -> input fid string
-	public static void payFine(String bidS, String fidS)
-	{
-		int		   bid = Integer.parseInt(bidS);
-		Statement  s;
-
-		int		   sfid;
-		String	   ans;
-
+	//Tony! this one is tricky theres a string input -> display fines -> input fid string
+	public static void payFine(String bidS, String fidS) {
 		try
 		{
+			int		   bid = Integer.parseInt(bidS);
+			Statement  s;
+
+			int		   sfid;
+			
 			s = Main.con.createStatement();
 
-			System.out.print("Borrower ID: ");
-			//bid = Integer.parseInt(Main.in.readLine());
 			// check that this is a valid Borrower account
 			ResultSet rs = s.executeQuery("SELECT * "
 					+ "FROM Borrower "
@@ -691,8 +579,6 @@ public class BorrowerUser {
 
 
 			// Ask borrower to select which fine to pay for
-			System.out.println("\n\nSelect ID of fine you wish to pay: ");
-			//String ans1 = Main.in.readLine();
 			String ans1 = fidS;
 
 			if (ans1.trim().equals("")){
@@ -700,17 +586,9 @@ public class BorrowerUser {
 			}
 			//this is where the chosen fid is inputted
 			sfid = Integer.parseInt(ans1);
-
-			System.out.println("Proceed with payment?(y/n)");
-//			ans = Main.in.readLine();
-
-//			if (ans.equals("y")){
-				updateFine(sfid);
-//				System.out.println("Fine has been paid.");
-//			}
-//			else {
-//				System.out.println("Payment cancelled.");
-//			}
+			updateFine(sfid);
+			
+			System.out.println("Fine has been paid.");
 		}
 
 		catch (SQLException ex) {
@@ -740,16 +618,16 @@ public class BorrowerUser {
 
 			GregorianCalendar gregCalendar = new GregorianCalendar();
 			paidDate = new java.sql.Date(gregCalendar.getTime().getTime());
-			
+
 			ps.setDate(1, paidDate);
 			ps.setInt(2, fid);
-			
+
 			ps.execute();
 			Main.con.commit();
 
 			ps.close();
 		}
-		
+
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 			try {
