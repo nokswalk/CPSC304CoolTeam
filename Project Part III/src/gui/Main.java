@@ -919,6 +919,7 @@ public class Main implements ActionListener {
 			menu.setVisible(true);
 		}
 		else if (user == 3){ //user is clerk
+			
 		//make addNewBook frame and panel
 			int ADDBORROWERROWS = 8;
 			int COLUMNS = 2;
@@ -931,14 +932,16 @@ public class Main implements ActionListener {
 			addBorrowerFrame.setPreferredSize(new Dimension (400, 250));
 			addBorrowerFrame.setLocationRelativeTo(null);
 
-		//make addNewBookCopy frame and panel
+		//make checkOutItems frame and panel
+			
 			final JFrame checkOutItemsFrame = new JFrame("Check out Items");
-			final JPanel panelcheckOutItemsCopy = new JPanel();
-		//make reportCheckOutBooks frame and panel
+			final JPanel panelcheckOutItems = new JPanel();
+			
+		//make processReturn frame and panel
 			final JFrame processReturnFrame = new JFrame("Process a return");
 			final JPanel panelprocessReturnBooks = new JPanel();
 
-		//make mostPopular frame and panel
+		//make checkOverdueItems frame and panel
 			final JFrame checkOverdueItemsFrame = new JFrame("Check overdue items");
 			final JPanel panelcheckOverdueItems = new JPanel();
 
@@ -951,7 +954,27 @@ public class Main implements ActionListener {
 			JLabel sinOrStno = new JLabel("SIN or Student Number:");
 			JLabel type = new JLabel("Type(student, staff, etc):");
 			final JLabel addBorrowerResultLabel = new JLabel("");
-
+			
+			//make checkOutItems frame and panel
+			int ROWScheckOutItems = 5;
+			int COLUMNScheckOutItems = 2;
+			final JPanel toppanelcheckOutItems = new JPanel();
+			final JPanel panelcheckOutItemsrNorth = new JPanel();
+			final JPanel panelcheckOutItemsSouth = new JPanel();
+			toppanelcheckOutItems.setLayout(new BoxLayout(toppanelcheckOutItems, BoxLayout.Y_AXIS));
+			panelcheckOutItemsrNorth.setLayout(new GridLayout(ROWScheckOutItems, COLUMNScheckOutItems));
+			panelcheckOutItemsSouth.setLayout(new FlowLayout());
+			checkOutItemsFrame.getContentPane().add(toppanelcheckOutItems);
+			checkOutItemsFrame.setPreferredSize(new Dimension(870, 630));
+			checkOutItemsFrame.setLocationRelativeTo(null);
+			
+		//making labels for checkOutItems
+			JLabel checkOutItems2 = new JLabel("Please specify borrower ID:");
+			JLabel checkOutItems3 = new JLabel("Please list out the call numbers of books to be checked out:");
+			JLabel checkOutItems4 = new JLabel(""); //empty space
+			JLabel checkOutItems5 = new JLabel("Please list out copy number of books in order of specified call numbers:");
+			final JLabel checkOutItemsResultLabel = new JLabel("");
+			
 
 		//making textarea for addBorrower
 			final JTextField passwordtxt = new JTextField();
@@ -962,6 +985,16 @@ public class Main implements ActionListener {
 			final JTextField sinOrStnotxt = new JTextField();
 			final JTextField typetxt = new JTextField();
 
+		//making textarea for checkOutItems
+		final JTextField bidtxt = new JTextField();
+		final JTextField callNumberstxt = new JTextField();
+		final JTextField copyNostxt = new JTextField();
+		
+		//setSize
+		bidtxt.setPreferredSize(new Dimension(400, 30));
+		callNumberstxt.setPreferredSize(new Dimension(400, 30));
+		copyNostxt.setPreferredSize(new Dimension(400, 30));
+		
 		//make buttons
 			JButton addBorrower = new JButton("Add Borrower");
 			JButton checkOutItems = new JButton("Check out Items");
@@ -970,8 +1003,11 @@ public class Main implements ActionListener {
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
 			JButton enter = new JButton("Enter");
+			JButton enterCheckOutItems = new JButton("Enter");
 			JButton cancel = new JButton("Cancel");
+			JButton cancelcheckOutItems = new JButton("Cancel");
 			final JButton close = new JButton("Close");
+			
 
 		//center align buttons
 			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -997,7 +1033,7 @@ public class Main implements ActionListener {
 			menu.getContentPane().add(panelClerkMenu);
 
 
-		//attaching labels and txt field to the panel
+		//attaching labels and txt field to the panel for addBorrower
 			paneladdBorrower.add(password);
 			paneladdBorrower.add(passwordtxt);
 			paneladdBorrower.add(name);
@@ -1014,7 +1050,23 @@ public class Main implements ActionListener {
 			paneladdBorrower.add(typetxt);
 			paneladdBorrower.add(enter);
 			paneladdBorrower.add(cancel);
+			
+		//attaching labels and txt field to the panel for checkOutItems
 
+			panelcheckOutItemsrNorth.add(checkOutItems2);
+			panelcheckOutItemsrNorth.add(bidtxt);
+			panelcheckOutItemsrNorth.add(checkOutItems3);
+			panelcheckOutItemsrNorth.add(callNumberstxt);
+			panelcheckOutItemsrNorth.add(checkOutItems5);
+			panelcheckOutItemsrNorth.add(copyNostxt);
+			
+			panelcheckOutItemsSouth.add(enterCheckOutItems);
+			panelcheckOutItemsSouth.add(cancelcheckOutItems);
+			
+			
+			toppanelcheckOutItems.add(panelcheckOutItemsrNorth);
+			toppanelcheckOutItems.add(panelcheckOutItemsSouth);
+			
 		//add listeners to the buttons
 			addBorrower.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
@@ -1031,9 +1083,15 @@ public class Main implements ActionListener {
 	    		}
 	    	});
 			checkOutItems.addActionListener(new ActionListener() {
-	    		public void actionPerformed(ActionEvent e) {
-
-	    		}
+				public void actionPerformed(ActionEvent e) {
+	    			//we set standard output stream to printstream instead so that it can go to the GUI now
+	    			checkOutItemsFrame.getContentPane().add(toppanelcheckOutItems);
+	    			checkOutItemsFrame.pack();
+	    			checkOutItemsFrame.setVisible(true);
+	    			bidtxt.setText(null);
+	    			callNumberstxt.setText(null);
+	    			copyNostxt.setText(null);
+				}
 	    	});
 			processReturn.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
@@ -1057,6 +1115,24 @@ public class Main implements ActionListener {
 	    			System.exit(0);
 	    		}
 	    	});
+			
+			//TODO!! NOT SURE WHAT IM DOING HERE
+			enterCheckOutItems.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+//	    			String bidstr = bidtxt.getText();
+//	    			String callNumberstr = callNumberstxt.getText();
+//	    			String copyNumberstr = copyNostxt.getText();
+//	    			int bid = ClerkUser.checkBidForCheckOut(bidstr);
+//	    			if (bid == -1){
+//	    				checkOutItemsResultLabel.setName("Invalid Borrower ID");
+//	    			}
+//	    			else{
+//	    			ClerkUser.checkOutItems(bidstr, callNumberstr);
+//	    			}
+//	    			panelcheckOutItems.setVisible(false);
+	    		}
+	    	});
+			
 			enter.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String passwordstr = passwordtxt.getText();
@@ -1069,7 +1145,7 @@ public class Main implements ActionListener {
 	    			ClerkUser.addBorrower(passwordstr, namestr, addressstr, phonestr, emailstr, sinOrStnostr, typestr);
 	    			int bid = ClerkUser.getNewBid(sinOrStnostr);
 	    			if(bid == -1){
-	    				addBorrowerResultLabel.setName("Not Available to Retrieve Borrower ID with this SIN or Student Number.");
+	    				addBorrowerResultLabel.setName("Not able to retrieve Borrower ID with given SIN or Student Number.");
 	    			}else
 	    				addBorrowerResultLabel.setName(namestr + "'s Borrower ID (bid) is : " + bid);
 	    			paneladdBorrowerResult.add(addBorrowerResultLabel);
@@ -1099,7 +1175,13 @@ public class Main implements ActionListener {
 	    			addBorrowerFrame.dispose();
 	    		}
 	    	});
-
+	    	cancelcheckOutItems.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			bidtxt.setText(null);
+	    			callNumberstxt.setText(null);
+	    			checkOutItemsFrame.dispose();
+	    		}
+	    	});
 
 
 			//add the panel into JFrame

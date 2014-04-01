@@ -2,7 +2,6 @@ package users;
 
 import gui.Main;
 
-import java.io.IOException;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
@@ -13,124 +12,34 @@ public class LibrarianUser {
 	public static String[][] getMostPopularData(){
 		return mostPopularData;
 	}
-	/*
-	 * Loads librarian's side of application.
-	 * Uses buffer line reader and connection established in Main class.
-	 */
-	public static void main() {
-
-		int choice;
-		boolean quit;
-
-		quit = false;
-		try {
-			while (!quit) {
-				System.out.print("\n\nPlease choose one of the following: \n");
-				System.out.print("1.  Add book\n");
-				System.out.print("2.  Generate a report of all checked out books\n"); 
-				System.out.print("3.  Generate a report of the most popular items for a given year\n");
-				System.out.print("4.  Quit\n>>");
-
-				choice = Integer.parseInt(Main.in.readLine());
-
-				System.out.println(" ");
-
-				switch (choice) {
-				case 1:  addBook(); break;
-//				case 2:  reportCheckedOutBooks(); break;
-//				case 3:  mostPopular(); break; 
-				case 4:  quit = true; 
-				}
-			}
-			Main.con.close();
-			Main.in.close();
-			System.out.println("\nGood Bye!\n\n");
-			System.exit(0);
-		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
-			try {
-				Main.con.close();
-				System.exit(-1);
-			}
-			catch (SQLException ex) {
-				System.err.println("Message: " + ex.getMessage());
-			}
-		}
-		catch (NumberFormatException ne) {
-			System.err.println("Please select an option.");
-		}
-		catch (SQLException ex)	{
-			System.err.println("Message: " + ex.getMessage());
-		}
-	}
-
 
 	/*
 	 * Adds a new book or new copy of an existing book to the library. The librarian provides 
 	 * the information for the new book, and the system adds it to the library.
 	 */
-	 //THIS IS NOT THE ONE USED IN MAIN
-	private static void addBook() {
-		// Search by title or author or subject
-		int choice;
-
-		try {
-			System.out.print("\n\nPlease choose one of the following to add: \n");
-			System.out.print("1.  New book\n");
-			System.out.print("2.  New copy of an existing book\n");
-			System.out.print("3.  Back\n>>");
-
-			choice = Integer.parseInt(Main.in.readLine());
-
-			System.out.println(" ");
-
-			switch (choice) {
-//			case 1:  addNewBook(); break;
-//			case 2:  addNewBookCopy(); break;
-			case 3:  return;
-			}
-		}
-
-		catch (IOException e) {
-			System.err.println("IOException!");
-			try {
-				Main.con.close();
-				System.exit(-1);
-			}
-			catch (SQLException ex) {
-				System.err.println("Message: " + ex.getMessage());
-			}
-		}
-		catch (NumberFormatException ne) {
-			System.err.println("Please select an option.");
-		}
-	}
 
 	public static void addNewBook(String isbnS, String titleS, String mainAuthorS, String publisherS, String yearS, String subjectsS, String authorsS) {
 
-		// attributes of new book
-		String 	           isbn = isbnS;
-		String             title = titleS;
-		String             mainAuthor = mainAuthorS;
-		String             publisher = publisherS;	
-		int                year = Integer.parseInt(yearS);
-
-		//
-		String			temp = subjectsS;
-		List<String>	subjects = Arrays.asList(temp.split(","));
-		String 			temp2 = authorsS;
-		List<String>    authors;
-
-		Statement          s;    // to check if added book already exists in database
-
-		PreparedStatement  ps1;  // for adding Book
-		PreparedStatement  ps2;  // for adding BookCopy
-		PreparedStatement  ps3;  // for adding HasSubject
-		PreparedStatement  ps4;  // for adding HasAuthor
-
 		try {
+			// attributes of new book
+			String 	           isbn = isbnS;
+			String             title = titleS;
+			String             mainAuthor = mainAuthorS;
+			String             publisher = publisherS;	
+			int                year = Integer.parseInt(yearS);
+
+			//
+			String			temp = subjectsS;
+			List<String>	subjects = Arrays.asList(temp.split(","));
+			String 			temp2 = authorsS;
+			List<String>    authors;
+
+			Statement          s;    // to check if added book already exists in database
+
+			PreparedStatement  ps1;  // for adding Book
+			PreparedStatement  ps2;  // for adding BookCopy
+			PreparedStatement  ps3;  // for adding HasSubject
+			PreparedStatement  ps4;  // for adding HasAuthor
 
 			ps1 = Main.con.prepareStatement("INSERT INTO Book VALUES (callNumber_c.nextval,?,?,?,?,?)");
 			ps2 = Main.con.prepareStatement("INSERT INTO BookCopy VALUES (callNumber_c.currval,?,?)");
@@ -139,7 +48,6 @@ public class LibrarianUser {
 
 			// new book
 			System.out.print("Book ISBN: ");
-			//isbn = Main.in.readLine();
 
 			// check if this book already in database
 			s = Main.con.createStatement();
@@ -148,7 +56,7 @@ public class LibrarianUser {
 					+ "WHERE isbn=" + isbn);
 			if (rs.next()) {
 				System.out.println("This book already exists in the library database."
-						+ "Please select 'New copy' in the 'Add book' menu.");
+						+ "\nPlease select 'New copy' in the 'Add book' menu.");
 				s.close();
 				ps1.close();
 				ps2.close();
@@ -157,20 +65,16 @@ public class LibrarianUser {
 
 			ps1.setString(1, isbn);
 
-			System.out.print("Book title: " + title);
-//			title = Main.in.readLine();
+			System.out.println("Book title: " + title);
 			ps1.setString(2, title);
 
-			System.out.print("Book main author: " + mainAuthor);
-//			mainAuthor = Main.in.readLine();
+			System.out.println("Book main author: " + mainAuthor);
 			ps1.setString(3, mainAuthor);
 
-			System.out.print("Book publisher: "+ publisher);
-//			publisher = Main.in.readLine();
+			System.out.println("Book publisher: "+ publisher);
 			ps1.setString(4,  publisher);
 
-			System.out.print("Book published year: "+ year);
-//			year = Integer.parseInt(Main.in.readLine());
+			System.out.println("Book published year: "+ year);
 			ps1.setInt(5, year);
 
 			ps1.executeUpdate();
@@ -179,15 +83,12 @@ public class LibrarianUser {
 			// new book copy
 			ps2.setInt(1, 1);
 			ps2.setString(2, "in");
-			
+
 			ps2.executeUpdate();
 
 
 			// add subjects of book
-			System.out.print("Book subjects: ");
-//			String temp = Main.in.readLine();
-//			subjects = Arrays.asList(temp.split(","));
-
+			System.out.println("Book subjects: ");
 			for (String subject : subjects) {				
 				if (subject.trim().length() == 0) {
 					ps3.setString(1, null);
@@ -195,18 +96,17 @@ public class LibrarianUser {
 					ps3.setString(1, subject.trim());
 					System.out.print(subject);
 				}
-				
+
 				ps3.executeUpdate();
 			}
 
 
 			// add other authors of book
-			System.out.print("Book's other authors: ");
-//			String temp2 = Main.in.readLine();
-			
+			System.out.println("Book's other authors: ");
+
 			if (temp2.length() != 0) {
 				authors = Arrays.asList(temp2.split(","));
-				
+
 				for (String author: authors) {					
 					if (author.length() == 0) {
 						ps4.setString(1, null);
@@ -214,12 +114,11 @@ public class LibrarianUser {
 						ps4.setString(1, author.trim());
 						System.out.print(author);
 					}
-					
+
 					ps4.executeUpdate();
 				}
 			}
 
-			
 			// commit work 
 			Main.con.commit();
 			System.out.println("Book has been added successfully.");
@@ -251,22 +150,21 @@ public class LibrarianUser {
 
 	public static void addNewBookCopy(String isbnS) {
 
-		// attributes of new copy
-		int                callNumber = 0;
-		int                copyNo     = 0;
-		String             status     = "in";
-
-		// to get existing callNumber of this book
-		String             isbn = isbnS;
-		Statement          s; 
-
-		// to add new copy into database
-		PreparedStatement  ps;
-
 		try {
+			// attributes of new copy
+			int                callNumber = 0;
+			int                copyNo     = 0;
+			String             status     = "in";
+
+			// to get existing callNumber of this book
+			String             isbn = isbnS;
+			Statement          s; 
+
+			// to add new copy into database
+			PreparedStatement  ps;
+
 			// use ISBN to get existing callNumber
-			System.out.print("Book ISBN: " + isbn);
-		//	isbn = Main.in.readLine();
+			System.out.println("Book ISBN: " + isbn);
 
 			s = Main.con.createStatement();
 			ResultSet rs1 = s.executeQuery("SELECT callNumber "
@@ -278,7 +176,7 @@ public class LibrarianUser {
 			}
 
 			// use callNumber to get #copies already existing in database
-			ResultSet rs2 = s.executeQuery("SELECT COUNT(C.callNumber) "
+			ResultSet rs2 = s.executeQuery("SELECT COUNT(*) "
 					+ "FROM BookCopy C "
 					+ "WHERE C.callNumber=" + callNumber);
 
@@ -303,7 +201,7 @@ public class LibrarianUser {
 			}
 			else {
 				System.out.println("This book does not exist in the database yet."
-						+ "  Please select 'New book' in the 'Add book' menu.");
+						+ "/nPlease select 'New book' in the 'Add book' menu.");
 			}
 
 			ps.close();
@@ -326,7 +224,7 @@ public class LibrarianUser {
 			}
 		}
 	}
-	
+
 
 	/*
 	 * Generate a report with all the books that have been checked out. For each
@@ -335,55 +233,50 @@ public class LibrarianUser {
 	 * book call number. If a subject is provided the report lists only books
 	 * related to that subject, otherwise all the books that are out are listed
 	 * by the report.
-	*/
-	
+	 */
+
 	public static void reportCheckedOutBooks(String subjectS) {
 
-		String subject = subjectS;
-		
 		try {
+			String subject = subjectS;
+
 			Statement s = Main.con.createStatement();
 			ResultSet rs;
 
-			//IF THE STRING IS EMPTY, IT WILL PRINT OUT EVERYTHING
-			System.out.println("Please enter a subject to report. \n "
-					+ "If no subject is inputted, the report will contain all subjects.): \n>> ");
-			//subject = Main.in.readLine();
-			
 			// check that this is a valid subject
 			if (!subject.trim().equals("")) {
 				rs = s.executeQuery("SELECT * " 
-										  + "FROM HasSubject "
-										  + "WHERE subject='" + subject+"'");
+						+ "FROM HasSubject "
+						+ "WHERE subject='" + subject+"'");
 				if (!rs.next()) {
 					System.out.println("This subject does not exist in the library database.");
 					s.close();
 					return;
 				}
 			}
-			
+
 			// query callNumber, copyNo, title, outDate and bookTimeLimit
 			// when borrowing's inDate is null.
 			System.out.println("List of items that are out :");
-			
+
 			//if subject is inputed
 			if(!subject.trim().equals("")) {
 				rs = s.executeQuery("SELECT A.callNumber, C.copyNo, A.title, TO_CHAR(B.outDate, 'YYYY-MM-DD') as outDate, B.bid "
-							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E, HasSubject F "
-							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid AND F.callNumber = A.callNumber "
-							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL AND F.subject='" + subject + "' "
-							+ "ORDER BY A.callNumber, C.copyNo, A.title ASC");
+						+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E, HasSubject F "
+						+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid AND F.callNumber = A.callNumber "
+						+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL AND F.subject='" + subject + "' "
+						+ "ORDER BY A.callNumber, C.copyNo, A.title ASC");
 			}
-			
+
 			//empty subject, all of the items will be selected
 			else {
 				rs = s.executeQuery("SELECT A.callNumber, C.copyNo, A.title, TO_CHAR(B.outDate, 'YYYY-MM-DD') as outDate, B.bid "
-							+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
-							+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
-							+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "
-							+ "ORDER BY A.callNumber, C.copyNo, A.title ASC");
+						+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
+						+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
+						+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "
+						+ "ORDER BY A.callNumber, C.copyNo, A.title ASC");
 			}
-			
+
 			// get info on ResultSet
 			ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -395,64 +288,65 @@ public class LibrarianUser {
 			// display column names;
 			for (int i = 0; i < numCols-1; i++) {
 				// get column name and print it
-				System.out.printf("%-25s", rsmd.getColumnName(i + 1));
+				System.out.printf("%-30s", rsmd.getColumnName(i + 1));
 			}
-			System.out.printf("%-25s", "DUEDATE");
-			System.out.printf("%-25s", "OVERDUE");  // for flagging
-			
+			System.out.printf("%-30s", "DUEDATE");
+			System.out.printf("%-30s", "OVERDUE");  // for flagging
+
 			System.out.println(" ");
 
 			while (rs.next()) {
 				Integer callNumber = rs.getInt("callNumber");
 				if (rs.wasNull()) {
-					System.out.printf("%-9.9s", " ");
+					System.out.printf("%-45s", " ");
 				} else {
-					System.out.printf("%-9.9s", callNumber);
+					System.out.printf("%-45s", callNumber);
 				}
 
 				Integer copyNo = rs.getInt("copyNo");
 				if (rs.wasNull()) {
-					System.out.printf("%-20.20s", " ");
+					System.out.printf("%-30s", " ");
 				} else {
-					System.out.printf("%-20.20s", copyNo);
+					System.out.printf("%-30s", copyNo);
 				}
-				
+
 				String title = rs.getString("title");
 				if (rs.wasNull()) {
-					System.out.printf("%-30.30s", " ");
+					System.out.printf("%-25.20s", " ");
 				} else {
-					System.out.printf("%-30.30s", title);
+					System.out.printf("%-25.20s", title);
 				}
-				
+
 				Date outDate = rs.getDate("outDate");
 				if(rs.wasNull()){
-					System.out.printf("%-20.20s", " ");
+					System.out.printf("%-30s", " ");
 				} else {
-					System.out.printf("%-20.20s", outDate);
+					System.out.printf("%-30s", outDate);
 				}
-				
+
 				Integer bid = rs.getInt("bid");
 				Date duedate = ClerkUser.getDueDate(bid,outDate);			
-				System.out.printf("%-20.20s", duedate);
-				
+				System.out.printf("%-30s", duedate);
+
 				// if item overdue, system flags it
 				if(ClerkUser.overdue(duedate)){
-					System.out.printf("%-20.20s\n", "*");
+					System.out.printf("%-30s\n", "*");
 				}
-				else
-					System.out.printf("%-20.20s\n", " ");
+				else {
+					System.out.printf("%-30s\n", " ");
+				}
 			}
-			
+
 			// close the statement;
 			// the ResultSet will also be closed
 			s.close();
-			
+
 		} catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
 		}
 	}
-	
-	
+
+
 	/*
 	 * Generate a report with the most popular items in a given year. The
 	 * librarian provides a year and a number n. The system lists out the top n
@@ -460,30 +354,25 @@ public class LibrarianUser {
 	 * ordered by the number of times they were borrowed.
 	 */
 	public static void mostPopular(String amountS, String yearS) {		
-		int 		amount = Integer.parseInt(amountS);
-		String 		year = yearS;
-		
+
 		try {
-			System.out.println("Generating a report with most popular items.");
-			System.out.println("Please specify how many books you wish to add into the report:\n>>");
-			//int amount = Integer.parseInt(Main.in.readLine());
+			int 		amount = Integer.parseInt(amountS);
+			String 		year = yearS;
 			
 			if(amount < 0){
 				System.out.println("Negatives are not allowed.");
 				return;
 			}
-			System.out.println("Please specify the year you wish to report:\n>>");
 
-			//String year = Main.in.readLine();
 			Statement statement = Main.con.createStatement();
 
 			ResultSet query = statement.executeQuery("SELECT A.callNumber, A.title, A.mainAuthor, A.isbn , COUNT(B.borid) AS count "  
-												+ "FROM Borrowing B "
-												+ "LEFT JOIN Book A "
-												+ "ON B.callNumber=A.callNumber "
-												+ "WHERE B.outDate > TO_DATE('"+year+"-01-01', 'YYYY-MM-DD') AND B.outDate < TO_DATE('"+year+"-12-31', 'YYYY-MM-DD') "
-												+ "GROUP BY A.callNumber, A.title, A.mainAuthor, A.isbn "
-												+ "ORDER BY count desc");
+					+ "FROM Borrowing B "
+					+ "LEFT JOIN Book A "
+					+ "ON B.callNumber=A.callNumber "
+					+ "WHERE B.outDate > TO_DATE('"+year+"-01-01', 'YYYY-MM-DD') AND B.outDate < TO_DATE('"+year+"-12-31', 'YYYY-MM-DD') "
+					+ "GROUP BY A.callNumber, A.title, A.mainAuthor, A.isbn "
+					+ "ORDER BY count desc");
 
 			// get info on ResultSet
 			ResultSetMetaData rsmd = query.getMetaData();
@@ -491,10 +380,12 @@ public class LibrarianUser {
 			int numCols = rsmd.getColumnCount();
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
-				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
+				System.out.printf("%-40s", rsmd.getColumnName(i + 1));
 			}
 			System.out.println(" ");
+
 			mostPopularData = new String[amount][numCols];
+
 			for(int i = 0; i < amount; i++){
 				if (!query.next()) {
 					System.out.println("End of results");
@@ -512,16 +403,16 @@ public class LibrarianUser {
 				mostPopularData[i][3] = isbn;
 				mostPopularData[i][4] = count.toString();
 
-				System.out.printf("%-30.30s", title);
-				System.out.printf("%-20.20s", mainAuthor);
-				System.out.printf("%-10.10s", isbn);
-				System.out.printf("%-10.10s\n", count);
+				System.out.printf("%-40.40s", title);
+				System.out.printf("%-40.40s", mainAuthor);
+				System.out.printf("%-40.40s", isbn);
+				System.out.printf("%-40.40s\n", count);
 			}
 
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
-			
+
 		} catch (SQLException e) {
 			System.err.println("Message: " + e.getMessage());
 		}
