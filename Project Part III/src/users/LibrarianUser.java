@@ -8,7 +8,12 @@ import java.util.*;
 
 public class LibrarianUser {
 	
+	static List<String[]> checkedoutReportData;
 	static String[][] mostPopularData;
+
+	public static List<String[]> getCheckedoutReportData(){
+		return checkedoutReportData;
+	}
 	public static String[][] getMostPopularData(){
 		return mostPopularData;
 	}
@@ -247,7 +252,10 @@ public class LibrarianUser {
 		try {
 			String subject = subjectS;
 
-			Statement s = Main.con.createStatement();
+//			Statement s = Main.con.createStatement();
+			Statement s= Main.con.createStatement(
+				    ResultSet.TYPE_SCROLL_INSENSITIVE, 
+				    ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs;
 
 			// check that this is a valid subject
@@ -256,7 +264,7 @@ public class LibrarianUser {
 						+ "FROM HasSubject "
 						+ "WHERE subject='" + subject+"'");
 				if (!rs.next()) {
-					System.out.println("This subject does not exist in the library database.");
+					System.err.println("This subject does not exist in the library database.");
 					s.close();
 					return;
 				}
@@ -289,7 +297,12 @@ public class LibrarianUser {
 
 			// get number of columns
 			int numCols = rsmd.getColumnCount();
+			rs.last();
+			int numRows = rs.getRow();
+			rs.beforeFirst();
 
+//			checkedoutReportData = new Object[numRows][7];
+			checkedoutReportData = new ArrayList<String[]>();
 			System.out.println(" ");
 
 			// display column names;
@@ -303,6 +316,7 @@ public class LibrarianUser {
 			System.out.println(" ");
 
 			while (rs.next()) {
+				String[] row = new String[7];
 				Integer callNumber = rs.getInt("callNumber");
 				if (rs.wasNull()) {
 					System.out.printf("%-45s", " ");
@@ -335,13 +349,24 @@ public class LibrarianUser {
 				Date duedate = ClerkUser.getDueDate(bid,outDate);			
 				System.out.printf("%-30s", duedate);
 
+
+				row[0] = callNumber.toString();
+				row[1] = copyNo.toString();
+				row[2] = title;
+				row[3] = outDate.toString();
+				row[4] = bid.toString();
+				row[5] = duedate.toString();
+						
 				// if item overdue, system flags it
 				if(ClerkUser.overdue(duedate)){
 					System.out.printf("%-30s\n", "*");
+					row[6] = "*";
 				}
 				else {
 					System.out.printf("%-30s\n", " ");
+					row[6] = " ";
 				}
+				checkedoutReportData.add(row);
 			}
 
 			// close the statement;

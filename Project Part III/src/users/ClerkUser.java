@@ -61,6 +61,7 @@ public class ClerkUser {
 			if (rs.next()) {
 				System.err.println("This SIN or student number is already associated with an account."
 						+ "Please check the digits with the borrower.");
+				BorrowerUser.infoBox("This SIN or student number is already associated with an account.", "error");
 				s.close();
 				ps.close();
 				return;
@@ -83,10 +84,12 @@ public class ClerkUser {
 			ps.close();
 
 			System.out.println("New borrower successfully added to database.");
+			BorrowerUser.infoBox("New borrower successfully added to database.", "success");
 		}
 
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
