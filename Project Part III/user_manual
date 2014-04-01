@@ -79,4 +79,5 @@ ASSUMPTIONS:
 - check out of an item that isn't in the library will not be attempted
 - check in of an item that hasn't been checked out will not be attempted
 - individual fines must be paid for in full at one time (total outstanding fines do not have to be paid in full)
+- when no items are overdue, emails to borrowers of overdue items will not be attempted
 		

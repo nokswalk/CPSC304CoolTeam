@@ -429,7 +429,7 @@ public class ClerkUser {
 	 */
 	//THIS METHOD TAKES IN BIDS AS INPUT TO KNOW WHICH EMAIL ADDRESSES TO SEND TO. IF 'ALL' IS INPUTTED, THEN EMAILS ALL BORROWERS
 
-	public static void checkOverdueItems(String bidsSS) {
+	public static void checkOverdueItems() {
 
 		try {
 			Statement statement;
@@ -519,25 +519,6 @@ public class ClerkUser {
 				}
 			}
 
-			// Clerk can send an email to each user or all users
-//			List<String> bidsS = Arrays.asList(bidsSS.split(","));
-
-			//System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
-			//		+ "or input 'all' to send a message to all borrowers: ");
-			//bidsS = Arrays.asList(Main.in.readLine().split(","));
-
-//			if (bidsS.get(0).equals("all")){
-//				for (int b : overdueBids) {
-//					sendEmailOverdue(b);
-//				}
-//			}
-//			else {
-//				for (String bs: bidsS){
-//					int b = Integer.parseInt(bs.trim());
-//					sendEmailOverdue(b);
-//				}
-//			}
-
 			// close the statement;
 			// the ResultSet will also be closed
 			statement.close();
@@ -549,8 +530,6 @@ public class ClerkUser {
 
 	}
 	
-	
-	
 	public static void sendEmail(String bidsSS){
 		List<String> bidsS = Arrays.asList(bidsSS.split(","));
 
@@ -558,6 +537,55 @@ public class ClerkUser {
 			BorrowerUser.infoBox("No ID entered", "error");
 		}
 		else if (bidsS.get(0).equals("all")){
+			ResultSet rs = null;
+
+			List<Integer> overdueBids = new ArrayList<Integer>();  // for storing overdue item borrower ids, for emailing
+
+			Statement statement = null;
+			try {
+				statement = Main.con.createStatement();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			System.out.println("List of items overdue and the borrowers who have checked them out:");
+
+			try {
+				rs = statement.executeQuery("SELECT E.bid, E.name, E.emailAddress, A.callNumber, C.copyNo, A.title, TO_CHAR(B.outDate, 'YYYY-MM-DD') as outDate "
+						+ "FROM Book A, Borrowing B, BookCopy C, BorrowerType D, Borrower E "
+						+ "WHERE B.callNumber = C.callNumber AND B.copyNo = C.copyNo AND D.type = E.type AND E.bid = B.bid "
+						+ "AND C.callNumber = A.callNumber AND B.inDate IS NULL "
+						+ "ORDER BY E.bid, E.name ASC");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// get info on ResultSet
+			try {
+				ResultSetMetaData rsmd = rs.getMetaData();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// get number of columns
+	
+			try {
+				while (rs.next()) {
+					Integer bid = rs.getInt("bid");
+					Date outDate = rs.getDate("outDate");
+					Date duedate = getDueDate(bid, outDate);
+
+					if (overdue(duedate)) {
+						overdueBids.add(bid);
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			for (int b : overdueBids) {
 				sendEmailOverdue(b);
 			}
