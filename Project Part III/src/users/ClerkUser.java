@@ -28,6 +28,12 @@ public class ClerkUser {
 		try {
 			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,?,?)");
 
+			// check that required fields are not empty
+			if (passwordstr.trim().equals("") || namestr.trim().equals("") || emailstr.trim().equals("")
+					|| sinOrStnostr.trim().equals("") || typestr.trim().equals("")) {
+				System.err.println("A required field was left blank.");
+			}
+			
 			System.out.println(passwordstr);
 			ps.setString(1, passwordstr);
 

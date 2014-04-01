@@ -259,8 +259,6 @@ public class Main implements ActionListener {
 			paneladdNewBook.setLayout(layoutaddNewBook);
 			addNewBookFrame.setPreferredSize(new Dimension (500, 240));
 			addNewBookFrame.setLocationRelativeTo(null);
-
-
 		//make addNewBookCopy frame and panel
 			int ROWSaddNewBookCopy = 2;
 			int COLUMNSaddNewBookCopy = 2;
@@ -270,7 +268,6 @@ public class Main implements ActionListener {
 			paneladdNewBookCopy.setLayout(layoutaddNewBookCopy);
 			addNewBookCopyFrame.setPreferredSize(new Dimension (500, 80));
 			addNewBookCopyFrame.setLocationRelativeTo(null);
-
 		//make reportCheckOutBooks frame and panel
 			final JFrame reportCheckedoutBooksFrame = new JFrame("Report Checked out Books");
 			final JPanel toppanelreportCheckedoutBooks = new JPanel();
@@ -280,7 +277,6 @@ public class Main implements ActionListener {
 			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);			
 			reportCheckedoutBooksFrame.setPreferredSize(new Dimension(800,600));
 			reportCheckedoutBooksFrame.setLocationRelativeTo(null);
-
 		//make mostPopular frame and panel
 			int ROWSmostPopular = 3;
 			int COLUMNSmostPopular = 2;
@@ -365,6 +361,7 @@ public class Main implements ActionListener {
 
 			reportCheckedOutBookstxtarea.setPreferredSize(new Dimension(800, 500));
 			mostPopulartxtarea.setPreferredSize(new Dimension(800, 500));
+			
 		//center align buttons
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
 			reportCheckedOutBooks.setAlignmentX(Component.CENTER_ALIGNMENT);
