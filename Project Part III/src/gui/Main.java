@@ -940,6 +940,9 @@ public class Main implements ActionListener {
 	    			String borrower = requestHoldBorrowertxt.getText();
 	    			String book = requestHoldBooktxt.getText();
 	    			BorrowerUser.requestHold(borrower, book);
+	    			requestHoldBorrowertxt.setText(null);
+	    			requestHoldBooktxt.setText(null);
+	    			holdRequestFrame.dispose();
 	    		}
 	    	});
 			requestHoldCancel.addActionListener(new ActionListener() {
