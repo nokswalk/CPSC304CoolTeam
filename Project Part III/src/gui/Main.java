@@ -23,6 +23,7 @@ import users.LibrarianUser;
  * Loads application.
  * Using simple text interface like "branch" tutorial until GUI is set up
  */
+
 public class Main implements ActionListener {
 
 	// command line reader 
@@ -37,7 +38,23 @@ public class Main implements ActionListener {
 	private JTextField usernameField;
 	private JPasswordField passwordField;
 	private JFrame mainFrame;
-
+	
+	//special method, we call multiple methods, so we need to hold string values for JtextFields
+	String str1 = null;
+	String str2 = null;
+	
+	public void setString1(String str){
+		this.str1 = str;
+	}
+	public void setString2(String str){
+		this.str2 = str;
+	}
+	public String getString1(){
+		return str1;
+	}
+	public String getString2(){
+		return str2;
+	}
 
     /*
      * constructs login window and loads JDBC driver
@@ -940,7 +957,10 @@ public class Main implements ActionListener {
 			payFinesSearch.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String borrower = payFinesBorrowertxt.getText();
+	    			setString1(borrower);
+	    			//System.out.println("Search: " + borrower);
 	    			//BorrowerUser.payFineSearch(borrower);
+	    			
 	    		}
 	    	});
 			payFinesCancel.addActionListener(new ActionListener() {
@@ -953,7 +973,9 @@ public class Main implements ActionListener {
 			payFinesPay.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String fineID = payFinesFinetxt.getText();
-	    			//BorrowerUser.payFine(fineID);
+	    			String borrower = getString1();
+	    			//System.out.println("Pay: " + borrower);
+	    			//BorrowerUser.payFine(borrower, fineID);
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {
