@@ -252,16 +252,26 @@ public class Main implements ActionListener {
 		//make reportCheckOutBooks frame and panel
 			final JFrame reportCheckedoutBooksFrame = new JFrame("Report Checked out Books");
 			final JPanel toppanelreportCheckedoutBooks = new JPanel();
+			final JPanel panelreportCheckedoutBooksNorth = new JPanel(); //has multiple things inside so we need to make a panel to contain it
 			toppanelreportCheckedoutBooks.setLayout(new BoxLayout(toppanelreportCheckedoutBooks, BoxLayout.Y_AXIS));
-			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);
-			final JPanel panelreportCheckedoutBooksNorth = new JPanel(); //has multiple things inside so we need to make a panel to contain it			
-			panelreportCheckedoutBooksNorth.setLayout(new FlowLayout()); //set the layout to go from left->right			
+			panelreportCheckedoutBooksNorth.setLayout(new FlowLayout()); //set the layout to go from left->right
+			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);			
 			reportCheckedoutBooksFrame.setPreferredSize(new Dimension(800,600));
 			reportCheckedoutBooksFrame.setLocationRelativeTo(null);
 			
 		//make mostPopular frame and panel
+			int ROWSmostPopular = 3;
+			int COLUMNSmostPopular = 2;
 			final JFrame mostPopularFrame = new JFrame("Most Popular");
-			final JPanel panelmostPopular = new JPanel();
+			final JPanel toppanelmostPopular = new JPanel();
+			final JPanel panelmostPopularNorth = new JPanel();
+			final JPanel panelmostPopularSouth = new JPanel();
+			toppanelmostPopular.setLayout(new BoxLayout(toppanelmostPopular, BoxLayout.Y_AXIS));
+			panelmostPopularNorth.setLayout(new GridLayout(ROWSmostPopular, COLUMNSmostPopular));
+			panelmostPopularSouth.setLayout(new FlowLayout());
+			mostPopularFrame.getContentPane().add(toppanelmostPopular);
+			mostPopularFrame.setPreferredSize(new Dimension(870, 630));
+			mostPopularFrame.setLocationRelativeTo(null);
 			
 		//making labels
 			JLabel isbn = new JLabel("ISBN:");
@@ -273,6 +283,11 @@ public class Main implements ActionListener {
 			JLabel subjects = new JLabel("Subjects: (place commas in between)");
 			JLabel authors = new JLabel("Authors: (place commas in between)");
 			JLabel reportCheckedOutBooksSubject = new JLabel("Subject:");
+			JLabel mostPopularLabel1 = new JLabel("Generating a report with most popular items.");
+			JLabel mostPopularLabel2 = new JLabel("Please specify how many books you wish to add into the report:");
+			JLabel mostPopularLabel3 = new JLabel("Please specify the year you wish to report:");
+			JLabel mostPopularLabel4 = new JLabel(""); //empty space
+			
 			
 		//making buttons
 			JButton addBook = new JButton("Add Book");
@@ -289,6 +304,8 @@ public class Main implements ActionListener {
 			JButton enterreportCheckedOutBooks = new JButton("Enter");
 			JButton clearreportCheckedOutBooks = new JButton("Clear");
 			JButton okayreportCheckedOutBooks = new JButton("Okay");
+			JButton entermostPopular = new JButton("Enter");
+			JButton cancelmostPopular = new JButton("Cancel");
 			
 		//making text field
 			final JTextField isbntxtaddNewBookCopy = new JTextField();
@@ -300,13 +317,20 @@ public class Main implements ActionListener {
 			final JTextField subjectstxt = new JTextField();
 			final JTextField authorstxt = new JTextField();
 			final JTextField reportCheckedOutBookstxt = new JTextField();
+			final JTextField mostPopulartxt1 = new JTextField();
+			final JTextField mostPopulartxt2 = new JTextField();
+			//final JTextField mostPopulartxt3 = new JTextField();
+			
 			
 		//set size of text field
 			reportCheckedOutBookstxt.setPreferredSize(new Dimension(400, 30));
 			
 		//make text area
 			final JTextArea reportCheckedOutBookstxtarea = new JTextArea();
+			final JTextArea mostPopulartxtarea = new JTextArea();
+			
 			reportCheckedOutBookstxtarea.setPreferredSize(new Dimension(800, 500));
+			mostPopulartxtarea.setPreferredSize(new Dimension(800, 500));
 			//setupButton(addBook, panelLibrarianMenu);
 			//setupButton(reportCheckedOutBooks, panelLibrarianMenu);
 			
@@ -367,9 +391,24 @@ public class Main implements ActionListener {
 			panelreportCheckedoutBooksNorth.add(reportCheckedOutBookstxt);
 			panelreportCheckedoutBooksNorth.add(enterreportCheckedOutBooks);
 			panelreportCheckedoutBooksNorth.add(clearreportCheckedOutBooks);
+			//append panels tgt
 			toppanelreportCheckedoutBooks.add(panelreportCheckedoutBooksNorth);
 			toppanelreportCheckedoutBooks.add(reportCheckedOutBookstxtarea);
 			toppanelreportCheckedoutBooks.add(okayreportCheckedOutBooks);
+			
+			panelmostPopularNorth.add(mostPopularLabel1);
+			panelmostPopularNorth.add(mostPopularLabel4);
+			panelmostPopularNorth.add(mostPopularLabel2);
+			panelmostPopularNorth.add(mostPopulartxt1);
+			panelmostPopularNorth.add(mostPopularLabel3);
+			panelmostPopularNorth.add(mostPopulartxt2);
+			toppanelmostPopular.add(mostPopulartxtarea);
+			panelmostPopularSouth.add(entermostPopular);
+			panelmostPopularSouth.add(cancelmostPopular);
+			//append panels tgt
+			toppanelmostPopular.add(panelmostPopularNorth);
+			toppanelmostPopular.add(mostPopulartxtarea);
+			toppanelmostPopular.add(panelmostPopularSouth);
 			
 			//splitpanelreportCheckedoutBooksV.add(reportCheckedOutBookstxt);
 			//splitpanelreportCheckedoutBooksBottomV.add(reportCheckedOutBookstxtarea);
@@ -414,7 +453,9 @@ public class Main implements ActionListener {
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			
+	    			mostPopularFrame.getContentPane().add(toppanelmostPopular);
+	    			mostPopularFrame.pack();
+	    			mostPopularFrame.setVisible(true);
 	    		}
 	    	});
 			addNewBook.addActionListener(new ActionListener() {
@@ -604,7 +645,7 @@ public class Main implements ActionListener {
 			final JPanel paneladdBorrowerResult = new JPanel();
 			GridLayout layout = new GridLayout(ADDBORROWERROWS, COLUMNS);
 			paneladdBorrower.setLayout(layout);
-			addBorrowerFrame.setPreferredSize(new Dimension (300, 200));
+			addBorrowerFrame.setPreferredSize(new Dimension (400, 250));
 			addBorrowerFrame.setLocationRelativeTo(null);
 			
 		//make addNewBookCopy frame and panel
@@ -852,67 +893,6 @@ public class Main implements ActionListener {
     	
     	userMenu.pack();
     	userMenu.setVisible(true);
-    	
-    	
-    /**
-     * the old stuff using console to use the program
-     */
- /*
-	int choice;
-	boolean quit;
-
-	quit = false;
-	
-	try 
-	{
-	    // disable auto commit mode
-	    con.setAutoCommit(false);
-
-	    while (!quit)
-	    {
-		System.out.print("\n\nPlease choose one of the following: \n");
-		System.out.print("1.  Borrower\n");
-		System.out.print("2.  Clerk\n");
-		System.out.print("3.  Librarian\n");
-		System.out.print("4.  Quit\n>>");
-
-		choice = Integer.parseInt(in.readLine());
-		
-		System.out.println(" ");
-
-		switch(choice)
-		{
-		   case 1:  BorrowerUser.main(); break;
-		   case 2:  ClerkUser.main(); break;
-		   case 3:  LibrarianUser.main(); break;
-		   case 4:  quit = true; 
-		}
-	    }
-
-	    con.close();
-        in.close();
-	    System.out.println("\nGood Bye!\n\n");
-	    System.exit(0);
-	}
-	catch (IOException e)
-	{
-	    System.out.println("IOException!");
-
-	    try
-	    {
-		con.close();
-		System.exit(-1);
-	    }
-	    catch (SQLException ex)
-	    {
-		 System.out.println("Message: " + ex.getMessage());
-	    }
-	}
-	catch (SQLException ex)
-	{
-	    System.out.println("Message: " + ex.getMessage());
-	}
-*/
     }
 
     public static void main(String args[])
