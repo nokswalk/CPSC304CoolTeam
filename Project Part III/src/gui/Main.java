@@ -477,7 +477,7 @@ public class Main implements ActionListener {
 	    		}
 	    	});
 			clearreportCheckedOutBooks.addActionListener(new ActionListener() { //kill the frame
-	    		public void actionPerformed(ActionEvent e) {//TODO table
+	    		public void actionPerformed(ActionEvent e) {
 	    			if (modelCB.getRowCount() > 0) {
 	    			    for (int i = modelCB.getRowCount() - 1; i > -1; i--) {
 	    			    	modelCB.removeRow(i);
@@ -737,7 +737,7 @@ public class Main implements ActionListener {
 			JButton payFinesCancel = new JButton("Cancel");
 			JButton payFinesPay = new JButton("Pay");
 			JButton payFinesClear = new JButton("Clear");
-			//TODO: payfine table
+			//payfine table
 			String[] columnNamesPF = {"Fine ID", "Amount", "Issued Date"};
 			final DefaultTableModel modelPF = new DefaultTableModel(null, columnNamesPF);
 			final JTable tablePF = new JTable(modelPF);
@@ -858,7 +858,7 @@ public class Main implements ActionListener {
 			panelpayFinesSouth.add(payFinesCancel);
 			toppayFinespanel.add(panelpayFinesNorth);
 			toppayFinespanel.add(scrollPanePF);// here
-//			toppayFinespanel.add(payFinestxtarea);//TODO if txt area neede, just uncomment it and comment 'here'
+			toppayFinespanel.add(payFinestxtarea);//TODO if txt area not needed, just comment it
 			toppayFinespanel.add(panelpayFinesSouth);
 			
 		//add borrower menu to the frame
@@ -964,7 +964,7 @@ public class Main implements ActionListener {
 	    			authortxt.setText(null);
 	    		}
 	    	});
-			searchAuthorClear.addActionListener(new ActionListener() {//TODO
+			searchAuthorClear.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			if (modelsearchbyA.getRowCount() > 0) {
 	    			    for (int i = modelsearchbyA.getRowCount() - 1; i > -1; i--) {
@@ -1068,6 +1068,8 @@ public class Main implements ActionListener {
 	    	});
 			payFinesPay.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(payFinestxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			String fineID = payFinesFinetxt.getText();
 	    			BorrowerUser.payFine(fineID);
 	    		}
