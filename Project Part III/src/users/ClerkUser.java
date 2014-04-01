@@ -299,19 +299,26 @@ public class ClerkUser {
 			ps4 = Main.con.prepareStatement("UPDATE BookCopy SET status='in' WHERE callNumber= ? AND copyNo= ?");
 
 			s = Main.con.createStatement();
+			
+			// check that this item is out of the library
+			ResultSet rs = s.executeQuery("SELECT * from BookCopy where status='out' "
+					+ "AND callNumber=" + callNumber + " AND copyNo=" + copyNo);
+			if (!rs.next()) {
+				System.out.println("This item has not been borrowed, please check the call number and copy number.");
+			}
 
 			// get borid and bid of borrowing
-			ResultSet rs = s.executeQuery("SELECT A.borid, A.bid, A.outDate, C.bookTimeLimit "
+			ResultSet rs1 = s.executeQuery("SELECT A.borid, A.bid, A.outDate, C.bookTimeLimit "
 					+ "FROM Borrowing A, Borrower B, BorrowerType C "
 					+ "WHERE A.callNumber=" + callNumber + " AND A.copyNo=" + copyNo
 					+ " AND A.bid=B.bid AND B.type=C.type");
-			if (!rs.next()) {
+			if (!rs1.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
 				return;
 			}
-			borid = rs.getInt(1);
-			bid = rs.getInt(2);
-			outDate = rs.getDate(3);
+			borid = rs1.getInt(1);
+			bid = rs1.getInt(2);
+			outDate = rs1.getDate(3);
 
 			// update borrowing so that inDate is set
 			GregorianCalendar gregToday = new GregorianCalendar();
