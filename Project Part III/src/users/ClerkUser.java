@@ -16,6 +16,9 @@ import java.util.List;
  */
 public class ClerkUser {
 
+
+	static List<Integer> overdueBids;
+	
 	private static List<Object[]> checkOverdueData;
 	public static List<Object[]> getCheckOverdueData(){
 		return checkOverdueData;
@@ -241,9 +244,7 @@ public class ClerkUser {
 
 				ps1.executeUpdate();
 
-				System.out.println(callNumber + " " + copyNo + " has been checked out.");
 				BorrowerUser.infoBox(callNumber + " " + copyNo + " has been checked out.", "success");
-
 
 
 				// update book copy status
@@ -314,10 +315,16 @@ public class ClerkUser {
 			s = Main.con.createStatement();
 			
 			// check that this item is out of the library
-			ResultSet rs = s.executeQuery("SELECT * from BookCopy where status='out' "
+			ResultSet rs = s.executeQuery("SELECT * from BookCopy where status='in' "
 					+ "AND callNumber=" + callNumber + " AND copyNo=" + copyNo);
-			if (!rs.next()) {
+			if (rs.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
+				ps1.close();
+				ps2.close();
+				ps3.close();
+				ps4.close();
+				s.close();
+				return;
 			}
 
 			// get borid and bid of borrowing
@@ -328,6 +335,11 @@ public class ClerkUser {
 			if (!rs1.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
 				BorrowerUser.infoBox("This item has not been borrowed, please check the call number and copy number.", "error");
+				ps1.close();
+				ps2.close();
+				ps3.close();
+				ps4.close();
+				s.close();
 				return;
 			}
 			borid = rs1.getInt(1);
@@ -397,6 +409,7 @@ public class ClerkUser {
 			ps2.close();
 			ps3.close();
 			ps4.close();
+			s.close();
 
 		}
 		catch (NumberFormatException ne) {
@@ -507,23 +520,23 @@ public class ClerkUser {
 			}
 
 			// Clerk can send an email to each user or all users
-			List<String> bidsS = Arrays.asList(bidsSS.split(","));
+//			List<String> bidsS = Arrays.asList(bidsSS.split(","));
 
-			System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
-					+ "or input 'all' to send a message to all borrowers: ");
+			//System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
+			//		+ "or input 'all' to send a message to all borrowers: ");
 			//bidsS = Arrays.asList(Main.in.readLine().split(","));
 
-			if (bidsS.get(0).equals("all")){
-				for (int b : overdueBids) {
-					sendEmailOverdue(b);
-				}
-			}
-			else {
-				for (String bs: bidsS){
-					int b = Integer.parseInt(bs.trim());
-					sendEmailOverdue(b);
-				}
-			}
+//			if (bidsS.get(0).equals("all")){
+//				for (int b : overdueBids) {
+//					sendEmailOverdue(b);
+//				}
+//			}
+//			else {
+//				for (String bs: bidsS){
+//					int b = Integer.parseInt(bs.trim());
+//					sendEmailOverdue(b);
+//				}
+//			}
 
 			// close the statement;
 			// the ResultSet will also be closed
@@ -534,6 +547,27 @@ public class ClerkUser {
 			System.err.println("Message: " + ex.getMessage());
 		}
 
+	}
+	
+	
+	
+	public static void sendEmail(String bidsSS){
+		List<String> bidsS = Arrays.asList(bidsSS.split(","));
+
+		if (bidsS.get(0).trim().equals("")){
+			BorrowerUser.infoBox("No ID entered", "error");
+		}
+		else if (bidsS.get(0).equals("all")){
+			for (int b : overdueBids) {
+				sendEmailOverdue(b);
+			}
+		}
+		else {
+			for (String bs: bidsS){
+				int b = Integer.parseInt(bs.trim());
+				sendEmailOverdue(b);
+			}
+		}
 	}
 	
 	// Sends email to borrower with overdue item
