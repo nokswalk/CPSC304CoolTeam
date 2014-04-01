@@ -8,7 +8,11 @@ import java.sql.Date;
 import java.util.*;
 
 public class LibrarianUser {
-
+	
+	static String[][] mostPopularData;
+	public static String[][] getMostPopularData(){
+		return mostPopularData;
+	}
 	/*
 	 * Loads librarian's side of application.
 	 * Uses buffer line reader and connection established in Main class.
@@ -485,23 +489,28 @@ public class LibrarianUser {
 			ResultSetMetaData rsmd = query.getMetaData();
 			// get number of columns
 			int numCols = rsmd.getColumnCount();
-			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
 				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
 			}
 			System.out.println(" ");
-			
+			mostPopularData = new String[amount][numCols];
 			for(int i = 0; i < amount; i++){
 				if (!query.next()) {
 					System.out.println("End of results");
 					return;
 				}
 				// simplified output formatting; truncation may occur
+				Integer callNumber = query.getInt("callNumber");
 				String title = query.getString("title");
 				String isbn = query.getString("isbn");
 				String mainAuthor = query.getString("mainAuthor");
-				int count = query.getInt("count");
+				Integer count = query.getInt("count");
+				mostPopularData[i][0] = callNumber.toString();
+				mostPopularData[i][1] = title;
+				mostPopularData[i][2] = mainAuthor;
+				mostPopularData[i][3] = isbn;
+				mostPopularData[i][4] = count.toString();
 
 				System.out.printf("%-30.30s", title);
 				System.out.printf("%-20.20s", mainAuthor);

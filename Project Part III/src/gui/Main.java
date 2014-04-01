@@ -9,6 +9,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import users.BorrowerUser;
 import users.ClerkUser;
@@ -96,17 +100,17 @@ public class Main implements ActionListener {
 
 		passwordField.addActionListener(this);
 		loginButton.addActionListener(this);
-		loginButton.addActionListener(new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    			mainFrame.dispose();
-    			try {
-    				showUserMenu();
-    			} catch (ParseException e1) {
-    				// TODO Auto-generated catch block
-    				e1.printStackTrace();
-    			}     
-    		}
-    	});
+//		loginButton.addActionListener(new ActionListener() {
+//    		public void actionPerformed(ActionEvent e) {
+//    			mainFrame.dispose();
+//    			try {
+//    				showUserMenu();
+//    			} catch (ParseException e1) {
+//    				// TODO Auto-generated catch block
+//    				e1.printStackTrace();
+//    			}     
+//    		}
+//    	});
 
 		// anonymous inner class for closing the window
 		mainFrame.addWindowListener(new WindowAdapter() 
@@ -323,7 +327,14 @@ public class Main implements ActionListener {
 		//make text area
 			final JTextArea reportCheckedOutBookstxtarea = new JTextArea();
 			final JTextArea mostPopulartxtarea = new JTextArea();
-			
+
+		//making table for most popular
+			String[] columnNamesMP = { "CALL NUMBER", "TITLE", "MAIN AUTHOR", "ISBN" , "COUNT" };
+			final DefaultTableModel model = new DefaultTableModel(null,columnNamesMP);
+			final JTable table = new JTable(model);
+			JScrollPane scrollPane = new JScrollPane(table);
+			table.setFillsViewportHeight(true);
+
 			reportCheckedOutBookstxtarea.setPreferredSize(new Dimension(800, 500));
 			mostPopulartxtarea.setPreferredSize(new Dimension(800, 500));
 		//center align buttons
@@ -389,13 +400,14 @@ public class Main implements ActionListener {
 			panelmostPopularNorth.add(mostPopulartxt1);
 			panelmostPopularNorth.add(mostPopularLabel3);
 			panelmostPopularNorth.add(mostPopulartxt2);
-			toppanelmostPopular.add(mostPopulartxtarea);
+//			toppanelmostPopular.add(mostPopulartxtarea);
 			panelmostPopularSouth.add(entermostPopular);
 			panelmostPopularSouth.add(clearmostPopular);
 			panelmostPopularSouth.add(cancelmostPopular);
 			//append panels tgt
 			toppanelmostPopular.add(panelmostPopularNorth);
-			toppanelmostPopular.add(mostPopulartxtarea);
+			toppanelmostPopular.add(scrollPane);
+//			toppanelmostPopular.add(mostPopulartxtarea);
 			toppanelmostPopular.add(panelmostPopularSouth);
 
 		//add the panel into JFrame
@@ -443,7 +455,7 @@ public class Main implements ActionListener {
 	    			//we set standard output stream to printstream instead so that it can go to the GUI now
 	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(mostPopulartxtarea, "Console output");
 	    			System.setOut(new PrintStream(taOutputStream));
-	    			mostPopularFrame.getContentPane().add(toppanelmostPopular);
+//	    			mostPopularFrame.getContentPane().add(toppanelmostPopular);
 	    			mostPopularFrame.pack();
 	    			mostPopularFrame.setVisible(true);
 
@@ -454,12 +466,20 @@ public class Main implements ActionListener {
 	    			String howManyBooks = mostPopulartxt1.getText();
 	    			String year = mostPopulartxt2.getText();
 	    			LibrarianUser.mostPopular(howManyBooks, year);
-	    			mostPopulartxt1.setText(null);
+	    			String[][] hello = LibrarianUser.getMostPopularData();
+	    			for(int i = 0; i< Integer.parseInt(howManyBooks); i++){
+		    			model.addRow(hello[i]);
+	    			}
+//	    			mostPopulartxt1.setText(null);
 	    			mostPopulartxt2.setText(null);
 	    		}
 	    	});
 			clearmostPopular.addActionListener(new ActionListener() { //kill the frame
 	    		public void actionPerformed(ActionEvent e) {
+	    			int rowCount=model.getRowCount();
+	    			for (int i = 0;i<rowCount;i++) {
+	    			    model.removeRow(i);
+	    			}
 	    			mostPopulartxtarea.setText(null);
 	    		}
 	    	});
