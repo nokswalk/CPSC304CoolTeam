@@ -477,7 +477,12 @@ public class Main implements ActionListener {
 	    		}
 	    	});
 			clearreportCheckedOutBooks.addActionListener(new ActionListener() { //kill the frame
-	    		public void actionPerformed(ActionEvent e) {
+	    		public void actionPerformed(ActionEvent e) {//TODO table
+	    			if (modelCB.getRowCount() > 0) {
+	    			    for (int i = modelCB.getRowCount() - 1; i > -1; i--) {
+	    			    	modelCB.removeRow(i);
+	    			    }
+	    			}
 	    			reportCheckedOutBookstxtarea.setText(null);
 	    		}
 	    	});
