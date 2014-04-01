@@ -615,16 +615,28 @@ public class Main implements ActionListener {
 			checkAccountFrame.setLocationRelativeTo(null);
 			
 		//make holdrequest
+			int ROWholdrequest = 3;
+			int COLUMNholdrequest = 2;
+			final JFrame holdRequestFrame = new JFrame("Hold Request");
+			final JPanel panelholdRequest = new JPanel();
+			panelholdRequest.setLayout(new GridLayout(ROWholdrequest, COLUMNholdrequest));
+			holdRequestFrame.getContentPane().add(panelholdRequest);
+			holdRequestFrame.setPreferredSize(new Dimension(500, 100));
+			holdRequestFrame.setLocationRelativeTo(null);
 			
 		//make payfines
-
+			//TODO
+			
 		//making labels
 			//Search Book
 			JLabel titleLabel = new JLabel("Title keyword:");
 			JLabel subjectLabel = new JLabel("Subject keyword:");
 			JLabel authorLabel = new JLabel("Author keyword:");
 			//Check Account
-			JLabel checkAccountLabel = new JLabel("User Borrower ID:");
+			JLabel checkAccountLabel = new JLabel("Borrower ID:");
+			//Hold Request
+			JLabel holdRequestBorrowerLabel = new JLabel("Borrower ID:");
+			JLabel holdRequestBookLabel = new JLabel("Book call number:");
 		
 		//make some buttons
 			JButton searchBook = new JButton("Search Book");
@@ -650,7 +662,10 @@ public class Main implements ActionListener {
 			JButton checkAccountSearch = new JButton("Search");
 			JButton checkAccountClear = new JButton("Clear");
 			JButton checkAccountCancel = new JButton("Cancel");
-			
+			//Request Hold buttons
+			JButton requestHoldHold = new JButton("Hold");
+			JButton requestHoldCancel = new JButton("Cancel");
+
 		//making text field
 			//Search Book
 			final JTextField authortxt = new JTextField();
@@ -658,6 +673,9 @@ public class Main implements ActionListener {
 			final JTextField titletxt = new JTextField();
 			//Check Account
 			final JTextField checkAccounttxt = new JTextField();
+			//Request Hold
+			final JTextField requestHoldBorrowertxt = new JTextField();
+			final JTextField requestHoldBooktxt = new JTextField();
 			
 		//set size of text field
 			//Search Book
@@ -690,17 +708,18 @@ public class Main implements ActionListener {
 			menu.setPreferredSize(new Dimension(200, 300));
 
 		//attaching buttons to the frame
+			//Menu
 			panelBorrowerMenu.add(searchBook);
 			panelBorrowerMenu.add(checkAccount);
 			panelBorrowerMenu.add(requestHold);
 			panelBorrowerMenu.add(payFines);
 			panelBorrowerMenu.add(quit);
-
+			//Submenu
 			panelBorrowerSubmenu.add(searchBookbyAuthor);
 			panelBorrowerSubmenu.add(searchBookbySubject);
 			panelBorrowerSubmenu.add(searchBookbyTitle);
 			panelBorrowerSubmenu.add(back);
-			
+			//Search by Author
 			panelsearchAuthorNorth.add(authorLabel);
 			panelsearchAuthorNorth.add(authortxt);
 			panelsearchAuthorNorth.add(searchAuthorSearch);
@@ -708,7 +727,7 @@ public class Main implements ActionListener {
 			panelsearchAuthorNorth.add(searchAuthorCancel);
 			toppanelsearchAuthor.add(panelsearchAuthorNorth);
 			toppanelsearchAuthor.add(authortxtarea);
-			
+			//Search by Subject
 			panelsearchSubjectNorth.add(subjectLabel);
 			panelsearchSubjectNorth.add(subjecttxt);
 			panelsearchSubjectNorth.add(searchSubjectSearch);
@@ -716,7 +735,7 @@ public class Main implements ActionListener {
 			panelsearchSubjectNorth.add(searchSubjectCancel);
 			toppanelsearchSubject.add(panelsearchSubjectNorth);
 			toppanelsearchSubject.add(subjecttxtarea);
-			
+			//Search by Title
 			panelsearchTitleNorth.add(titleLabel);
 			panelsearchTitleNorth.add(titletxt);
 			panelsearchTitleNorth.add(searchTitleSearch);
@@ -724,7 +743,7 @@ public class Main implements ActionListener {
 			panelsearchTitleNorth.add(searchTitleCancel);
 			toppanelsearchTitle.add(panelsearchTitleNorth);
 			toppanelsearchTitle.add(titletxtarea);
-			
+			//Check Account
 			panelcheckAccountNorth.add(checkAccountLabel);
 			panelcheckAccountNorth.add(checkAccounttxt);
 			panelcheckAccountNorth.add(checkAccountSearch);
@@ -732,6 +751,13 @@ public class Main implements ActionListener {
 			panelcheckAccountNorth.add(checkAccountCancel);
 			toppanelcheckAccount.add(panelcheckAccountNorth);
 			toppanelcheckAccount.add(checkAccounttxtarea);
+			//Request Hold
+			panelholdRequest.add(holdRequestBorrowerLabel);
+			panelholdRequest.add(requestHoldBorrowertxt);
+			panelholdRequest.add(holdRequestBookLabel);
+			panelholdRequest.add(requestHoldBooktxt);
+			panelholdRequest.add(requestHoldHold);
+			panelholdRequest.add(requestHoldCancel);
 			
 		//add borrower menu to the frame
 			menu.getContentPane().add(panelBorrowerMenu);
@@ -850,7 +876,23 @@ public class Main implements ActionListener {
 	    	});
 			requestHold.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-
+	    			holdRequestFrame.getContentPane().add(panelholdRequest);
+	    			holdRequestFrame.pack();
+	    			holdRequestFrame.setVisible(true);
+	    		}
+	    	});
+			requestHoldHold.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String borrower = requestHoldBorrowertxt.getText();
+	    			String book = requestHoldBooktxt.getText();
+	    			BorrowerUser.requestHold(borrower, book);
+	    		}
+	    	});
+			requestHoldCancel.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			requestHoldBorrowertxt.setText(null);
+	    			requestHoldBooktxt.setText(null);
+	    			holdRequestFrame.dispose();
 	    		}
 	    	});
 			payFines.addActionListener(new ActionListener() {
