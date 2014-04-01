@@ -1038,7 +1038,22 @@ public class Main implements ActionListener {
 	    	});
 			checkAccountClear.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			checkAccounttxtarea.setText(null);
+					if (modelLoanC.getRowCount() > 0) {
+						for (int i = modelLoanC.getRowCount() - 1; i > -1; i--) {
+							modelLoanC.removeRow(i);
+						}
+					}
+					if (modelFineC.getRowCount() > 0) {
+						for (int i = modelFineC.getRowCount() - 1; i > -1; i--) {
+							modelFineC.removeRow(i);
+						}
+					}
+					if (modelHoldC.getRowCount() > 0) {
+						for (int i = modelHoldC.getRowCount() - 1; i > -1; i--) {
+							modelHoldC.removeRow(i);
+						}
+					}
+					checkAccounttxtarea.setText(null);
 	    		}
 	    	});
 			checkAccountCancel.addActionListener(new ActionListener() {
