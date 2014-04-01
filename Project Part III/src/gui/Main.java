@@ -807,6 +807,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyTitle.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(titletxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchTitleFrame.getContentPane().add(toppanelsearchTitle);
 	    			searchTitleFrame.pack();
 	    			searchTitleFrame.setVisible(true);
