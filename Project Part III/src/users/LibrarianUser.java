@@ -57,6 +57,7 @@ public class LibrarianUser {
 			if (rs.next()) {
 				System.out.println("This book already exists in the library database."
 						+ "\nPlease select 'New copy' in the 'Add book' menu.");
+				BorrowerUser.infoBox("This book already exists in the library database. Please select 'New copy' in the 'Add book' menu.", "Error");
 				s.close();
 				ps1.close();
 				ps2.close();
@@ -122,6 +123,7 @@ public class LibrarianUser {
 			// commit work 
 			Main.con.commit();
 			System.out.println("Book has been added successfully.");
+			BorrowerUser.infoBox("Book has been added successfully.", "Success");
 
 			ps1.close();
 			ps2.close();
@@ -132,6 +134,7 @@ public class LibrarianUser {
 
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "Error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -198,10 +201,13 @@ public class LibrarianUser {
 				// commit work 
 				Main.con.commit();
 				System.out.println("Book copy has been added successfully.");
+				BorrowerUser.infoBox("Book copy has been added successfully.", "Success");
+				
 			}
 			else {
 				System.out.println("This book does not exist in the database yet."
 						+ "/nPlease select 'New book' in the 'Add book' menu.");
+				BorrowerUser.infoBox("This book does not exist in the database yet. Please select 'New book' in the 'Add book' menu.", "Error");
 			}
 
 			ps.close();
@@ -209,6 +215,7 @@ public class LibrarianUser {
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "Error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
