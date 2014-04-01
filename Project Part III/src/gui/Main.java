@@ -1048,7 +1048,7 @@ public class Main implements ActionListener {
 			panelcheckOutItemsrNorth.setLayout(new GridLayout(ROWScheckOutItems, COLUMNScheckOutItems));
 			panelcheckOutItemsSouth.setLayout(new FlowLayout());
 			checkOutItemsFrame.getContentPane().add(toppanelcheckOutItems);
-			checkOutItemsFrame.setPreferredSize(new Dimension(800, 600));
+			checkOutItemsFrame.setPreferredSize(new Dimension(800, 80));
 			checkOutItemsFrame.setLocationRelativeTo(null);
 			
 		//make processReturn frame and panel and setup layout, size of frame, location of frame
@@ -1079,7 +1079,7 @@ public class Main implements ActionListener {
 		//making labels
 			//checkOutItems
 			JLabel checkOutItemsBorrowerlabel = new JLabel("Borrower ID:");
-			JLabel checkOutItemsCallCopylabel = new JLabel("Call Number and Copy Number: (Each entry separated by a ,)");
+			JLabel checkOutItemsCallCopylabel = new JLabel("Call Number and Copy Number: (e.i: 100 1, 200 1, 200 2)");
 			//JLabel checkOutItems4 = new JLabel(""); //empty space
 			//JLabel checkOutItems5 = new JLabel("Please list out copy number of books in order of specified call numbers:");
 			JLabel checkOutItemsResultLabel = new JLabel("");
@@ -1261,6 +1261,9 @@ public class Main implements ActionListener {
 	    			String bidstr = bidtxt.getText();
 	    			String callncopyNumberstr = callncopyNumberstxt.getText();
 	    			ClerkUser.checkOutItems(bidstr, callncopyNumberstr);
+	    			bidtxt.setText(null);
+	    			callncopyNumberstxt.setText(null);
+	    			checkOutItemsFrame.dispose();
 	    		}
 	    	});
 			
