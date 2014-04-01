@@ -61,6 +61,7 @@ public class ClerkUser {
 			if (rs.next()) {
 				System.err.println("This SIN or student number is already associated with an account."
 						+ "Please check the digits with the borrower.");
+				BorrowerUser.infoBox("This SIN or student number is already associated with an account.", "error");
 				s.close();
 				ps.close();
 				return;
@@ -83,10 +84,12 @@ public class ClerkUser {
 			ps.close();
 
 			System.out.println("New borrower successfully added to database.");
+			BorrowerUser.infoBox("New borrower successfully added to database.", "success");
 		}
 
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -266,14 +269,12 @@ public class ClerkUser {
 	 * registered as "on hold" and a message is send to the borrower who made the hold request. 
 	 */
 
-	public static void processReturn(String callAndCopyNoS) {
+	public static void processReturn(String callNumberS, String copyNoS) {
 
 		try {
 			// provided by clerk
-			List<String> callAndCopyNo = Arrays.asList(callAndCopyNoS.split(" "));
-
-			int callNumber = Integer.parseInt(callAndCopyNo.get(0).trim());
-			int copyNo = Integer.parseInt(callAndCopyNo.get(1).trim());
+			int callNumber = Integer.parseInt(callNumberS.trim());
+			int copyNo = Integer.parseInt(copyNoS.trim());
 
 			// determined by system
 			int					borid;

@@ -5,14 +5,18 @@ import java.awt.event.*;
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.JOptionPane;
 
 import users.BorrowerUser;
 import users.ClerkUser;
@@ -117,17 +121,17 @@ public class Main implements ActionListener {
 
 		passwordField.addActionListener(this);
 		loginButton.addActionListener(this);
-//		loginButton.addActionListener(new ActionListener() {
-//    		public void actionPerformed(ActionEvent e) {
-//    			mainFrame.dispose();
-//    			try {
-//    				showUserMenu();
-//    			} catch (ParseException e1) {
-//    				// TODO Auto-generated catch block
-//    				e1.printStackTrace();
-//    			}     
-//    		}
-//    	});
+		loginButton.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			mainFrame.dispose();
+    			try {
+    				showUserMenu();
+    			} catch (ParseException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}     
+    		}
+    	});
 
 		// anonymous inner class for closing the window
 		mainFrame.addWindowListener(new WindowAdapter() 
@@ -345,12 +349,19 @@ public class Main implements ActionListener {
 			final JTextArea reportCheckedOutBookstxtarea = new JTextArea();
 			final JTextArea mostPopulartxtarea = new JTextArea();
 
+		//making table for Report Checked out books
+			String[] columnNamesCB = {"CallNumber", "CopyNo", "Title", "Out Date", "BorrowerID", "Due Date" ,"Overdue"};
+			final DefaultTableModel modelCB = new DefaultTableModel(null, columnNamesCB);
+			final JTable tableCB = new JTable(modelCB);
+			JScrollPane scrollPaneCB = new JScrollPane(tableCB);
+			tableCB.setFillsViewportHeight(true);
+			
 		//making table for most popular
 			String[] columnNamesMP = { "CALL NUMBER", "TITLE", "MAIN AUTHOR", "ISBN" , "COUNT" };
-			final DefaultTableModel model = new DefaultTableModel(null,columnNamesMP);
-			final JTable table = new JTable(model);
-			JScrollPane scrollPane = new JScrollPane(table);
-			table.setFillsViewportHeight(true);
+			final DefaultTableModel modelMP = new DefaultTableModel(null,columnNamesMP);
+			final JTable tableMP = new JTable(modelMP);
+			JScrollPane scrollPaneMP = new JScrollPane(tableMP);
+			tableMP.setFillsViewportHeight(true);
 
 			reportCheckedOutBookstxtarea.setPreferredSize(new Dimension(800, 500));
 			mostPopulartxtarea.setPreferredSize(new Dimension(800, 500));
@@ -408,7 +419,8 @@ public class Main implements ActionListener {
 			panelreportCheckedoutBooksNorth.add(clearreportCheckedOutBooks);
 			//append panels tgt
 			toppanelreportCheckedoutBooks.add(panelreportCheckedoutBooksNorth);
-			toppanelreportCheckedoutBooks.add(reportCheckedOutBookstxtarea);
+			toppanelreportCheckedoutBooks.add(scrollPaneCB);
+//			toppanelreportCheckedoutBooks.add(reportCheckedOutBookstxtarea);
 			toppanelreportCheckedoutBooks.add(okayreportCheckedOutBooks);
 			
 			panelmostPopularNorth.add(mostPopularLabel1);
@@ -423,7 +435,7 @@ public class Main implements ActionListener {
 			panelmostPopularSouth.add(cancelmostPopular);
 			//append panels tgt
 			toppanelmostPopular.add(panelmostPopularNorth);
-			toppanelmostPopular.add(scrollPane);
+			toppanelmostPopular.add(scrollPaneMP);
 //			toppanelmostPopular.add(mostPopulartxtarea);
 			toppanelmostPopular.add(panelmostPopularSouth);
 
@@ -453,6 +465,11 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String subject =  reportCheckedOutBookstxt.getText();
 	    			LibrarianUser.reportCheckedOutBooks(subject);
+	    			List<String[]> rows = LibrarianUser.getCheckedoutReportData();
+	    			for(String[] row:rows){
+//	    				System.out.println(row[]);
+		    			modelCB.addRow(row);
+	    			}
 	    			reportCheckedOutBookstxt.setText(null);
 	    		}
 	    	});
@@ -483,19 +500,19 @@ public class Main implements ActionListener {
 	    			String howManyBooks = mostPopulartxt1.getText();
 	    			String year = mostPopulartxt2.getText();
 	    			LibrarianUser.mostPopular(howManyBooks, year);
-	    			String[][] hello = LibrarianUser.getMostPopularData();
+	    			String[][] rows = LibrarianUser.getMostPopularData();
 	    			for(int i = 0; i< Integer.parseInt(howManyBooks); i++){
-		    			model.addRow(hello[i]);
+		    			modelMP.addRow(rows[i]);
 	    			}
-//	    			mostPopulartxt1.setText(null);
+	    			mostPopulartxt1.setText(null);
 	    			mostPopulartxt2.setText(null);
 	    		}
 	    	});
 			clearmostPopular.addActionListener(new ActionListener() { //kill the frame
 	    		public void actionPerformed(ActionEvent e) {
-	    			int rowCount=model.getRowCount();
+	    			int rowCount=modelMP.getRowCount();
 	    			for (int i = 0;i<rowCount;i++) {
-	    			    model.removeRow(i);
+	    			    modelMP.removeRow(i);
 	    			}
 	    			mostPopulartxtarea.setText(null);
 	    		}
@@ -824,6 +841,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyTitle.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(titletxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchTitleFrame.getContentPane().add(toppanelsearchTitle);
 	    			searchTitleFrame.pack();
 	    			searchTitleFrame.setVisible(true);
@@ -850,6 +869,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbySubject.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(subjecttxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchSubjectFrame.getContentPane().add(toppanelsearchSubject);
 	    			searchSubjectFrame.pack();
 	    			searchSubjectFrame.setVisible(true);
@@ -876,6 +897,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyAuthor.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(authortxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchAuthorFrame.getContentPane().add(toppanelsearchAuthor);
 	    			searchAuthorFrame.pack();
 	    			searchAuthorFrame.setVisible(true);
@@ -938,6 +961,9 @@ public class Main implements ActionListener {
 	    			String borrower = requestHoldBorrowertxt.getText();
 	    			String book = requestHoldBooktxt.getText();
 	    			BorrowerUser.requestHold(borrower, book);
+	    			requestHoldBorrowertxt.setText(null);
+	    			requestHoldBooktxt.setText(null);
+	    			holdRequestFrame.dispose();
 	    		}
 	    	});
 			requestHoldCancel.addActionListener(new ActionListener() {
@@ -958,8 +984,7 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String borrower = payFinesBorrowertxt.getText();
 	    			setString1(borrower);
-	    			//System.out.println("Search: " + borrower);
-	    			//BorrowerUser.payFineSearch(borrower);
+	    			BorrowerUser.payFineSearch(borrower);
 	    			
 	    		}
 	    	});
@@ -973,9 +998,7 @@ public class Main implements ActionListener {
 			payFinesPay.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String fineID = payFinesFinetxt.getText();
-	    			String borrower = getString1();
-	    			//System.out.println("Pay: " + borrower);
-	    			//BorrowerUser.payFine(borrower, fineID);
+	    			BorrowerUser.payFine(fineID);
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {

@@ -5,9 +5,18 @@ import gui.Main;
 import java.sql.*;
 import java.util.GregorianCalendar;
 
+import javax.swing.JOptionPane;
+
 public class BorrowerUser {
 
 
+
+		public static void infoBox(String infoMessage, String titleBarMessage)
+		    {
+		        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBarMessage, JOptionPane.INFORMATION_MESSAGE);
+		    }
+		
+	
 	/*
 	 * Search for books using keyword search on titles, authors and subjects. The result is a list 
 	 * of books that match the search together with the number of copies that are in and out. 
@@ -457,6 +466,7 @@ public class BorrowerUser {
 					+ "WHERE bid=" + bid);
 			if (rs.next() == false) {
 				System.out.println("This is not a valid borrower ID.");
+				infoBox("This is not a valid borrower ID.", "Invalid BID");
 				s.close();
 				return;
 			}
@@ -467,6 +477,7 @@ public class BorrowerUser {
 					+ "WHERE bid=" + bid);
 			if (rs.next() == false) {
 				System.out.println("This is not a valid item call number.");
+				infoBox("This is not a valid item call number.", "Invalid call bumber");
 				s.close();
 				return;
 			}
@@ -478,6 +489,7 @@ public class BorrowerUser {
 					+ " AND status = 'in'");
 			if (rs.next()){
 				System.out.println("Book is currently available in the library.");
+				infoBox("Book is currently available in the library.", "Book unavailable");
 				return;
 			}
 
@@ -500,6 +512,7 @@ public class BorrowerUser {
 			ps.close();
 
 			System.out.println("Hold request placed. You will be notified by email when the book is available.");
+			infoBox("Hold request placed. You will be notified by email when the book is available.", "Request successful");
 		}
 
 		catch (SQLException ex) {
@@ -523,7 +536,7 @@ public class BorrowerUser {
 	 * Pay a fine.
 	 */
 	//Tony! this one is tricky theres a string input -> display fines -> input fid string
-	public static void displayFines(String bidS) {
+	public static void payFineSearch(String bidS) {
 		try
 		{
 			int		   bid = Integer.parseInt(bidS);
@@ -613,6 +626,8 @@ public class BorrowerUser {
 			Main.con.commit();
 
 			ps.close();
+			
+			System.out.println("Fine has been paid");
 		}
 
 		catch (SQLException ex) {
