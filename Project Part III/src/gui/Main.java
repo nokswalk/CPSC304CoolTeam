@@ -909,6 +909,8 @@ public class Main implements ActionListener {
 	    	});
 			checkAccount.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(checkAccounttxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			checkAccountFrame.getContentPane().add(toppanelcheckAccount);
 	    			checkAccountFrame.pack();
 	    			checkAccountFrame.setVisible(true);
@@ -959,6 +961,8 @@ public class Main implements ActionListener {
 	    	});
 			payFines.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(payFinestxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			payFinesFrame.getContentPane().add(toppayFinespanel);
 	    			payFinesFrame.pack();
 	    			payFinesFrame.setVisible(true);
@@ -1005,7 +1009,7 @@ public class Main implements ActionListener {
 		}
 		else if (user == 3){ //user is clerk
 			
-		//make addNewBook frame and panel
+		//make addBorrower frame and panel
 			int ADDBORROWERROWS = 8;
 			int COLUMNS = 2;
 

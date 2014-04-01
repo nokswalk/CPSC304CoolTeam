@@ -130,10 +130,10 @@ public class ClerkUser {
 
 	/*
 	 * Check-out items borrowed by a borrower. To borrow items, borrowers provide their card 
-	 * number and a list with the call numbers of the items they want to check out. The system 
-	 * determines if the borrower's account is valid and if the library items are available for 
-	 * borrowing. Then it creates one or more borrowing records and prints a note with the 
-	 * items and their due day (which is giver to the borrower).  
+	 * number and a list with the call numbers and copy numbers of the items they want to check out. 
+	 * The system determines if the borrower's account is valid and if the library items are available
+	 * for borrowing. Then it creates one or more borrowing records and prints a note with the items 
+	 * and their due day (which is given to the borrower).  
 	 */
 
 	public static void checkOutItems(String bidS, String callAndCopyNumbersS) {
