@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class ClerkUser {
 
+	static List<Integer> overdueBids;
+	
 	/*
 	 * Add a new borrower to the library.  
 	 * User should provide all required info.
@@ -493,23 +495,23 @@ public class ClerkUser {
 			}
 
 			// Clerk can send an email to each user or all users
-			List<String> bidsS = Arrays.asList(bidsSS.split(","));
+//			List<String> bidsS = Arrays.asList(bidsSS.split(","));
 
-			System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
-					+ "or input 'all' to send a message to all borrowers: ");
+			//System.out.print("\n\nPlease list IDs of borrowers you would like to send an overdue email to, "
+			//		+ "or input 'all' to send a message to all borrowers: ");
 			//bidsS = Arrays.asList(Main.in.readLine().split(","));
 
-			if (bidsS.get(0).equals("all")){
-				for (int b : overdueBids) {
-					sendEmailOverdue(b);
-				}
-			}
-			else {
-				for (String bs: bidsS){
-					int b = Integer.parseInt(bs.trim());
-					sendEmailOverdue(b);
-				}
-			}
+//			if (bidsS.get(0).equals("all")){
+//				for (int b : overdueBids) {
+//					sendEmailOverdue(b);
+//				}
+//			}
+//			else {
+//				for (String bs: bidsS){
+//					int b = Integer.parseInt(bs.trim());
+//					sendEmailOverdue(b);
+//				}
+//			}
 
 			// close the statement;
 			// the ResultSet will also be closed
@@ -520,6 +522,27 @@ public class ClerkUser {
 			System.err.println("Message: " + ex.getMessage());
 		}
 
+	}
+	
+	
+	
+	public static void sendEmail(String bidsSS){
+		List<String> bidsS = Arrays.asList(bidsSS.split(","));
+
+		if (bidsS.get(0).trim().equals("")){
+			BorrowerUser.infoBox("No ID entered", "error");
+		}
+		else if (bidsS.get(0).equals("all")){
+			for (int b : overdueBids) {
+				sendEmailOverdue(b);
+			}
+		}
+		else {
+			for (String bs: bidsS){
+				int b = Integer.parseInt(bs.trim());
+				sendEmailOverdue(b);
+			}
+		}
 	}
 	
 	// Sends email to borrower with overdue item
