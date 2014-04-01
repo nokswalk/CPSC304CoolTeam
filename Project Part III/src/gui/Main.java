@@ -1291,7 +1291,7 @@ public class Main implements ActionListener {
 			panelcheckOverdueItemsSouth.add(emailcheckOverdueItems);
 			toppanelcheckOverdueItems.add(panelcheckOverdueItemsNorth);
 			toppanelcheckOverdueItems.add(scrollPaneCheckOverdue);
-			toppanelcheckOverdueItems.add(checkOverdueItemstxtarea);
+//			toppanelcheckOverdueItems.add(checkOverdueItemstxtarea);
 			toppanelcheckOverdueItems.add(panelcheckOverdueItemsSouth);
 			
 		//add listeners to the buttons
