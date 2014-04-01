@@ -536,7 +536,7 @@ public class BorrowerUser {
 	 * Pay a fine.
 	 */
 	//Tony! this one is tricky theres a string input -> display fines -> input fid string
-	public static void displayFines(String bidS) {
+	public static void payFineSearch(String bidS) {
 		try
 		{
 			int		   bid = Integer.parseInt(bidS);
@@ -626,6 +626,8 @@ public class BorrowerUser {
 			Main.con.commit();
 
 			ps.close();
+			
+			System.out.println("Fine has been paid");
 		}
 
 		catch (SQLException ex) {

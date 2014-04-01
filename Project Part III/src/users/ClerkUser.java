@@ -269,14 +269,12 @@ public class ClerkUser {
 	 * registered as "on hold" and a message is send to the borrower who made the hold request. 
 	 */
 
-	public static void processReturn(String callAndCopyNoS) {
+	public static void processReturn(String callNumberS, String copyNoS) {
 
 		try {
 			// provided by clerk
-			List<String> callAndCopyNo = Arrays.asList(callAndCopyNoS.split(" "));
-
-			int callNumber = Integer.parseInt(callAndCopyNo.get(0).trim());
-			int copyNo = Integer.parseInt(callAndCopyNo.get(1).trim());
+			int callNumber = Integer.parseInt(callNumberS.trim());
+			int copyNo = Integer.parseInt(copyNoS.trim());
 
 			// determined by system
 			int					borid;

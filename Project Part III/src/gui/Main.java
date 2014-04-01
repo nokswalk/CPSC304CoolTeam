@@ -825,6 +825,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyTitle.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(titletxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchTitleFrame.getContentPane().add(toppanelsearchTitle);
 	    			searchTitleFrame.pack();
 	    			searchTitleFrame.setVisible(true);
@@ -851,6 +853,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbySubject.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(subjecttxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchSubjectFrame.getContentPane().add(toppanelsearchSubject);
 	    			searchSubjectFrame.pack();
 	    			searchSubjectFrame.setVisible(true);
@@ -877,6 +881,8 @@ public class Main implements ActionListener {
 	    	});
 			searchBookbyAuthor.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(authortxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			searchAuthorFrame.getContentPane().add(toppanelsearchAuthor);
 	    			searchAuthorFrame.pack();
 	    			searchAuthorFrame.setVisible(true);
@@ -962,8 +968,7 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String borrower = payFinesBorrowertxt.getText();
 	    			setString1(borrower);
-	    			//System.out.println("Search: " + borrower);
-	    			//BorrowerUser.payFineSearch(borrower);
+	    			BorrowerUser.payFineSearch(borrower);
 	    			
 	    		}
 	    	});
@@ -977,9 +982,7 @@ public class Main implements ActionListener {
 			payFinesPay.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String fineID = payFinesFinetxt.getText();
-	    			String borrower = getString1();
-	    			//System.out.println("Pay: " + borrower);
-	    			//BorrowerUser.payFine(borrower, fineID);
+	    			BorrowerUser.payFine(fineID);
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {
