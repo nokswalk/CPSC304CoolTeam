@@ -40,8 +40,9 @@ Clerk:
 		account is created and the borrower id is returned.
 		
 	2. Check out items
-		Enter list of call numbers of items to be checked out.  Call numbers should be separated by commas.
-		Enter the copy number of each of the items.
+		Enter list of call numbers and copy numbers of items to be checked out.  
+		Call numbers and copy numbers should be separated by a space.
+		Call and copy number pairs (items) should be separated by commas.
 		The system prints the call number and copy number of each item, and the due date of the items.
 		
 	3. Process a return
