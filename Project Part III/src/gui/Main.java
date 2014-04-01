@@ -683,7 +683,7 @@ public class Main implements ActionListener {
 			panelpayFinesNorth.setLayout(new FlowLayout());
 			panelpayFinesSouth.setLayout(new FlowLayout());
 			payFinesFrame.getContentPane().add(toppayFinespanel);
-			payFinesFrame.setPreferredSize(new Dimension(500, 600));
+			payFinesFrame.setPreferredSize(new Dimension(500, 700));
 			payFinesFrame.setLocationRelativeTo(null);
 			
 		//making labels
@@ -731,6 +731,12 @@ public class Main implements ActionListener {
 			JButton payFinesSearch = new JButton("Search");
 			JButton payFinesCancel = new JButton("Cancel");
 			JButton payFinesPay = new JButton("Pay");
+			//TODO: payfine table
+			String[] columnNamesPF = {"Fine ID", "Amount", "Issued Date"};
+			final DefaultTableModel modelPF = new DefaultTableModel(null, columnNamesPF);
+			final JTable tablePF = new JTable(modelPF);
+			JScrollPane scrollPanePF = new JScrollPane(tablePF);
+			tablePF.setFillsViewportHeight(true);
 
 		//making text field
 			//Search Book
@@ -844,7 +850,8 @@ public class Main implements ActionListener {
 			panelpayFinesSouth.add(payFinesPay);
 			panelpayFinesSouth.add(payFinesCancel);
 			toppayFinespanel.add(panelpayFinesNorth);
-			toppayFinespanel.add(payFinestxtarea);
+			toppayFinespanel.add(scrollPanePF);
+			toppayFinespanel.add(payFinestxtarea);//TODO
 			toppayFinespanel.add(panelpayFinesSouth);
 			
 		//add borrower menu to the frame
@@ -1021,8 +1028,8 @@ public class Main implements ActionListener {
 	    	});
 			payFines.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(payFinestxtarea, "Console output");
-	    			System.setOut(new PrintStream(taOutputStream));
+//	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(payFinestxtarea, "Console output");
+//	    			System.setOut(new PrintStream(taOutputStream));
 	    			payFinesFrame.getContentPane().add(toppayFinespanel);
 	    			payFinesFrame.pack();
 	    			payFinesFrame.setVisible(true);
@@ -1033,7 +1040,9 @@ public class Main implements ActionListener {
 	    			String borrower = payFinesBorrowertxt.getText();
 	    			setString1(borrower);
 	    			BorrowerUser.payFineSearch(borrower);
-	    			
+	    			for(Object[] row: BorrowerUser.getPayFineData()){
+	    				modelPF.addRow(row);
+	    			}
 	    		}
 	    	});
 			payFinesCancel.addActionListener(new ActionListener() {

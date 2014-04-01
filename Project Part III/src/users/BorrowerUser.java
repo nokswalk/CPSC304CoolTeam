@@ -11,10 +11,14 @@ import javax.swing.JOptionPane;
 
 public class BorrowerUser {
 	private static List<Object[]> searchByData;
+	private static List<Object[]> payFineData;
 	public static List<Object[]> getSearByData(){
 		return searchByData;
 	}
-
+	public static List<Object[]> getPayFineData(){
+		return payFineData;
+	}
+	
 
 		public static void infoBox(String infoMessage, String titleBarMessage)
 		    {
@@ -616,10 +620,10 @@ public class BorrowerUser {
 			}
 			System.out.println(" ");
 
+			payFineData = new ArrayList<Object[]>();
 			while(rs.next())
 			{
 				// simplified output formatting; truncation may occur
-
 				int fid = rs.getInt(1);
 				System.out.printf("%-15.15s", Integer.toString(fid));
 
@@ -628,6 +632,11 @@ public class BorrowerUser {
 
 				Date issuedDate = rs.getDate(3);
 				System.out.printf("%-15.15s", issuedDate);
+				Object[] row = new Object[3];
+				row[0] = fid;
+				row[1] = amount;
+				row[2] = issuedDate;
+				payFineData.add(row);
 			}
 			System.out.println("\nEnd of results\n");
 			
