@@ -128,7 +128,7 @@ public class BorrowerUser {
 
 		try {
 			// first search Book table based on author name
-			System.out.print("\n Author name: ");
+			System.out.print("\n Author name: "+ authorS + " \n");
 			//sAuthor = Main.in.readLine();
 
 			s = Main.con.createStatement();
@@ -226,7 +226,7 @@ public class BorrowerUser {
 
 		try {
 			// first search Book table based on subject name
-			System.out.print("\n Subject: ");
+			System.out.print("\n Subject: "+ subjectS + " \n");
 			//sSubject = Main.in.readLine();
 
 			s = Main.con.createStatement();
@@ -328,6 +328,8 @@ public class BorrowerUser {
 					+ "WHERE bid=" + userBid);
 			if (rs.next() == false) {
 				System.out.println("This is not a valid borrower ID.");
+				infoBox("This is not a valid borrower ID.", "error");
+				
 				s.close();
 				return;
 			}
@@ -430,7 +432,7 @@ public class BorrowerUser {
 				}
 			}
 			System.out.println("Total amount of outstanding fine is: " + totalAmount);
-			System.out.println(" ");
+			System.out.println("\n");
 
 
 			//Hold Request List
@@ -479,6 +481,7 @@ public class BorrowerUser {
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			infoBox("A required field was left blank.", "error");
 		}
 	}
 
@@ -565,6 +568,7 @@ public class BorrowerUser {
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			infoBox("A required field was left blank.", "error");
 		}
 	}
 
@@ -587,6 +591,7 @@ public class BorrowerUser {
 					+ "WHERE bid=" + bid);
 			if (rs.next() == false) {
 				System.out.println("This is not a valid borrower ID.");
+				infoBox("This is not a valid borrower ID.", "error");
 				s.close();
 				return;
 			}
@@ -616,7 +621,7 @@ public class BorrowerUser {
 				// simplified output formatting; truncation may occur
 
 				int fid = rs.getInt(1);
-				System.out.printf("%-15.15s", fid);
+				System.out.printf("%-15.15s", Integer.toString(fid));
 
 				double amount = rs.getDouble(2);
 				System.out.printf("%-15.15s", amount);
@@ -624,6 +629,8 @@ public class BorrowerUser {
 				Date issuedDate = rs.getDate(3);
 				System.out.printf("%-15.15s", issuedDate);
 			}
+			System.out.println("\nEnd of results\n");
+			
 		}
 
 		catch (SQLException ex) {
@@ -639,6 +646,7 @@ public class BorrowerUser {
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			infoBox("A required field was left blank.", "error");
 		}
 	}
 
@@ -665,6 +673,7 @@ public class BorrowerUser {
 			ps.close();
 			
 			System.out.println("Fine has been paid");
+			infoBox("Fine has been paid", "success");
 		}
 
 		catch (SQLException ex) {
@@ -678,7 +687,8 @@ public class BorrowerUser {
 			}
 		}	
 		catch (NumberFormatException ne) {
-			System.err.println("That fine ID is not valid.");
+			System.err.println("Fine ID is not valid.");
+			infoBox("Fine has been paid", "success");
 		}
 	}
 

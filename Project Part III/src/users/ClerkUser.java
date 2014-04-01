@@ -28,6 +28,12 @@ public class ClerkUser {
 		try {
 			ps = Main.con.prepareStatement("INSERT INTO Borrower VALUES (bid_c.nextval,?,?,?,?,?,?,?,?)");
 
+			// check that required fields are not empty
+			if (passwordstr.trim().equals("") || namestr.trim().equals("") || emailstr.trim().equals("")
+					|| sinOrStnostr.trim().equals("") || typestr.trim().equals("")) {
+				System.err.println("A required field was left blank.");
+			}
+			
 			System.out.println(passwordstr);
 			ps.setString(1, passwordstr);
 
@@ -133,10 +139,10 @@ public class ClerkUser {
 
 	/*
 	 * Check-out items borrowed by a borrower. To borrow items, borrowers provide their card 
-	 * number and a list with the call numbers of the items they want to check out. The system 
-	 * determines if the borrower's account is valid and if the library items are available for 
-	 * borrowing. Then it creates one or more borrowing records and prints a note with the 
-	 * items and their due day (which is giver to the borrower).  
+	 * number and a list with the call numbers and copy numbers of the items they want to check out. 
+	 * The system determines if the borrower's account is valid and if the library items are available
+	 * for borrowing. Then it creates one or more borrowing records and prints a note with the items 
+	 * and their due day (which is given to the borrower).  
 	 */
 
 	public static void checkOutItems(String bidS, String callAndCopyNumbersS) {
@@ -159,6 +165,7 @@ public class ClerkUser {
 			// check that bid is valid
 			if (!rs.next()){
 				System.out.println("Invalid borrower ID.");
+				BorrowerUser.infoBox("Invalid borrower ID.", "error");
 				return;
 			}
 
@@ -169,9 +176,11 @@ public class ClerkUser {
 
 			// print due date
 			System.out.println("Checked out items due " + getDueDate(bid, sqlToday));
+			BorrowerUser.infoBox("Checked out items due " + getDueDate(bid, sqlToday), "success");
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -293,19 +302,27 @@ public class ClerkUser {
 			ps4 = Main.con.prepareStatement("UPDATE BookCopy SET status='in' WHERE callNumber= ? AND copyNo= ?");
 
 			s = Main.con.createStatement();
+			
+			// check that this item is out of the library
+			ResultSet rs = s.executeQuery("SELECT * from BookCopy where status='out' "
+					+ "AND callNumber=" + callNumber + " AND copyNo=" + copyNo);
+			if (!rs.next()) {
+				System.out.println("This item has not been borrowed, please check the call number and copy number.");
+			}
 
 			// get borid and bid of borrowing
-			ResultSet rs = s.executeQuery("SELECT A.borid, A.bid, A.outDate, C.bookTimeLimit "
+			ResultSet rs1 = s.executeQuery("SELECT A.borid, A.bid, A.outDate, C.bookTimeLimit "
 					+ "FROM Borrowing A, Borrower B, BorrowerType C "
 					+ "WHERE A.callNumber=" + callNumber + " AND A.copyNo=" + copyNo
 					+ " AND A.bid=B.bid AND B.type=C.type");
-			if (!rs.next()) {
+			if (!rs1.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
+				BorrowerUser.infoBox("This item has not been borrowed, please check the call number and copy number.", "error");
 				return;
 			}
-			borid = rs.getInt(1);
-			bid = rs.getInt(2);
-			outDate = rs.getDate(3);
+			borid = rs1.getInt(1);
+			bid = rs1.getInt(2);
+			outDate = rs1.getDate(3);
 
 			// update borrowing so that inDate is set
 			GregorianCalendar gregToday = new GregorianCalendar();
@@ -315,6 +332,7 @@ public class ClerkUser {
 			ps1.setInt(3, copyNo);
 			ps1.execute();
 			System.out.println("Item has been checked in.");
+			BorrowerUser.infoBox("Item has been checked in.", "success");
 
 			// if item is overdue, place a fine on the borrower
 			if (overdue(getDueDate(bid, outDate))) {
@@ -325,6 +343,7 @@ public class ClerkUser {
 				ps2.setInt(4, borid);
 				ps2.execute();
 				System.out.println("A fine has been placed on borrower " + bid + ".");
+				BorrowerUser.infoBox("A fine has been placed on borrower " + bid + ".", "fine");
 			}
 
 			ResultSet rs2 = s.executeQuery("SELECT bid "
@@ -347,8 +366,11 @@ public class ClerkUser {
 				String emailAddrHold = rs3.getString(2);
 
 				System.out.println("Item has been registered as 'on hold' for borrower " + bidHold);
+				BorrowerUser.infoBox("Item has been registered as 'on hold' for borrower " + bidHold, "hold");
 				System.out.println("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
 						"), has been notified about their held item.");
+				BorrowerUser.infoBox("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
+						"), has been notified about their held item.", "notify");
 			}
 
 			// otherwise update book copy so that it's registered as 'in'
@@ -357,6 +379,7 @@ public class ClerkUser {
 				ps4.setInt(2, copyNo);
 				ps4.execute();
 				System.out.println("Item has been registered as 'in'.");
+				BorrowerUser.infoBox("Item has been registered as 'in'.", "success");
 			}
 
 			Main.con.commit();
@@ -368,6 +391,7 @@ public class ClerkUser {
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -510,6 +534,9 @@ public class ClerkUser {
 					nameHold = rs.getString(2);
 					System.out.println("\nBorrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
 							"), has been notified about their overdue item.");
+					BorrowerUser.infoBox("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
+							"), has been notified about their overdue item.", "success");
+					
 				}
 			}
 

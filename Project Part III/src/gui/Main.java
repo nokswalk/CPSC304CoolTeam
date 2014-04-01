@@ -259,8 +259,6 @@ public class Main implements ActionListener {
 			paneladdNewBook.setLayout(layoutaddNewBook);
 			addNewBookFrame.setPreferredSize(new Dimension (500, 240));
 			addNewBookFrame.setLocationRelativeTo(null);
-
-
 		//make addNewBookCopy frame and panel
 			int ROWSaddNewBookCopy = 2;
 			int COLUMNSaddNewBookCopy = 2;
@@ -270,7 +268,6 @@ public class Main implements ActionListener {
 			paneladdNewBookCopy.setLayout(layoutaddNewBookCopy);
 			addNewBookCopyFrame.setPreferredSize(new Dimension (500, 80));
 			addNewBookCopyFrame.setLocationRelativeTo(null);
-
 		//make reportCheckOutBooks frame and panel
 			final JFrame reportCheckedoutBooksFrame = new JFrame("Report Checked out Books");
 			final JPanel toppanelreportCheckedoutBooks = new JPanel();
@@ -280,7 +277,6 @@ public class Main implements ActionListener {
 			reportCheckedoutBooksFrame.getContentPane().add(toppanelreportCheckedoutBooks);			
 			reportCheckedoutBooksFrame.setPreferredSize(new Dimension(800,600));
 			reportCheckedoutBooksFrame.setLocationRelativeTo(null);
-
 		//make mostPopular frame and panel
 			int ROWSmostPopular = 3;
 			int COLUMNSmostPopular = 2;
@@ -365,6 +361,7 @@ public class Main implements ActionListener {
 
 			reportCheckedOutBookstxtarea.setPreferredSize(new Dimension(800, 500));
 			mostPopulartxtarea.setPreferredSize(new Dimension(800, 500));
+			
 		//center align buttons
 			addBook.setAlignmentX(Component.CENTER_ALIGNMENT);
 			reportCheckedOutBooks.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -972,6 +969,8 @@ public class Main implements ActionListener {
 	    	});
 			checkAccount.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(checkAccounttxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			checkAccountFrame.getContentPane().add(toppanelcheckAccount);
 	    			checkAccountFrame.pack();
 	    			checkAccountFrame.setVisible(true);
@@ -1022,6 +1021,8 @@ public class Main implements ActionListener {
 	    	});
 			payFines.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(payFinestxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			payFinesFrame.getContentPane().add(toppayFinespanel);
 	    			payFinesFrame.pack();
 	    			payFinesFrame.setVisible(true);
@@ -1038,6 +1039,8 @@ public class Main implements ActionListener {
 			payFinesCancel.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			payFinesBorrowertxt.setText(null);
+	    			payFinesFinetxt.setText(null);
+	    			payFinesFrame.dispose();
 	    			payFinesFinetxt.setText(null);
 	    			payFinesFrame.dispose();
 	    		}
@@ -1068,7 +1071,7 @@ public class Main implements ActionListener {
 		}
 		else if (user == 3){ //user is clerk
 			
-		//make addNewBook frame and panel
+		//make addBorrower frame and panel
 			int ADDBORROWERROWS = 8;
 			int COLUMNS = 2;
 
@@ -1081,14 +1084,31 @@ public class Main implements ActionListener {
 			addBorrowerFrame.setLocationRelativeTo(null);
 
 		//make checkOutItems frame and panel
-			
-			final JFrame checkOutItemsFrame = new JFrame("Check out Items");
+			int ROWScheckOutItems = 2;
+			int COLUMNScheckOutItems = 2;
+			final JFrame checkOutItemsFrame = new JFrame("Checkout Items");
 			final JPanel panelcheckOutItems = new JPanel();
+			final JPanel toppanelcheckOutItems = new JPanel();
+			final JPanel panelcheckOutItemsrNorth = new JPanel();
+			final JPanel panelcheckOutItemsSouth = new JPanel();
+			toppanelcheckOutItems.setLayout(new BoxLayout(toppanelcheckOutItems, BoxLayout.Y_AXIS));
+			panelcheckOutItemsrNorth.setLayout(new GridLayout(ROWScheckOutItems, COLUMNScheckOutItems));
+			panelcheckOutItemsSouth.setLayout(new FlowLayout());
+			checkOutItemsFrame.getContentPane().add(toppanelcheckOutItems);
+			checkOutItemsFrame.setPreferredSize(new Dimension(800, 600));
+			checkOutItemsFrame.setLocationRelativeTo(null);
 			
-		//make processReturn frame and panel
+		//make processReturn frame and panel and setup layout, size of frame, location of frame
+			int ROWSprocessReturn = 3;
+			int COLUMNprocessReturn = 2;
 			final JFrame processReturnFrame = new JFrame("Process a return");
 			final JPanel panelprocessReturnBooks = new JPanel();
-
+			panelprocessReturnBooks.setLayout(new GridLayout(ROWSprocessReturn, COLUMNprocessReturn));
+			processReturnFrame.getContentPane().add(panelprocessReturnBooks);
+			processReturnFrame.setPreferredSize(new Dimension(400, 110));
+			processReturnFrame.setLocationRelativeTo(null);
+			
+			
 		//make checkOverdueItems frame and panel
 			final JFrame checkOverdueItemsFrame = new JFrame("Check overdue items");
 			final JPanel panelcheckOverdueItems = new JPanel();
@@ -1103,28 +1123,19 @@ public class Main implements ActionListener {
 			JLabel type = new JLabel("Type(student, staff, etc):");
 			final JLabel addBorrowerResultLabel = new JLabel("");
 			
-			//make checkOutItems frame and panel
-			int ROWScheckOutItems = 5;
-			int COLUMNScheckOutItems = 2;
-			final JPanel toppanelcheckOutItems = new JPanel();
-			final JPanel panelcheckOutItemsrNorth = new JPanel();
-			final JPanel panelcheckOutItemsSouth = new JPanel();
-			toppanelcheckOutItems.setLayout(new BoxLayout(toppanelcheckOutItems, BoxLayout.Y_AXIS));
-			panelcheckOutItemsrNorth.setLayout(new GridLayout(ROWScheckOutItems, COLUMNScheckOutItems));
-			panelcheckOutItemsSouth.setLayout(new FlowLayout());
-			checkOutItemsFrame.getContentPane().add(toppanelcheckOutItems);
-			checkOutItemsFrame.setPreferredSize(new Dimension(870, 630));
-			checkOutItemsFrame.setLocationRelativeTo(null);
-			
-		//making labels for checkOutItems
-			JLabel checkOutItems2 = new JLabel("Please specify borrower ID:");
-			JLabel checkOutItems3 = new JLabel("Please list out the call numbers of books to be checked out:");
-			JLabel checkOutItems4 = new JLabel(""); //empty space
-			JLabel checkOutItems5 = new JLabel("Please list out copy number of books in order of specified call numbers:");
-			final JLabel checkOutItemsResultLabel = new JLabel("");
-			
+		//making labels
+			//checkOutItems
+			JLabel checkOutItemsBorrowerlabel = new JLabel("Borrower ID:");
+			JLabel checkOutItemsCallCopylabel = new JLabel("Call Number and Copy Number: (Each entry separated by a ,)");
+			//JLabel checkOutItems4 = new JLabel(""); //empty space
+			//JLabel checkOutItems5 = new JLabel("Please list out copy number of books in order of specified call numbers:");
+			JLabel checkOutItemsResultLabel = new JLabel("");
+			//processReturn
+			JLabel processReturncallNumberlabel = new JLabel("Call Number:");
+			JLabel processReturncopyNumberlabel = new JLabel("Copy Number:");
 
 		//making textarea for addBorrower
+			//addBorrower
 			final JTextField passwordtxt = new JTextField();
 			final JTextField nametxt = new JTextField();
 			final JTextField addresstxt = new JTextField();
@@ -1132,16 +1143,16 @@ public class Main implements ActionListener {
 			final JTextField emailtxt = new JTextField();
 			final JTextField sinOrStnotxt = new JTextField();
 			final JTextField typetxt = new JTextField();
-
-		//making textarea for checkOutItems
-		final JTextField bidtxt = new JTextField();
-		final JTextField callNumberstxt = new JTextField();
-		final JTextField copyNostxt = new JTextField();
+			//checkOutItems
+			final JTextField bidtxt = new JTextField();
+			final JTextField callncopyNumberstxt = new JTextField();
+			//processReturn
+			final JTextField processReturncallNumbertxt = new JTextField();
+			final JTextField processReturncopyNumbertxt = new JTextField();
 		
 		//setSize
-		bidtxt.setPreferredSize(new Dimension(400, 30));
-		callNumberstxt.setPreferredSize(new Dimension(400, 30));
-		copyNostxt.setPreferredSize(new Dimension(400, 30));
+		//bidtxt.setPreferredSize(new Dimension(400, 30));
+		//callncopyNumberstxt.setPreferredSize(new Dimension(400, 30)); 
 		
 		//make buttons
 			JButton addBorrower = new JButton("Add Borrower");
@@ -1151,11 +1162,18 @@ public class Main implements ActionListener {
 			JButton back = new JButton("Go Back");
 			JButton quit = new JButton("Quit Program");
 			JButton enter = new JButton("Enter");
-			JButton enterCheckOutItems = new JButton("Enter");
 			JButton cancel = new JButton("Cancel");
-			JButton cancelcheckOutItems = new JButton("Cancel");
 			final JButton close = new JButton("Close");
+			//checkOutItems
+			JButton enterCheckOutItems = new JButton("Enter");
+			JButton cancelcheckOutItems = new JButton("Cancel");
+			//processReturn
+			JButton enterProcessReturn = new JButton("Enter");
+			JButton cancelProcessReturn = new JButton("Cancel");
 			
+		//make txt area
+			JTextArea checkOutItemstxtarea = new JTextArea();
+			checkOutItemstxtarea.setPreferredSize(new Dimension(800, 400));
 
 		//center align buttons
 			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1201,19 +1219,24 @@ public class Main implements ActionListener {
 			
 		//attaching labels and txt field to the panel for checkOutItems
 
-			panelcheckOutItemsrNorth.add(checkOutItems2);
+			panelcheckOutItemsrNorth.add(checkOutItemsBorrowerlabel);
 			panelcheckOutItemsrNorth.add(bidtxt);
-			panelcheckOutItemsrNorth.add(checkOutItems3);
-			panelcheckOutItemsrNorth.add(callNumberstxt);
-			panelcheckOutItemsrNorth.add(checkOutItems5);
-			panelcheckOutItemsrNorth.add(copyNostxt);
+			panelcheckOutItemsrNorth.add(checkOutItemsCallCopylabel);
+			panelcheckOutItemsrNorth.add(callncopyNumberstxt);
 			
 			panelcheckOutItemsSouth.add(enterCheckOutItems);
 			panelcheckOutItemsSouth.add(cancelcheckOutItems);
 			
-			
 			toppanelcheckOutItems.add(panelcheckOutItemsrNorth);
+			toppanelcheckOutItems.add(checkOutItemstxtarea);
 			toppanelcheckOutItems.add(panelcheckOutItemsSouth);
+			//processReturn
+			panelprocessReturnBooks.add(processReturncallNumberlabel);
+			panelprocessReturnBooks.add(processReturncallNumbertxt);
+			panelprocessReturnBooks.add(processReturncopyNumberlabel);
+			panelprocessReturnBooks.add(processReturncopyNumbertxt);
+			panelprocessReturnBooks.add(enterProcessReturn);
+			panelprocessReturnBooks.add(cancelProcessReturn);
 			
 		//add listeners to the buttons
 			addBorrower.addActionListener(new ActionListener() {
@@ -1237,13 +1260,29 @@ public class Main implements ActionListener {
 	    			checkOutItemsFrame.pack();
 	    			checkOutItemsFrame.setVisible(true);
 	    			bidtxt.setText(null);
-	    			callNumberstxt.setText(null);
-	    			copyNostxt.setText(null);
+	    			callncopyNumberstxt.setText(null);
 				}
 	    	});
 			processReturn.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-
+	    			processReturnFrame.getContentPane().add(panelprocessReturnBooks);
+	    			processReturnFrame.pack();
+	    			processReturnFrame.setVisible(true);
+	    		}
+	    	});
+			enterProcessReturn.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String call = processReturncallNumbertxt.getText();
+	    			String copy = processReturncopyNumbertxt.getText();
+	    			System.out.println(call + " " + copy);
+	    			ClerkUser.processReturn(call, copy);
+	    		}
+	    	});
+			cancelProcessReturn.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			processReturncallNumbertxt.setText(null);
+	    			processReturncopyNumbertxt.setText(null);
+	    			processReturnFrame.dispose();
 	    		}
 	    	});
 			checkOverdueItems.addActionListener(new ActionListener() {
@@ -1264,20 +1303,11 @@ public class Main implements ActionListener {
 	    		}
 	    	});
 			
-			//TODO!! NOT SURE WHAT IM DOING HERE
 			enterCheckOutItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-//	    			String bidstr = bidtxt.getText();
-//	    			String callNumberstr = callNumberstxt.getText();
-//	    			String copyNumberstr = copyNostxt.getText();
-//	    			int bid = ClerkUser.checkBidForCheckOut(bidstr);
-//	    			if (bid == -1){
-//	    				checkOutItemsResultLabel.setName("Invalid Borrower ID");
-//	    			}
-//	    			else{
-//	    			ClerkUser.checkOutItems(bidstr, callNumberstr);
-//	    			}
-//	    			panelcheckOutItems.setVisible(false);
+	    			String bidstr = bidtxt.getText();
+	    			String callncopyNumberstr = callncopyNumberstxt.getText();
+	    			ClerkUser.checkOutItems(bidstr, callncopyNumberstr);
 	    		}
 	    	});
 			
@@ -1326,7 +1356,7 @@ public class Main implements ActionListener {
 	    	cancelcheckOutItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			bidtxt.setText(null);
-	    			callNumberstxt.setText(null);
+	    			callncopyNumberstxt.setText(null);
 	    			checkOutItemsFrame.dispose();
 	    		}
 	    	});
