@@ -219,6 +219,7 @@ public class ClerkUser {
 	 * items and their due day (which is giver to the borrower).  
 	 */
 	
+	
 	public static void checkOutItems(String bidS, String callNumbersS) {
 		int 			   bid = Integer.parseInt(bidS);
 		
