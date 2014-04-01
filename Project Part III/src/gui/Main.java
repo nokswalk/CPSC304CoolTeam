@@ -263,7 +263,6 @@ public class Main implements ActionListener {
 			int ROWSmostPopular = 3;
 			int COLUMNSmostPopular = 2;
 			final JFrame mostPopularFrame = new JFrame("Most Popular");
-<<<<<<< HEAD
 			final JPanel toppanelmostPopular = new JPanel();
 			final JPanel panelmostPopularNorth = new JPanel();
 			final JPanel panelmostPopularSouth = new JPanel();
@@ -273,11 +272,7 @@ public class Main implements ActionListener {
 			mostPopularFrame.getContentPane().add(toppanelmostPopular);
 			mostPopularFrame.setPreferredSize(new Dimension(870, 630));
 			mostPopularFrame.setLocationRelativeTo(null);
-			
-=======
-			final JPanel panelmostPopular = new JPanel();
 
->>>>>>> 96fc4d54616627a0ba427298f25ec19ba97346b9
 		//making labels
 			JLabel isbn = new JLabel("ISBN:");
 			JLabel isbnaddNewBook = new JLabel("ISBN:");
@@ -288,16 +283,11 @@ public class Main implements ActionListener {
 			JLabel subjects = new JLabel("Subjects: (place commas in between)");
 			JLabel authors = new JLabel("Authors: (place commas in between)");
 			JLabel reportCheckedOutBooksSubject = new JLabel("Subject:");
-<<<<<<< HEAD
 			JLabel mostPopularLabel1 = new JLabel("Generating a report with most popular items.");
 			JLabel mostPopularLabel2 = new JLabel("Please specify how many books you wish to add into the report:");
 			JLabel mostPopularLabel3 = new JLabel("Please specify the year you wish to report:");
 			JLabel mostPopularLabel4 = new JLabel(""); //empty space
 			
-			
-=======
-
->>>>>>> 96fc4d54616627a0ba427298f25ec19ba97346b9
 		//making buttons
 			JButton addBook = new JButton("Add Book");
 			JButton reportCheckedOutBooks = new JButton("Report Checked Out Books");
@@ -313,13 +303,9 @@ public class Main implements ActionListener {
 			JButton enterreportCheckedOutBooks = new JButton("Enter");
 			JButton clearreportCheckedOutBooks = new JButton("Clear");
 			JButton okayreportCheckedOutBooks = new JButton("Okay");
-<<<<<<< HEAD
 			JButton entermostPopular = new JButton("Enter");
 			JButton cancelmostPopular = new JButton("Cancel");
-			
-=======
 
->>>>>>> 96fc4d54616627a0ba427298f25ec19ba97346b9
 		//making text field
 			final JTextField isbntxtaddNewBookCopy = new JTextField();
 			final JTextField isbntxtaddNewBook = new JTextField();
@@ -330,15 +316,10 @@ public class Main implements ActionListener {
 			final JTextField subjectstxt = new JTextField();
 			final JTextField authorstxt = new JTextField();
 			final JTextField reportCheckedOutBookstxt = new JTextField();
-<<<<<<< HEAD
 			final JTextField mostPopulartxt1 = new JTextField();
 			final JTextField mostPopulartxt2 = new JTextField();
 			//final JTextField mostPopulartxt3 = new JTextField();
 			
-			
-=======
-
->>>>>>> 96fc4d54616627a0ba427298f25ec19ba97346b9
 		//set size of text field
 			reportCheckedOutBookstxt.setPreferredSize(new Dimension(400, 30));
 
@@ -412,7 +393,6 @@ public class Main implements ActionListener {
 			toppanelreportCheckedoutBooks.add(panelreportCheckedoutBooksNorth);
 			toppanelreportCheckedoutBooks.add(reportCheckedOutBookstxtarea);
 			toppanelreportCheckedoutBooks.add(okayreportCheckedOutBooks);
-<<<<<<< HEAD
 			
 			panelmostPopularNorth.add(mostPopularLabel1);
 			panelmostPopularNorth.add(mostPopularLabel4);
@@ -427,10 +407,7 @@ public class Main implements ActionListener {
 			toppanelmostPopular.add(panelmostPopularNorth);
 			toppanelmostPopular.add(mostPopulartxtarea);
 			toppanelmostPopular.add(panelmostPopularSouth);
-			
-=======
 
->>>>>>> 96fc4d54616627a0ba427298f25ec19ba97346b9
 			//splitpanelreportCheckedoutBooksV.add(reportCheckedOutBookstxt);
 			//splitpanelreportCheckedoutBooksBottomV.add(reportCheckedOutBookstxtarea);
 			//splitpanelreportCheckedoutBooksBottomV.add(okayreportCheckedoutBooks);
@@ -474,13 +451,10 @@ public class Main implements ActionListener {
 	    	});
 			mostPopular.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
 	    			mostPopularFrame.getContentPane().add(toppanelmostPopular);
 	    			mostPopularFrame.pack();
 	    			mostPopularFrame.setVisible(true);
-=======
 
->>>>>>> 96fc4d54616627a0ba427298f25ec19ba97346b9
 	    		}
 	    	});
 			addNewBook.addActionListener(new ActionListener() {
