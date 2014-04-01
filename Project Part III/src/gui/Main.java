@@ -994,6 +994,8 @@ public class Main implements ActionListener {
 	    			payFinesBorrowertxt.setText(null);
 	    			payFinesFinetxt.setText(null);
 	    			payFinesFrame.dispose();
+	    			payFinesFinetxt.setText(null);
+	    			payFinesFrame.dispose();
 	    		}
 	    	});
 			payFinesPay.addActionListener(new ActionListener() {
@@ -1045,7 +1047,7 @@ public class Main implements ActionListener {
 			panelcheckOutItemsrNorth.setLayout(new GridLayout(ROWScheckOutItems, COLUMNScheckOutItems));
 			panelcheckOutItemsSouth.setLayout(new FlowLayout());
 			checkOutItemsFrame.getContentPane().add(toppanelcheckOutItems);
-			checkOutItemsFrame.setPreferredSize(new Dimension(800, 600));
+			checkOutItemsFrame.setPreferredSize(new Dimension(800, 80));
 			checkOutItemsFrame.setLocationRelativeTo(null);
 			//make processReturn
 			int ROWSprocessReturn = 3;
@@ -1077,8 +1079,8 @@ public class Main implements ActionListener {
 			final JLabel addBorrowerResultLabel = new JLabel("");
 			//checkOutItems
 			JLabel checkOutItemsBorrowerlabel = new JLabel("Borrower ID:");
-			JLabel checkOutItemsCallCopylabel = new JLabel("Call Number and Copy Number: (Each entry separated by a ,)");
-			//JLabel checkOutItemsResultLabel = new JLabel("");
+			JLabel checkOutItemsCallCopylabel = new JLabel("Call Number and Copy Number: (e.i: 100 1, 200 1, 200 2)");
+			JLabel checkOutItemsResultLabel = new JLabel("");
 			//processReturn
 			JLabel processReturncallNumberlabel = new JLabel("Call Number:");
 			JLabel processReturncopyNumberlabel = new JLabel("Copy Number:");
@@ -1292,9 +1294,14 @@ public class Main implements ActionListener {
 			
 			enterCheckOutItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(checkOutItemstxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			String bidstr = bidtxt.getText();
 	    			String callncopyNumberstr = callncopyNumberstxt.getText();
 	    			ClerkUser.checkOutItems(bidstr, callncopyNumberstr);
+	    			bidtxt.setText(null);
+	    			callncopyNumberstxt.setText(null);
+	    			checkOutItemsFrame.dispose();
 	    		}
 	    	});
 			
