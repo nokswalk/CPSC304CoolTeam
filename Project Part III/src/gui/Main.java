@@ -1130,7 +1130,9 @@ public class Main implements ActionListener {
 			final JFrame checkOverdueItemsFrame = new JFrame("Check overdue items");
 			final JPanel toppanelcheckOverdueItems = new JPanel();
 			final JPanel panelcheckOverdueItemsNorth = new JPanel();
+			final JPanel panelcheckOverdueItemsSouth = new JPanel();
 			panelcheckOverdueItemsNorth.setLayout(new FlowLayout());
+			panelcheckOverdueItemsSouth.setLayout(new FlowLayout());
 			toppanelcheckOverdueItems.setLayout(new BoxLayout(toppanelcheckOverdueItems, BoxLayout.Y_AXIS));
 			checkOverdueItemsFrame.setPreferredSize(new Dimension(600, 500));
 			checkOverdueItemsFrame.setLocationRelativeTo(null);
@@ -1154,6 +1156,7 @@ public class Main implements ActionListener {
 			JLabel processReturncopyNumberlabel = new JLabel("Copy Number:");
 			//checkOverdueItems
 			JLabel checkOverdueItemsborrowerlabel = new JLabel("Borrower ID:");
+			JLabel checkOverdueItemsemaillabel = new JLabel("Send email to users with Borrower ID(s):");
 
 		//making textarea for addBorrower
 			//addBorrower
@@ -1172,8 +1175,10 @@ public class Main implements ActionListener {
 			final JTextField processReturncopyNumbertxt = new JTextField();
 			//checkOverdueItems
 			final JTextField checkOverdueItemsborrowertxt = new JTextField();
+			final JTextField checkOverdueItemsemailtxt = new JTextField();
 			
 			checkOverdueItemsborrowertxt.setPreferredSize(new Dimension(200, 30));
+			checkOverdueItemsemailtxt.setPreferredSize(new Dimension(200, 30));
 		
 		//make buttons
 			JButton addBorrower = new JButton("Add Borrower");
@@ -1195,6 +1200,7 @@ public class Main implements ActionListener {
 			JButton entercheckOverdueItems = new JButton("Enter");
 			JButton clearcheckOverdueItems = new JButton("Clear");
 			JButton closecheckOverdueItems = new JButton("Close");
+			JButton emailcheckOverdueItems = new JButton("Send email");
 			
 		//make txt area
 			//checkOutItems
@@ -1273,8 +1279,12 @@ public class Main implements ActionListener {
 			panelcheckOverdueItemsNorth.add(entercheckOverdueItems);
 			panelcheckOverdueItemsNorth.add(clearcheckOverdueItems);
 			panelcheckOverdueItemsNorth.add(closecheckOverdueItems);
+			panelcheckOverdueItemsSouth.add(checkOverdueItemsemaillabel);
+			panelcheckOverdueItemsSouth.add(checkOverdueItemsemailtxt);
+			panelcheckOverdueItemsSouth.add(emailcheckOverdueItems);
 			toppanelcheckOverdueItems.add(panelcheckOverdueItemsNorth);
 			toppanelcheckOverdueItems.add(checkOverdueItemstxtarea);
+			toppanelcheckOverdueItems.add(panelcheckOverdueItemsSouth);
 			
 		//add listeners to the buttons
 			addBorrower.addActionListener(new ActionListener() {
@@ -1345,6 +1355,12 @@ public class Main implements ActionListener {
 	    		public void actionPerformed(ActionEvent e) {
 	    			checkOverdueItemsborrowertxt.setText(null);
 	    			checkOverdueItemsFrame.dispose();
+	    		}
+	    	});
+			emailcheckOverdueItems.addActionListener(new ActionListener() {
+	    		public void actionPerformed(ActionEvent e) {
+	    			String emailBid = checkOverdueItemsemailtxt.getText();
+	    			//sendEmail(emailBid);
 	    		}
 	    	});
 			back.addActionListener(new ActionListener() {
