@@ -1205,7 +1205,12 @@ public class Main implements ActionListener {
 			//checkOverdueItems
 			final JTextArea checkOverdueItemstxtarea = new JTextArea();
 			checkOverdueItemstxtarea.setPreferredSize(new Dimension(800,400));
-			
+		//make table check Overdue items
+			String[] columnNamesCheckOverdue = {"Borrower ID", "Name", "Email", "callNumber","CopyNo", "Title", "Due Date"};
+			final DefaultTableModel modelCheckOverdue = new DefaultTableModel(null, columnNamesCheckOverdue);
+			final JTable tableCheckOverdue = new JTable(modelCheckOverdue);
+			JScrollPane scrollPaneCheckOverdue = new JScrollPane(tableCheckOverdue);
+			tableCheckOverdue.setFillsViewportHeight(true);
 
 		//center align buttons
 			addBorrower.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -1276,6 +1281,7 @@ public class Main implements ActionListener {
 			panelcheckOverdueItemsNorth.add(clearcheckOverdueItems);
 			panelcheckOverdueItemsNorth.add(closecheckOverdueItems);
 			toppanelcheckOverdueItems.add(panelcheckOverdueItemsNorth);
+			toppanelcheckOverdueItems.add(scrollPaneCheckOverdue);
 			toppanelcheckOverdueItems.add(checkOverdueItemstxtarea);
 			
 		//add listeners to the buttons
@@ -1333,11 +1339,16 @@ public class Main implements ActionListener {
 	    		}
 	    	});
 			entercheckOverdueItems.addActionListener(new ActionListener() {
-	    		public void actionPerformed(ActionEvent e) {
-	    			String bid = checkOverdueItemsborrowertxt.getText();
-	    			ClerkUser.checkOverdueItems(bid);
-	    		}
-	    	});
+				public void actionPerformed(ActionEvent e) {
+					String bid = checkOverdueItemsborrowertxt.getText();
+					ClerkUser.checkOverdueItems(bid);
+					List<Object[]> rows = ClerkUser.getCheckOverdueData();
+					for (Object[] row : rows) {
+						modelCheckOverdue.addRow(row);
+					}
+
+				}
+			});
 			clearcheckOverdueItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			checkOverdueItemstxtarea.setText(null);
