@@ -1061,7 +1061,6 @@ public class Main implements ActionListener {
 			processReturnFrame.setPreferredSize(new Dimension(400, 110));
 			processReturnFrame.setLocationRelativeTo(null);
 			
-			
 		//make checkOverdueItems frame and panel
 			final JFrame checkOverdueItemsFrame = new JFrame("Check overdue items");
 			final JPanel panelcheckOverdueItems = new JPanel();
@@ -1125,7 +1124,7 @@ public class Main implements ActionListener {
 			JButton cancelProcessReturn = new JButton("Cancel");
 			
 		//make txt area
-			JTextArea checkOutItemstxtarea = new JTextArea();
+			final JTextArea checkOutItemstxtarea = new JTextArea();
 			checkOutItemstxtarea.setPreferredSize(new Dimension(800, 400));
 
 		//center align buttons
@@ -1258,6 +1257,8 @@ public class Main implements ActionListener {
 			
 			enterCheckOutItems.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
+	    			TextAreaOutputStream taOutputStream = new TextAreaOutputStream(checkOutItemstxtarea, "Console output");
+	    			System.setOut(new PrintStream(taOutputStream));
 	    			String bidstr = bidtxt.getText();
 	    			String callncopyNumberstr = callncopyNumberstxt.getText();
 	    			ClerkUser.checkOutItems(bidstr, callncopyNumberstr);

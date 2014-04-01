@@ -236,8 +236,10 @@ public class ClerkUser {
 				ps1.setDate(4, outDate);		
 
 				ps1.executeUpdate();
+
 				System.out.println(callNumber + " " + copyNo + " has been checked out.");
 				BorrowerUser.infoBox(callNumber + " " + copyNo + " has been checked out.", "success");
+
 
 
 				// update book copy status
