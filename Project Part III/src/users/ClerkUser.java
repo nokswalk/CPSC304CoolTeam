@@ -16,6 +16,10 @@ import java.util.List;
  */
 public class ClerkUser {
 
+	private static List<Object[]> checkOverdueData;
+	public static List<Object[]> getCheckOverdueData(){
+		return checkOverdueData;
+	}
 	/*
 	 * Add a new borrower to the library.  
 	 * User should provide all required info.
@@ -446,6 +450,7 @@ public class ClerkUser {
 
 			System.out.println(" ");
 
+			checkOverdueData = new ArrayList<Object[]>();
 			while (rs.next()) {
 				Integer bid = rs.getInt("bid");
 				Date outDate = rs.getDate("outDate");
@@ -489,6 +494,15 @@ public class ClerkUser {
 						System.out.printf("%-30.30s", title);
 					}
 					System.out.printf("%-20.20s\n", duedate);
+					Object[] row = new Object[7];
+					row[0] = bid;
+					row[1] = name;
+					row[2] = email;
+					row[3] = callNumber;
+					row[4] = copyNo;
+					row[5] = title;
+					row[6] = duedate;
+					checkOverdueData.add(row);
 				}
 			}
 

@@ -20,6 +20,10 @@ public class BorrowerUser {
 	}
 	
 
+		private static Statement s;
+
+
+
 		public static void infoBox(String infoMessage, String titleBarMessage)
 		    {
 		        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBarMessage, JOptionPane.INFORMATION_MESSAGE);
@@ -604,6 +608,7 @@ public class BorrowerUser {
 			rs = s.executeQuery("SELECT fid, amount, TO_CHAR(issuedDate, 'YYYY-MM-DD') as issDate "
 					+ "FROM Fine F, Borrowing B "
 					+ "WHERE F.borid = B.borid "
+					+ "AND F.paidDate is null "
 					+ "AND B.bid = " + bid);
 
 			// get info on ResultSet
@@ -661,12 +666,16 @@ public class BorrowerUser {
 
 	public static void payFine(String fidS)
 	{
+		
 		try
 		{
 			int fid = Integer.parseInt(fidS);
 			
 			Date			   paidDate;
 			PreparedStatement  ps;
+			s = null;
+			
+
 			
 			ps = Main.con.prepareStatement("UPDATE fine SET paidDate = ? WHERE fid = ?");
 
@@ -681,8 +690,10 @@ public class BorrowerUser {
 
 			ps.close();
 			
+
 			System.out.println("Fine has been paid");
-			infoBox("Fine has been paid", "success");
+			infoBox("Transaction has been sent for processing.", "success");
+			
 		}
 
 		catch (SQLException ex) {
@@ -697,7 +708,7 @@ public class BorrowerUser {
 		}	
 		catch (NumberFormatException ne) {
 			System.err.println("Fine ID is not valid.");
-			infoBox("Fine has been paid", "success");
+			infoBox("Fine ID is not valid.", "error");
 		}
 	}
 
