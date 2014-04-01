@@ -159,6 +159,7 @@ public class ClerkUser {
 			// check that bid is valid
 			if (!rs.next()){
 				System.out.println("Invalid borrower ID.");
+				BorrowerUser.infoBox("Invalid borrower ID.", "error");
 				return;
 			}
 
@@ -169,9 +170,11 @@ public class ClerkUser {
 
 			// print due date
 			System.out.println("Checked out items due " + getDueDate(bid, sqlToday));
+			BorrowerUser.infoBox("Checked out items due " + getDueDate(bid, sqlToday), "success");
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -301,6 +304,7 @@ public class ClerkUser {
 					+ " AND A.bid=B.bid AND B.type=C.type");
 			if (!rs.next()) {
 				System.out.println("This item has not been borrowed, please check the call number and copy number.");
+				BorrowerUser.infoBox("This item has not been borrowed, please check the call number and copy number.", "error");
 				return;
 			}
 			borid = rs.getInt(1);
@@ -315,6 +319,7 @@ public class ClerkUser {
 			ps1.setInt(3, copyNo);
 			ps1.execute();
 			System.out.println("Item has been checked in.");
+			BorrowerUser.infoBox("Item has been checked in.", "success");
 
 			// if item is overdue, place a fine on the borrower
 			if (overdue(getDueDate(bid, outDate))) {
@@ -325,6 +330,7 @@ public class ClerkUser {
 				ps2.setInt(4, borid);
 				ps2.execute();
 				System.out.println("A fine has been placed on borrower " + bid + ".");
+				BorrowerUser.infoBox("A fine has been placed on borrower " + bid + ".", "fine");
 			}
 
 			ResultSet rs2 = s.executeQuery("SELECT bid "
@@ -347,8 +353,11 @@ public class ClerkUser {
 				String emailAddrHold = rs3.getString(2);
 
 				System.out.println("Item has been registered as 'on hold' for borrower " + bidHold);
+				BorrowerUser.infoBox("Item has been registered as 'on hold' for borrower " + bidHold, "hold");
 				System.out.println("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
 						"), has been notified about their held item.");
+				BorrowerUser.infoBox("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
+						"), has been notified about their held item.", "notify");
 			}
 
 			// otherwise update book copy so that it's registered as 'in'
@@ -357,6 +366,7 @@ public class ClerkUser {
 				ps4.setInt(2, copyNo);
 				ps4.execute();
 				System.out.println("Item has been registered as 'in'.");
+				BorrowerUser.infoBox("Item has been registered as 'in'.", "success");
 			}
 
 			Main.con.commit();
@@ -368,6 +378,7 @@ public class ClerkUser {
 		}
 		catch (NumberFormatException ne) {
 			System.err.println("A required field was left blank.");
+			BorrowerUser.infoBox("A required field was left blank.", "error");
 		}
 		catch (SQLException ex) {
 			System.err.println("Message: " + ex.getMessage());
@@ -510,6 +521,9 @@ public class ClerkUser {
 					nameHold = rs.getString(2);
 					System.out.println("\nBorrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
 							"), has been notified about their overdue item.");
+					BorrowerUser.infoBox("Borrower "+ bid + ", " + nameHold + " (" + emailAddrHold + 
+							"), has been notified about their overdue item.", "success");
+					
 				}
 			}
 
