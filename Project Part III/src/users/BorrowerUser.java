@@ -10,6 +10,10 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class BorrowerUser {
+
+	private static List<Object[]> checkLoanData;
+	private static List<Object[]> checkFineData;
+	private static List<Object[]> checkholdData;
 	private static List<Object[]> searchByData;
 	private static List<Object[]> payFineData;
 	public static List<Object[]> getSearByData(){
@@ -18,7 +22,15 @@ public class BorrowerUser {
 	public static List<Object[]> getPayFineData(){
 		return payFineData;
 	}
-	
+	public static List<Object[]> getcheckLoanData(){
+		return checkLoanData;
+	}	
+	public static List<Object[]> getcheckFineData(){
+		return checkFineData;
+	}	
+	public static List<Object[]> getcheckHoldData(){
+		return checkholdData;
+	}	
 
 		private static Statement s;
 
@@ -356,6 +368,10 @@ public class BorrowerUser {
 			// get number of columns
 			int numCols = rsmd.getColumnCount();
 			System.out.println(" ");
+			if (checkLoanData == null)
+				checkLoanData = new ArrayList<Object[]>();
+			else
+				checkLoanData.clear();
 			// display column names;
 			for (int i = 0; i < numCols; i++) {
 				// get column name and print it
@@ -389,6 +405,11 @@ public class BorrowerUser {
 				} else {
 					System.out.printf("%-20.20s\n", mainAuthor);
 				}
+				Object[] row = new Object[3];
+				row[0] = title;
+				row[1] = isbn;
+				row[2] = mainAuthor;
+				checkLoanData.add(row);
 			}
 
 
@@ -410,7 +431,10 @@ public class BorrowerUser {
 				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
 			}
 			System.out.println(" ");
-
+			if (checkFineData == null)
+				checkFineData = new ArrayList<Object[]>();
+			else
+				checkFineData.clear();
 			while (rs.next()) {
 				// for display purposes get everything from Oracle
 				// as a string
@@ -438,6 +462,11 @@ public class BorrowerUser {
 				} else {
 					System.out.printf("%-50.50s\n", title);
 				}
+				Object[] row = new Object[3];
+				row[0] = amount;
+				row[1] = issuedDate;
+				row[2] = title;
+				checkFineData.add(row);
 			}
 			System.out.println("Total amount of outstanding fine is: " + totalAmount);
 			System.out.println("\n");
@@ -460,7 +489,10 @@ public class BorrowerUser {
 				System.out.printf("%-20s", rsmd.getColumnName(i + 1));
 			}
 			System.out.println(" ");
-
+			if (checkholdData == null)
+				checkholdData = new ArrayList<Object[]>();
+			else
+				checkholdData.clear();
 			while (rs.next()) {
 				// for display purposes get everything from Oracle
 				// as a string
@@ -478,6 +510,10 @@ public class BorrowerUser {
 				} else {
 					System.out.printf("%-15.15s\n", issuedDate);
 				}
+				Object[] row = new Object[2];
+				row[0] = title;
+				row[1] = issuedDate;
+				checkholdData.add(row);
 			}
 
 			// close the statement;

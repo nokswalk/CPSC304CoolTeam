@@ -668,6 +668,28 @@ public class Main implements ActionListener {
 			checkAccountFrame.getContentPane().add(toppanelcheckAccount);
 			checkAccountFrame.setPreferredSize(new Dimension(800, 600));
 			checkAccountFrame.setLocationRelativeTo(null);
+			JLabel forTableLabel1 = new JLabel("List of items currently on loan");
+			//making table
+			String[] columnNamesLoanC = { "Title", "ISBN", "MainAuthor"};
+			final DefaultTableModel modelLoanC = new DefaultTableModel(null, columnNamesLoanC);
+			final JTable tableLoanC = new JTable(modelLoanC);
+			JScrollPane scrollPaneLoanC = new JScrollPane(tableLoanC);
+			tableLoanC.setFillsViewportHeight(true);
+			JLabel forTableLabel2 = new JLabel("Outstanding Fines");
+			//making table
+			String[] columnNamesFineC = {"Amount", "Issued Date", "Title"};
+			final DefaultTableModel modelFineC = new DefaultTableModel(null, columnNamesFineC);
+			final JTable tableFineC = new JTable(modelFineC);
+			JScrollPane scrollPaneFineC = new JScrollPane(tableFineC);
+			tableFineC.setFillsViewportHeight(true);
+			JLabel forTableLabel3 = new JLabel("Total OutStanding Fine is");
+			JLabel forTableLabel4 = new JLabel("Placed Hold Request");
+			//making table
+			String[] columnNamesHoldC = {"Title", "Issued Date"};
+			final DefaultTableModel modelHoldC = new DefaultTableModel(null, columnNamesHoldC);
+			final JTable tableHoldC = new JTable(modelHoldC);
+			JScrollPane scrollPaneHoldC = new JScrollPane(tableHoldC);
+			tableHoldC.setFillsViewportHeight(true);
 			
 		//make holdrequest
 			int ROWholdrequest = 3;
@@ -789,6 +811,10 @@ public class Main implements ActionListener {
 			payFines.setAlignmentX(Component.CENTER_ALIGNMENT);
 			back.setAlignmentX(Component.CENTER_ALIGNMENT);
 			quit.setAlignmentX(Component.CENTER_ALIGNMENT);
+			forTableLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
+			forTableLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
+			forTableLabel3.setAlignmentX(Component.CENTER_ALIGNMENT);
+			forTableLabel4.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		//set the menu frame's size
 			menu.setPreferredSize(new Dimension(200, 300));
@@ -839,7 +865,14 @@ public class Main implements ActionListener {
 			panelcheckAccountNorth.add(checkAccountClear);
 			panelcheckAccountNorth.add(checkAccountCancel);
 			toppanelcheckAccount.add(panelcheckAccountNorth);
-			toppanelcheckAccount.add(checkAccounttxtarea);
+			toppanelcheckAccount.add(forTableLabel1);
+			toppanelcheckAccount.add(scrollPaneLoanC);
+			toppanelcheckAccount.add(forTableLabel2);
+			toppanelcheckAccount.add(scrollPaneFineC);
+//			toppanelcheckAccount.add(forTableLabel3);
+			toppanelcheckAccount.add(forTableLabel4);
+			toppanelcheckAccount.add(scrollPaneHoldC);
+//			toppanelcheckAccount.add(checkAccounttxtarea);
 			//Request Hold
 			panelholdRequest.add(holdRequestBorrowerLabel);
 			panelholdRequest.add(requestHoldBorrowertxt);
@@ -993,7 +1026,13 @@ public class Main implements ActionListener {
 			checkAccountSearch.addActionListener(new ActionListener() {
 	    		public void actionPerformed(ActionEvent e) {
 	    			String bid = checkAccounttxt.getText();
-	    			BorrowerUser.checkAccount(bid);;
+	    			BorrowerUser.checkAccount(bid);;//TODO table
+	    			for(Object[] row:BorrowerUser.getcheckLoanData())
+	    				modelLoanC.addRow(row);
+	    			for(Object[] row:BorrowerUser.getcheckFineData())
+	    				modelFineC.addRow(row);
+	    			for(Object[] row:BorrowerUser.getcheckHoldData())
+	    				modelHoldC.addRow(row);
 	    			checkAccounttxt.setText(null);
 	    		}
 	    	});
